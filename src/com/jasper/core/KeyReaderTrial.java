@@ -47,6 +47,11 @@ public class KeyReaderTrial {
                         return true;
                     }
                 }
+                else if (m.equals("04")){
+                    if( dCompare <= 30) {
+                        return true;
+                    }
+                }
                 return false;
             } else {
                 return false;
