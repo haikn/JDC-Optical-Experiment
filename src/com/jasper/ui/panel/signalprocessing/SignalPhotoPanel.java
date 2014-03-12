@@ -43,8 +43,6 @@ public class SignalPhotoPanel extends OpticsPane{
     ResourceBundle labels;
     private String actionTag = "Len";
     
-    private javax.swing.JSlider sliderFocal;
-    private javax.swing.JTextField textFocal;
     private JPanel panelPattern;
     private JFrame magFrameLenon;
     private double xoff = 0.0, yoff = 0.0, focal = 0.0;
@@ -57,7 +55,6 @@ public class SignalPhotoPanel extends OpticsPane{
     private javax.swing.JPanel panelButton;
      
     private int countSecondDisplayPhoto = 1;
-    static String logmessageSignalPhoto = "Signal photo: widht=%s height=%s";
     private int countLenOnPhoto = 1;
     private static BufferedImage buffImages = null;
     private javax.swing.JFileChooser openFile;
@@ -85,7 +82,7 @@ public class SignalPhotoPanel extends OpticsPane{
         buttonOpenFile.setText("Browse...");
         buttonOpenFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b_openFileActionPerformed(evt);
+                openFileActionPerformed(evt);
             }
         });
         lblPleaseSelectPhoto.setText("Select the file to import.");
@@ -205,91 +202,79 @@ public class SignalPhotoPanel extends OpticsPane{
     
      private void buttonGenerateActionPerformedProcessingPhoto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerateActionPerformedCyllin
         actionTag = "ProcessingPhoto";
-        if (parseArguments()) {
-            buttonSecondPhoto.setEnabled(true);
-            button11LensOnPhoto.setEnabled(true);
+        buttonSecondPhoto.setEnabled(true);
+        button11LensOnPhoto.setEnabled(true);
 
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            //   image.updateParameterDrawSignalPhoto(buffImages.get);
-            image.signalPhoto(buffImages);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogSignalPhoto());
-            setLog(genLogSignalPhoto());
-            imageGenerated = true;
-        }
-
+        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+        image.signalPhoto(buffImages);
+        EduPatternShowOn.updateLensPatternPattern(image, "");
+        //setLog(genLogSignalPhoto());
+        imageGenerated = true;
     }
 
     private void button11LensOnProcessingPhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button11LensOnProcessingPhotoActionPerformed
         actionTag = "ProcessingPhoto";
-        if (parseArguments()) {
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.signalPhoto(buffImages);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogSignalPhoto());
-            setLog(genLogSignalPhoto());
-            imageGenerated = true;
+        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+        image.signalPhoto(buffImages);
+        EduPatternShowOn.updateLensPatternPattern(image, "");
+        //setLog(genLogSignalPhoto());
+        imageGenerated = true;
 
-            if (countLenOnPhoto % 2 == 0) {
-                magFrameLenon.dispose();
-                panelPattern.addMouseListener(new java.awt.event.MouseAdapter() {
-                    public void mouseClicked(java.awt.event.MouseEvent evt) {
-                        patternFrameDoubleClick.show();
-                    }
-                });
+        if (countLenOnPhoto % 2 == 0) {
+            magFrameLenon.dispose();
+            panelPattern.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    patternFrameDoubleClick.show();
+                }
+            });
 
-            } else {
-                magFrameLenon = new JFrame("1:1 Lens On");
-                URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                Toolkit kit = Toolkit.getDefaultToolkit();
-                Image img = kit.createImage(url);
-                magFrameLenon.setIconImage(img);
-                
-                EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
-                magFrameLenon.getContentPane().add(mag);
-                magFrameLenon.pack();
-                magFrameLenon.setLocation(new Point(568, 450));
-                magFrameLenon.setResizable(false);
-                magFrameLenon.setVisible(true);
-                magFrameLenon.setAlwaysOnTop(true);
-                magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            countLenOnPhoto--;
-                            button11LensOnPhoto.setText(labels.getString("btnLensOn"));
-                            magFrameLenon.dispose();
-                    }
-                });
-            }
+        } else {
+            magFrameLenon = new JFrame("1:1 Lens On");
+            URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Image img = kit.createImage(url);
+            magFrameLenon.setIconImage(img);
 
+            EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
+            magFrameLenon.getContentPane().add(mag);
+            magFrameLenon.pack();
+            magFrameLenon.setLocation(new Point(568, 450));
+            magFrameLenon.setResizable(false);
+            magFrameLenon.setVisible(true);
+            magFrameLenon.setAlwaysOnTop(true);
+            magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                        countLenOnPhoto--;
+                        button11LensOnPhoto.setText(labels.getString("btnLensOn"));
+                        magFrameLenon.dispose();
+                }
+            });
         }
 
     }//GEN-LAST:event_button11LensOnProcessingPhotoActionPerformed
 
     private void buttonSecondGenerateActionPerformedProcessingPhoto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondGenerateActionPerformedCyllin
         actionTag = "ProcessingPhoto";
-        if (parseArguments()) {
-            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice[] devices = env.getScreenDevices();
-            if (devices.length == 1) {
-                countSecondDisplayPhoto--;
-                JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                // image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel);
-                image.signalPhoto(buffImages);
-                EduPatternShowOn.updateLensPatternPattern(image, genLogSignalPhoto());
-                setLog(genLogSignalPhoto());
-                //EduPatternTest.updateLensPatternPattern(image, genLog());
-                imageGenerated = true;
-                if (countSecondDisplayPhoto % 2 == 0) {
-                    patternFrameDoubleClick.dispose();
-                    patternFrame.dispose();
-                }
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] devices = env.getScreenDevices();
+        if (devices.length == 1) {
+            countSecondDisplayPhoto--;
+            JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+            image.signalPhoto(buffImages);
+            EduPatternShowOn.updateLensPatternPattern(image, "");
+            //setLog(genLogSignalPhoto());
+            imageGenerated = true;
+            if (countSecondDisplayPhoto % 2 == 0) {
+                patternFrameDoubleClick.dispose();
+                patternFrame.dispose();
             }
         }
     }
     
-    private void b_openFileActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private void openFileActionPerformed(java.awt.event.ActionEvent evt) {
         int returnVal = openFile.showOpenDialog(this);
         if (returnVal == openFile.APPROVE_OPTION) {
             File file = openFile.getSelectedFile();
@@ -319,42 +304,17 @@ public class SignalPhotoPanel extends OpticsPane{
             } else {
                 try {
                     buffImages = ImageIO.read(new File(file.getAbsolutePath()));
-                    //String ext = File.probeContentType(file.getAbsolutePath());
+                    String filePath = file.getAbsolutePath();
                     PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
                     image.signalPhoto(buffImages);
-                    EduPatternShowOn.updateLensPatternPattern(image, genLogSignalPhoto());
-                    setLog(genLogSignalPhoto());
+                    EduPatternShowOn.updateLensPatternPattern(image, "");
+                    setLog(filePath);
                     imageGenerated = true;
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    //System.out.println("problem accessing file" + file.getAbsolutePath());
                 }
             }
-        } else {
-            //System.out.println("File access cancelled by user.");
         }
-
-    }
-    
-    
-    private String genLogSignalPhoto() {
-        return String.format(logmessageSignalPhoto, Double.toString(buffImages.getWidth()), Double.toString(buffImages.getHeight()));
-    }
-    
-    private boolean parseArguments() {
-        boolean ret = false;
-        try {          
-           
-            
-            ret = true;
-            
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, warnings);
-            //textXpos.setText(String.valueOf(this.yoff));
-            //textYpos.setText(String.valueOf(this.yoff));
-            textFocal.setText(String.valueOf(this.focal));
-        }
-        return ret;
     }
     
     public void setLog(String msg) {
