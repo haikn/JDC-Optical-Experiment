@@ -56,9 +56,9 @@ public class EduLensOn11 extends JComponent implements MouseMotionListener {
             return;
         }
         PatternImage image = ((EduPatternJPanel) comp).pimage;
-        //Pattern area size: 505x420 (size main view)
-        int patternAreaWidth = 563;
-        int patternAreaHeight = 368;
+        int patternAreaWidth = comp.getBounds().width;
+        int patternAreaHeight = comp.getBounds().height;
+        
         int fullScreenWidth = PatternImage.width;
         int fullScreenHeight = PatternImage.height;
 
