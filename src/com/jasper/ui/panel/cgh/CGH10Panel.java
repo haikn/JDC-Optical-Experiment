@@ -31,6 +31,7 @@ import static com.jasper.ui.EduPatternShowOn.patternFrame;
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import com.jasper.utils.Constant;
 import com.jasper.utils.Utils;
+import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -293,18 +294,27 @@ public class CGH10Panel extends OpticsPane{
             });
 
         } else {
-            magFrameLenon = new JFrame("1:1 Lens On");
+            Robot robot;
+                try {
+                    robot = new Robot();
+                    robot.mouseMove(Constant.LENS_ON_MOUSE_X, Constant.LENS_ON_MOUSE_Y);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            magFrameLenon = new JFrame(labels.getString("btnLensOn"));
             URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
             Toolkit kit = Toolkit.getDefaultToolkit();
             Image img = kit.createImage(url);
             magFrameLenon.setIconImage(img);
 
-            EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
+            EduLensOn11 mag = new EduLensOn11(panelPattern, 
+                    new Dimension(Constant.LENS_ON_PANEL_WIDTH, Constant.LENS_ON_PANEL_HEIGHT));
             magFrameLenon.getContentPane().add(mag);
             magFrameLenon.pack();
-            magFrameLenon.setLocation(new Point(505, 420));
-                magFrameLenon.setResizable(false);
+            magFrameLenon.setLocation(new Point(Constant.LENS_ON_LOCAL_X, Constant.LENS_ON_LOCAL_Y));
+            magFrameLenon.setResizable(false);
             magFrameLenon.setVisible(true);
+            magFrameLenon.setAlwaysOnTop(true);
             magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                 public void windowClosing(java.awt.event.WindowEvent e) {

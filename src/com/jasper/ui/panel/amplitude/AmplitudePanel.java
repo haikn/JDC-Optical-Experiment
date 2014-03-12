@@ -29,6 +29,8 @@ import org.jdesktop.beansbinding.BindingGroup;
 
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
+import com.jasper.utils.Constant;
+import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -159,7 +161,7 @@ public class AmplitudePanel extends OpticsPane{
         panelButtonExp2Layout.setVerticalGroup(
                 panelButtonExp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonExp2Layout.createSequentialGroup()
-                .addGap(161, 161, 161)
+                .addGap(204, 204, 204)
                 .addGroup(panelButtonExp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -279,19 +281,27 @@ public class AmplitudePanel extends OpticsPane{
             });
 
         } else {
-            magFrameLenon = new JFrame("1:1 Lens On");
+            Robot robot;
+                try {
+                    robot = new Robot();
+                    robot.mouseMove(Constant.LENS_ON_MOUSE_X, Constant.LENS_ON_MOUSE_Y);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            magFrameLenon = new JFrame(labels.getString("btnLensOn"));
             URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
             Toolkit kit = Toolkit.getDefaultToolkit();
             Image img = kit.createImage(url);
             magFrameLenon.setIconImage(img);
 
-            //EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120), 2.0);
-            EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
+            EduLensOn11 mag = new EduLensOn11(panelPattern, 
+                    new Dimension(Constant.LENS_ON_PANEL_WIDTH, Constant.LENS_ON_PANEL_HEIGHT));
             magFrameLenon.getContentPane().add(mag);
             magFrameLenon.pack();
-            magFrameLenon.setLocation(new Point(505, 420));
+            magFrameLenon.setLocation(new Point(Constant.LENS_ON_LOCAL_X, Constant.LENS_ON_LOCAL_Y));
             magFrameLenon.setResizable(false);
             magFrameLenon.setVisible(true);
+            magFrameLenon.setAlwaysOnTop(true);
             magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                 public void windowClosing(java.awt.event.WindowEvent e) {

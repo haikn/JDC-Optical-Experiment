@@ -33,6 +33,8 @@ import org.jdesktop.beansbinding.BindingGroup;
 
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
+import com.jasper.utils.Constant;
+import java.awt.Robot;
 import javax.swing.JTextArea;
 /**
  *
@@ -377,14 +379,14 @@ public class TalbotPanel extends OpticsPane{
                 .addGap(20, 20, 20)
                 .addComponent(button11LensOntalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(buttonSecondDisplaytalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonSecondDisplaytalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(190, Short.MAX_VALUE)
                 )
                 )));
         panelButtonTalbotLayout.setVerticalGroup(
                 panelButtonTalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonTalbotLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addGap(15, 15, 15)
                 .addGroup(panelButtonTalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonSecondDisplaytalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(button11LensOntalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -393,6 +395,7 @@ public class TalbotPanel extends OpticsPane{
         
         javax.swing.GroupLayout jPaneltalbotLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(jPaneltalbotLayout);
+        
         jPaneltalbotLayout.setHorizontalGroup(
                 jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPaneltalbotLayout.createSequentialGroup()
@@ -405,98 +408,119 @@ public class TalbotPanel extends OpticsPane{
                 .addGroup(jPaneltalbotLayout.createSequentialGroup()
                 .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPaneltalbotLayout.createSequentialGroup()
-                .addComponent(lblPosXTalbot)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                .addComponent(text_position_talbot_x, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPaneltalbotLayout.createSequentialGroup()
                 .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblPosYTalbot)
-                .addComponent(lblSpacingtalbot))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(text_talbot_spacing, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(text_position_talbot_y))))
-                .addGap(17, 17, 17)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(s_talbot_pos_y, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(s_talbot_positionx, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(s_talbot_spacing, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)))
                 .addGroup(jPaneltalbotLayout.createSequentialGroup()
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblHeightYTalbot)
+                    
+                    .addComponent(lblHeightXTalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(text_height_talbot_x, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(s_talbot_height_x, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    
+                )
                 .addGroup(jPaneltalbotLayout.createSequentialGroup()
-                .addComponent(lblHeightXTalbot)
-                .addGap(33, 33, 33)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(text_width_talbot_y, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(text_height_talbot_x, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                .addComponent(s_talbot_height_x, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(s_talbot_width_y, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    
+                    .addComponent(lblHeightYTalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(text_width_talbot_y, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(s_talbot_width_y, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
                 .addGroup(jPaneltalbotLayout.createSequentialGroup()
-                .addComponent(lblRotationtalbot)
-                .addGap(27, 27, 27)
-                .addComponent(text_rotation_talbot, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17)
-                .addComponent(s_talbot_rotation, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblRotationtalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(text_rotation_talbot, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(s_talbot_rotation, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
                 .addGroup(jPaneltalbotLayout.createSequentialGroup()
-                .addComponent(jLabelGraytalbot)
-                .addGap(17, 17, 17)
-                .addComponent(text_talbot_gray, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addComponent(s_talbot_gray, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                )));
+                    .addComponent(lblPosXTalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(text_position_talbot_x, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(s_talbot_positionx, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(jPaneltalbotLayout.createSequentialGroup()
+                    .addComponent(lblPosYTalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(text_position_talbot_y, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(s_talbot_pos_y, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(jPaneltalbotLayout.createSequentialGroup()
+                    .addComponent(lblSpacingtalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(text_talbot_spacing, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(s_talbot_spacing, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+
+                )
+                .addGroup(jPaneltalbotLayout.createSequentialGroup()
+                 
+                    .addComponent(jLabelGraytalbot, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(text_talbot_gray, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(s_talbot_gray, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                 
+                )
+                )))))))));        
+
         jPaneltalbotLayout.setVerticalGroup(
                 jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPaneltalbotLayout.createSequentialGroup()
-                .addGap(8, 8, 8))
+                    .addGap(18, 18, 18))
                 .addGroup(jPaneltalbotLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addGroup(jPaneltalbotLayout.createSequentialGroup()
-                .addComponent(s_talbot_height_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5))
-                .addGroup(jPaneltalbotLayout.createSequentialGroup()
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(text_height_talbot_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblHeightXTalbot))
-                .addGap(6, 6, 6)))
-                .addGap(2, 2, 2)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(text_width_talbot_y, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblHeightYTalbot))
-                .addComponent(s_talbot_width_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(text_rotation_talbot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblRotationtalbot))
-                .addComponent(s_talbot_rotation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(s_talbot_positionx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(text_position_talbot_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblPosXTalbot)))
-                .addGap(10, 10, 10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(text_position_talbot_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblPosYTalbot)
-                .addComponent(s_talbot_pos_y, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(text_talbot_spacing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(s_talbot_spacing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblSpacingtalbot))
-                .addGap(8, 8, 8)
-                .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(text_talbot_gray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(s_talbot_gray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabelGraytalbot)).addGap(0, 0, 0)));
+                    .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    	.addGap(35, 35, 35)
+                    	.addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblHeightXTalbot)
+                        .addComponent(text_height_talbot_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(s_talbot_height_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                    )
+                    .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    	.addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)	
+                        .addComponent(lblHeightYTalbot)
+                        .addComponent(text_width_talbot_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(s_talbot_width_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                    )
+                    .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    	.addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblRotationtalbot)
+                        .addComponent(text_rotation_talbot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(s_talbot_rotation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                    )
+                    .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    	.addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblPosXTalbot)
+                        .addComponent(text_position_talbot_x, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(s_talbot_positionx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                    )
+                    .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    	.addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblPosYTalbot)
+                        .addComponent(text_position_talbot_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(s_talbot_pos_y, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                    )
+                    .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    	.addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblSpacingtalbot)
+                        .addComponent(text_talbot_spacing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(s_talbot_spacing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                    )
+                    .addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    	.addGroup(jPaneltalbotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabelGraytalbot)
+                        .addComponent(text_talbot_gray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(s_talbot_gray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                    )));
     }
     
     public JPanel getPanel() {
@@ -573,20 +597,28 @@ public class TalbotPanel extends OpticsPane{
                     }
                 });
             } else {
-                magFrameLenon = new JFrame("1:1 Lens On");
-                URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                Toolkit kit = Toolkit.getDefaultToolkit();
-                Image img = kit.createImage(url);
-                magFrameLenon.setIconImage(img);
-                
-                EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
-                magFrameLenon.getContentPane().add(mag);
-                magFrameLenon.pack();
-                magFrameLenon.setLocation(new Point(568, 450));
-                magFrameLenon.setResizable(false);
-                magFrameLenon.setVisible(true);
-                magFrameLenon.setAlwaysOnTop(true);
-                magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                Robot robot;
+                try {
+                    robot = new Robot();
+                    robot.mouseMove(Constant.LENS_ON_MOUSE_X, Constant.LENS_ON_MOUSE_Y);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            magFrameLenon = new JFrame(labels.getString("btnLensOn"));
+            URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Image img = kit.createImage(url);
+            magFrameLenon.setIconImage(img);
+
+            EduLensOn11 mag = new EduLensOn11(panelPattern, 
+                    new Dimension(Constant.LENS_ON_PANEL_WIDTH, Constant.LENS_ON_PANEL_HEIGHT));
+            magFrameLenon.getContentPane().add(mag);
+            magFrameLenon.pack();
+            magFrameLenon.setLocation(new Point(Constant.LENS_ON_LOCAL_X, Constant.LENS_ON_LOCAL_Y));
+            magFrameLenon.setResizable(false);
+            magFrameLenon.setVisible(true);
+            magFrameLenon.setAlwaysOnTop(true);
+            magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                             countLenOnTalbot--;
