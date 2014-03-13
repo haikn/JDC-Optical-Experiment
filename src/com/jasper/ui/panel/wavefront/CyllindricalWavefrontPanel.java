@@ -231,7 +231,7 @@ public class CyllindricalWavefrontPanel extends OpticsPane{
         panelCyllinLayout.setVerticalGroup(
                 panelCyllinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelCyllinLayout.createSequentialGroup()
-                .addGap(105, 105, 105)
+                .addGap(118, 118, 118)
                 .addGroup(panelCyllinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonCyllinDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonCyllinLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

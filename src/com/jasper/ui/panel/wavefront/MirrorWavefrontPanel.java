@@ -198,7 +198,7 @@ public class MirrorWavefrontPanel extends OpticsPane{
         panelMirrorLayout.setVerticalGroup(
                 panelMirrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelMirrorLayout.createSequentialGroup()
-                .addGap(105, 105, 105)
+                .addGap(118, 118, 118)
                 .addGroup(panelMirrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonMirrorDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonMirrorLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

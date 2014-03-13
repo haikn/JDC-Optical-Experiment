@@ -161,7 +161,7 @@ public class TalbotPhotoPanel extends OpticsPane{
         panelButtonTalbotPhotoLayout.setVerticalGroup(
                 panelButtonTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonTalbotPhotoLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addGap(11, 11, 11)
                 .addGroup(panelButtonTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonSecondTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(button11LensOnTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
