@@ -10,32 +10,33 @@
 package com.jasper.ui.panel.talbot;
 
 import com.jasper.core.OpticsPane;
-import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import javax.swing.JOptionPane;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import javax.imageio.ImageIO;
-import java.io.IOException;
-import java.io.File;
-import javax.swing.JOptionPane;
 import com.jasper.core.PatternImage;
 import com.jasper.ui.EduLensOn11;
 import com.jasper.ui.EduPatternJPanel;
 import com.jasper.ui.EduPatternShowOn;
-import java.awt.image.BufferedImage;
 import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.jdesktop.beansbinding.BindingGroup;
 
-import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
+import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import com.jasper.utils.Constant;
-import java.awt.Robot;
-import javax.swing.JTextArea;
+import com.jasper.utils.Utils;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -44,30 +45,34 @@ import javax.swing.JTextArea;
 public class TalbotPhotoPanel extends OpticsPane{
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
-    private String actionTag = "Len";
     
-    private JPanel panelPattern;
-    private JFrame magFrameLenon;
-    private double xoff = 0.0, yoff = 0.0, focal = 0.0;
+    private javax.swing.JFileChooser openFile;
+    private javax.swing.JButton buttonLensOn;
+    private javax.swing.JButton buttonDisplaySecondOn;
+    private javax.swing.JButton buttonGeneral;
+    private javax.swing.JButton buttonOpenFile;
+    private javax.swing.JLabel lblPleaseSelect;
+    private javax.swing.JLabel lblFilePath;
+    private File fileLog;
+    // Textbox Log
+    private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JTextArea txtLog;
+    private String getText;
     
-    private javax.swing.JButton buttonOpenFileTalbotPhoto;
-    private javax.swing.JLabel lblPleaseSelectTalbotPhoto;
-    private javax.swing.JButton buttonSecondTalbotPhoto;
-    private javax.swing.JButton button11LensOnTalbotPhoto;
-    private javax.swing.JButton buttonGeneralTalbotPhoto;
     private javax.swing.JPanel panel;
     private javax.swing.JPanel panelButton;
-    private javax.swing.JTextArea txtLogArea;
-    static String logmessageTalbotPhoto = "Talbot photo: widht=%s height=%s";
-    private static BufferedImage buffImagesTalbotPhoto = null;
-
-    private javax.swing.JFileChooser openFile;
-    private int countLenOnTalbotPhoto = 1;
-    private int countSecondDisplayTalbotPhoto = 1;
     
-     public TalbotPhotoPanel(ResourceBundle labels, BindingGroup bindingGroup,JPanel panelPattern) {
+    private static BufferedImage buffImages;
+    private JPanel panelPattern;
+    private JFrame magFrameLenon;
+    
+    private int countLenOn = 1;
+    private int countSecondDisplay = 1;
+    
+    static String logMessage = "Amplitude : image=%s";
+    
+    public TalbotPhotoPanel(ResourceBundle labels, BindingGroup bindingGroup,JPanel panelPattern) {
         this.labels = labels;
-        this.txtLogArea = new javax.swing.JTextArea();
         this.panelPattern = panelPattern;
         image1 = ((EduPatternJPanel) panelPattern).pimage;
         
@@ -75,144 +80,161 @@ public class TalbotPhotoPanel extends OpticsPane{
     }
     
     private void initComponents(BindingGroup bindingGroup) {
-        panel = new javax.swing.JPanel();
         panelButton = new javax.swing.JPanel();
-        
+        panel = new javax.swing.JPanel();
         openFile = new javax.swing.JFileChooser();
-        buttonOpenFileTalbotPhoto = new javax.swing.JButton();
-        lblPleaseSelectTalbotPhoto = new javax.swing.JLabel();
-        buttonSecondTalbotPhoto = new javax.swing.JButton();
-        button11LensOnTalbotPhoto = new javax.swing.JButton();
-        buttonGeneralTalbotPhoto = new javax.swing.JButton();
-        buttonOpenFileTalbotPhoto.setText("Browse...");
-        buttonOpenFileTalbotPhoto.addActionListener(new java.awt.event.ActionListener() {
+        buttonOpenFile = new javax.swing.JButton();
+        buttonGeneral = new javax.swing.JButton();
+        buttonLensOn = new javax.swing.JButton();
+        buttonDisplaySecondOn = new javax.swing.JButton();
+        lblPleaseSelect = new javax.swing.JLabel();
+        lblFilePath = new javax.swing.JLabel();
+        
+        buttonGeneral.setText(labels.getString("btnGenerate"));
+        buttonGeneral.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b_openFileActionPerformedTalbotPhoto(evt);
-            }
-        });
-        lblPleaseSelectTalbotPhoto.setText("Select the file to import.");
-
-        buttonSecondTalbotPhoto.setEnabled(false);
-        buttonSecondTalbotPhoto.setText(labels.getString("btnSecondDisplayOn"));
-        buttonSecondTalbotPhoto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (buffImagesTalbotPhoto != null) {
-                    buttonSecondGenerateActionPerformedTalbotPhoto(evt);
-                    countSecondDisplayTalbotPhoto++;
-                    if (countSecondDisplayTalbotPhoto % 2 == 0) {
-                        buttonSecondTalbotPhoto.setText(labels.getString("btnSecondDisplayOff"));
-                    } else {
-                        buttonSecondTalbotPhoto.setText(labels.getString("btnSecondDisplayOn"));
-                    }
+                if (buffImages != null) {
+                    buttonGenerateActionPerformed(evt);
                 } else {
                     JOptionPane.showMessageDialog(null, "Please import an images file!", "Failure", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        button11LensOnTalbotPhoto.setEnabled(false);
-        button11LensOnTalbotPhoto.setText(labels.getString("btnLensOn"));
-        button11LensOnTalbotPhoto.addActionListener(new java.awt.event.ActionListener() {
+        buttonLensOn.setEnabled(false);
+        buttonLensOn.setText(labels.getString("btnLensOn"));
+        buttonLensOn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (buffImagesTalbotPhoto != null) {
-                    button11LensOnTalbotPhotoActionPerformed(evt);
-                    countLenOnTalbotPhoto++;
-                    if (countLenOnTalbotPhoto % 2 == 0) {
-                        button11LensOnTalbotPhoto.setText(labels.getString("btnLensOff"));
+                if (buffImages != null) {
+                    button11LensOnActionPerformed(evt);
+                    countLenOn++;
+                    if (countLenOn % 2 == 0) {
+                        buttonLensOn.setText(labels.getString("btnLensOff"));
                         panelPattern.addMouseListener(new java.awt.event.MouseAdapter() {
                         public void mouseClicked(java.awt.event.MouseEvent evt) {
                             patternFrameDoubleClick.show();
                         }
                         });
                     } else {
-                        button11LensOnTalbotPhoto.setText(labels.getString("btnLensOn"));
+                        buttonLensOn.setText(labels.getString("btnLensOn"));
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please import an images file!", " Failure", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Please import an images file!", "Failure", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        buttonGeneralTalbotPhoto.setText(labels.getString("btnGenerate"));
-        buttonGeneralTalbotPhoto.addActionListener(new java.awt.event.ActionListener() {
+
+        buttonDisplaySecondOn.setEnabled(false);
+        buttonDisplaySecondOn.setText(labels.getString("btnSecondDisplayOn"));
+        buttonDisplaySecondOn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (buffImagesTalbotPhoto != null) {
-                    buttonGenerateActionPerformedTalbotPhoto(evt);
+                if (buffImages != null) {
+                    buttonSecondActionPerformed(evt);
+                    countSecondDisplay++;
+                    if (countSecondDisplay % 2 == 0) {
+                        buttonDisplaySecondOn.setText(labels.getString("btnSecondDisplayOff"));
+                    } else {
+                        buttonDisplaySecondOn.setText(labels.getString("btnSecondDisplayOn"));
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Please import an images file!", "Failure", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
         
-        javax.swing.GroupLayout panelButtonTalbotPhotoLayout = new javax.swing.GroupLayout(panelButton);
-        panelButton.setLayout(panelButtonTalbotPhotoLayout);
-        panelButtonTalbotPhotoLayout.setHorizontalGroup(
-                panelButtonTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelButtonTalbotPhotoLayout.createSequentialGroup()
-                .addGroup(panelButtonTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelButtonTalbotPhotoLayout.createSequentialGroup()
+        buttonOpenFile.setText("Browse...");
+        buttonOpenFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openFileActionPerformed(evt);
+            }
+        });
+        lblPleaseSelect.setText("Select the file to import.");
+        
+        lblFilePath.setText(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_TALBOT);
+        lblFilePath.setForeground(Color.blue);
+        lblFilePath.setFont(new Font("Arial", Font.PLAIN , 10));
+        
+        panelButton = new javax.swing.JPanel();
+        javax.swing.GroupLayout panelButtonCGH8Layout = new javax.swing.GroupLayout(panelButton);
+        panelButton.setLayout(panelButtonCGH8Layout);
+        panelButtonCGH8Layout.setHorizontalGroup(
+                panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelButtonCGH8Layout.createSequentialGroup()
+                .addGroup(panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelButtonCGH8Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(buttonGeneralTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(button11LensOnTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(buttonSecondTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(190, Short.MAX_VALUE)
                 )
                 )));
-        panelButtonTalbotPhotoLayout.setVerticalGroup(
-                panelButtonTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelButtonTalbotPhotoLayout.createSequentialGroup()
+        panelButtonCGH8Layout.setVerticalGroup(
+                panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelButtonCGH8Layout.createSequentialGroup()
                 .addGap(11, 11, 11)
-                .addGroup(panelButtonTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                .addComponent(buttonSecondTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(button11LensOnTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(buttonGeneralTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 ));
         
-        javax.swing.GroupLayout signalTalbotPhotoLayout = new javax.swing.GroupLayout(panel);
-        panel.setLayout(signalTalbotPhotoLayout);
-        signalTalbotPhotoLayout.setHorizontalGroup(
-                signalTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(signalTalbotPhotoLayout.createSequentialGroup()
-                .addContainerGap()
+        scrollPane = new javax.swing.JScrollPane();
+        txtLog = new javax.swing.JTextArea();
+        getText = Utils.readFile(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_TALBOT);
+        
+        txtLog.setColumns(10);
+        txtLog.setRows(4);
+        txtLog.setText(getText);
+        scrollPane.setViewportView(txtLog);
+        
+        javax.swing.GroupLayout CGH8Layout = new javax.swing.GroupLayout(panel);
+        panel.setLayout(CGH8Layout);
+        CGH8Layout.setHorizontalGroup(
+            CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CGH8Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addGroup(signalTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(signalTalbotPhotoLayout.createSequentialGroup()
-                .addComponent(buttonOpenFileTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addComponent(lblPleaseSelectTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(288, 288, 288)
-                ))));
-        signalTalbotPhotoLayout.setVerticalGroup(
-                signalTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, signalTalbotPhotoLayout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addGroup(signalTalbotPhotoLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(signalTalbotPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(buttonOpenFileTalbotPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblPleaseSelectTalbotPhoto))
-                .addGap(0, 0, 0)
-                )));
+                .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(lblPleaseSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+        CGH8Layout.setVerticalGroup(
+            CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CGH8Layout.createSequentialGroup()
+                .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(CGH8Layout.createSequentialGroup()
+                        .addGap(95, 95, 95)
+                        .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPleaseSelect)))
+                    .addGroup(CGH8Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(lblFilePath)
+                        .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(7, 7, 7))))
+        );
     }
     
-    public JPanel getPanel() {
+    public JPanel getPanel(){
         return panel;
     }
     
-    public JPanel getPanelButton() {
+    public JPanel getPanelButton(){
         return panelButton;
     }
     
-    public JTextArea getLogArea() {
-        return txtLogArea;
-    }
-    
-     private void b_openFileActionPerformedTalbotPhoto(java.awt.event.ActionEvent evt) {
+    private void openFileActionPerformed(java.awt.event.ActionEvent evt) {
         int returnVal = openFile.showOpenDialog(this);
         if (returnVal == openFile.APPROVE_OPTION) {
-            File file = openFile.getSelectedFile();
+            fileLog = openFile.getSelectedFile();
             String ext = "";
-            String extension = file.getName();
+            String extension = fileLog.getName();
             extension = extension.toLowerCase();
             if (extension.contains("jpg")) {
                 ext = ".jpg";
@@ -236,13 +258,14 @@ public class TalbotPhotoPanel extends OpticsPane{
                 JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
-                    buffImagesTalbotPhoto = ImageIO.read(new File(file.getAbsolutePath()));
-                    //String ext = File.probeContentType(file.getAbsolutePath());
+                    buffImages = ImageIO.read(new File(fileLog.getAbsolutePath()));
+                    String fileName = fileLog.getName();
                     PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                    //  image.updatePhaseRetarderParameter(zoom, grayLevel);
-                    image.paintTalbotPhoto(buffImagesTalbotPhoto);
-                    EduPatternShowOn.updateLensPatternPattern(image, genLogTalbotPhoto());
-                    setLog(genLogTalbotPhoto());
+                    image.paintTalbotPhoto(buffImages);
+                    EduPatternShowOn.updateLensPatternPattern(image, "");
+                    setLog(Constant.TEXT_FORMAT_CGH + Constant.LOG_NAME + fileName + "\n"
+                            + Constant.LOG_DATE + Utils.dateNow() + "\n"
+                            + Constant.TEXT_FORMAT_CGH );
                     imageGenerated = true;
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -252,138 +275,98 @@ public class TalbotPhotoPanel extends OpticsPane{
         } else {
             //System.out.println("File access cancelled by user.");
         }
+
     }
-     
-      private void buttonSecondGenerateActionPerformedTalbotPhoto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondGenerateActionPerformedTalbotPhoto
-        actionTag = "TalbotPhoto";
-        if (parseArguments()) {
-            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice[] devices = env.getScreenDevices();
-            if (devices.length == 1) {
-                countSecondDisplayTalbotPhoto--;
-                JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                // image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel);
-                image.paintTalbotPhoto(buffImagesTalbotPhoto);
-                EduPatternShowOn.updateLensPatternPattern(image, genLogTalbotPhoto());
-                setLog(genLogTalbotPhoto());
-                //EduPatternTest.updateLensPatternPattern(image, genLog());
-                imageGenerated = true;
-                if (countSecondDisplayTalbotPhoto% 2 == 0) {
-                    patternFrameDoubleClick.dispose();
-                    patternFrame.dispose();
+    
+    private void buttonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed1
+        buttonLensOn.setEnabled(true);
+        buttonDisplaySecondOn.setEnabled(true);
+
+        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+        image.paintTalbotPhoto(buffImages);
+        EduPatternShowOn.updateLensPatternPattern(image, "");
+        imageGenerated = true;
+    }
+
+    private void button11LensOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed1
+        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+        image.paintTalbotPhoto(buffImages);
+        EduPatternShowOn.updateLensPatternPattern(image, "");
+        imageGenerated = true;
+
+        if (countLenOn % 2 == 0) {
+            magFrameLenon.dispose();
+            panelPattern.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    patternFrameDoubleClick.show();
                 }
-            }
-        }
-    }
-      
-      private void buttonGenerateActionPerformedTalbotPhoto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerateActionPerformedTalbotPhoto
-        actionTag = "TalbotPhoto";
-        if (parseArguments()) {
-             button11LensOnTalbotPhoto.setEnabled(true);
-            buttonSecondTalbotPhoto.setEnabled(true);
+            });
 
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.paintTalbotPhoto(buffImagesTalbotPhoto);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogTalbotPhoto());
-            setLog(genLogTalbotPhoto());
-            imageGenerated = true;
-        }
-
-    }
-
-    private void button11LensOnTalbotPhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button11LensOnTalbotPhotoActionPerformed
-        actionTag = "TalbotPhoto";
-        if (parseArguments()) {
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.paintTalbotPhoto(buffImagesTalbotPhoto);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogTalbotPhoto());
-            setLog(genLogTalbotPhoto());
-            imageGenerated = true;
-
-            if (countLenOnTalbotPhoto % 2 == 0) {
-                magFrameLenon.dispose();
-                panelPattern.addMouseListener(new java.awt.event.MouseAdapter() {
-                    public void mouseClicked(java.awt.event.MouseEvent evt) {
-                        patternFrameDoubleClick.show();
-                    }
-                });
-
-            } else {
-                Robot robot;
-                try {
-                    robot = new Robot();
-                    robot.mouseMove(Constant.LENS_ON_MOUSE_X, Constant.LENS_ON_MOUSE_Y);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            magFrameLenon = new JFrame(labels.getString("btnLensOn"));
+        } else {
+            magFrameLenon = new JFrame("1:1 Lens On");
             URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
             Toolkit kit = Toolkit.getDefaultToolkit();
             Image img = kit.createImage(url);
             magFrameLenon.setIconImage(img);
 
-            EduLensOn11 mag = new EduLensOn11(panelPattern, 
-                    new Dimension(Constant.LENS_ON_PANEL_WIDTH, Constant.LENS_ON_PANEL_HEIGHT));
+            EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
             magFrameLenon.getContentPane().add(mag);
             magFrameLenon.pack();
-            magFrameLenon.setLocation(new Point(Constant.LENS_ON_LOCAL_X, Constant.LENS_ON_LOCAL_Y));
-            magFrameLenon.setResizable(false);
+            magFrameLenon.setLocation(new Point(505, 420));
+                magFrameLenon.setResizable(false);
             magFrameLenon.setVisible(true);
-            magFrameLenon.setAlwaysOnTop(true);
             magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            countLenOnTalbotPhoto--;
-                            button11LensOnTalbotPhoto.setText(labels.getString("btnLensOn"));
-                            magFrameLenon.dispose();
-                    }
-                });
-            }
-
+            magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                        countLenOn--;
+                        buttonLensOn.setText(labels.getString("btnLensOn"));
+                        magFrameLenon.dispose();
+                }
+            });
         }
 
     }//GEN-LAST:event_button11LensOnTalbotPhotoActionPerformed
-    
-     
-     private String genLogTalbotPhoto() {
-        return String.format(logmessageTalbotPhoto, Double.toString(buffImagesTalbotPhoto.getWidth()), Double.toString(buffImagesTalbotPhoto.getHeight()));
-    }
-    
-     private boolean parseArguments() {
-        boolean ret = false;
-        try {          
-           
-           
-            ret = true;
-            
-        } catch (Exception e) {
+
+    private void buttonSecondActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed10
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] devices = env.getScreenDevices();
+        if (devices.length == 1) {
+            countSecondDisplay--;
+            JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+            image.paintTalbotPhoto(buffImages);
+            EduPatternShowOn.updatePatternSecondDisplay(image, "");
+            imageGenerated = true;
+            if (countSecondDisplay % 2 == 0) {
+                patternFrameDoubleClick.dispose();
+                patternFrame.dispose();
+            }
         }
-        return ret;
     }
     
     public void setLog(String msg) {
-        txtLogArea.append(msg + System.getProperty("line.separator"));
-    }
-    
-     @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
+        String filePath;
+        try {
+            txtLog.append(msg);
+            txtLog.setCaretPosition(txtLog.getText().length() - 1);
+            filePath = Constant.FILE_PATH + File.separator + Constant.FILE_NAME_TALBOT;
+            // Check file logs exists
+            if(Utils.checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_TALBOT)) {
+                Utils.writeFile(filePath, msg, false);
+            } else {
+                Utils.createDirectory(File.separator + Constant.FILE_NAME_TALBOT);
+                Utils.writeFile(filePath, msg, false);
+            }
+        } catch (Exception e) {
         }
-        EduPatternShowOn.updatePatternScreen(image, "");
+    }
+
+    @Override
+    public void updatePatternScreen() {
     }
 
     @Override
     public void updateRegenerate() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

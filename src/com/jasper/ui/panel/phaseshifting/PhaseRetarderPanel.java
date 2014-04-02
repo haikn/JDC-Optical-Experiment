@@ -175,7 +175,7 @@ public class PhaseRetarderPanel extends OpticsPane{
         panelButtonPhaseLayout.setVerticalGroup(
                 panelButtonPhaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonPhaseLayout.createSequentialGroup()
-                .addGap(160, 160, 160)
+                .addGap(147, 147, 147)
                 .addGroup(panelButtonPhaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonSecondPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(button11LensOnPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

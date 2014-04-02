@@ -99,7 +99,10 @@ public class Utils {
         File fileCGH8;
         File fileCGH10;
         
-        File filExp1;
+        File fileAmplitude;
+        File fileSignal;
+        File fileTalbot;
+        
         File fileDirectory;
         try {
             fileDirectory = new File(Constant.FILE_PATH);
@@ -133,9 +136,17 @@ public class Utils {
                 fileCGH10 = new File(Constant.FILE_PATH, Constant.FILE_NAME_CGH10);
                 fileCGH10.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_EXP1)) {
-                filExp1 = new File(Constant.FILE_PATH, Constant.FILE_NAME_EXP1);
-                filExp1.createNewFile();
+            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_AMPLITUDE)) {
+                fileAmplitude = new File(Constant.FILE_PATH, Constant.FILE_NAME_AMPLITUDE);
+                fileAmplitude.createNewFile();
+            }
+            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_SIGNAL)) {
+                fileSignal = new File(Constant.FILE_PATH, Constant.FILE_NAME_SIGNAL);
+                fileSignal.createNewFile();
+            }
+            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_TALBOT)) {
+                fileTalbot = new File(Constant.FILE_PATH, Constant.FILE_NAME_TALBOT);
+                fileTalbot.createNewFile();
             }
             
             

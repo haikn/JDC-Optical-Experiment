@@ -99,9 +99,9 @@ public class PatternImage {
     public Dimension rectSize = new Dimension();
     public int zoom_layout = 80;
     public int action = 0;
-    // Calibrationn
-    private double xoffCalibration;
-    private double yoffCalibration;
+    // Beam  Shifting
+    private double xoffBeamShifting;
+    private double yoffBeamShifting;
     // Import file
     private double k;
     private double r;
@@ -244,9 +244,9 @@ public class PatternImage {
         title = "cylindrical " + xoff + " " + angle + " " + focal;
     }
 
-    public void updateCalibrationParameter(double xoff, double yoff) {
-        this.xoffCalibration = xoff;
-        this.yoffCalibration = yoff;
+    public void updateBeamShiftingParameter(double xoff, double yoff) {
+        this.xoffBeamShifting = xoff;
+        this.yoffBeamShifting = yoff;
         title = "calibration " + xoff + " " + yoff;
     }
 
@@ -554,14 +554,14 @@ public class PatternImage {
 
     }
 
-    public void paintCalibration() {
+    public void paintBeamShifting() {
         double[][] cHGPattern;
         WritableRaster raster = canvas.getRaster();
         double[] iArray = new double[1];
         double phase, x, y;
         //phy and theta uses "radian"
-        double phy = Math.toRadians(xoffCalibration);
-        double theta = Math.toRadians(yoffCalibration);
+        double phy = Math.toRadians(xoffBeamShifting);
+        double theta = Math.toRadians(yoffBeamShifting);
 
         double xm = Math.sin(phy) * Math.cos(theta);
         double ym = Math.sin(phy) * Math.sin(theta);
@@ -1291,6 +1291,31 @@ public class PatternImage {
                 raster.setPixel(j, i, iArray);
             }
         }
+        buferPattern = compute(canvas);
+        flag = 1;
+        tuningFlag = true;
+    }
+    
+    public void dynamic(BufferedImage buffImg) {
+
+        double scale = 1.0;
+        // scale = d_zoom / 100.0D;
+        //buffImg = buffImg.gets
+        buffImg = PatternImage.resizeImage(buffImg, buffImg.getType(), 1920, 1080);
+        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
+        g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        double canvasX = canvas.getWidth() / 2;
+        double canvasY = canvas.getHeight() / 2;
+        int imageWidth = buffImg.getWidth();
+        int imageHeight = buffImg.getHeight();
+        double x = (scale * imageWidth) / 2;
+        double y = (scale * imageHeight) / 2;
+        AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
+        at.scale(scale, scale);
+        /// AffineTransform at = AffineTransform.getScaleInstance(1920, 1080);
+        g2.drawRenderedImage(buffImg, at);
         buferPattern = compute(canvas);
         flag = 1;
         tuningFlag = true;

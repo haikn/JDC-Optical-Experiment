@@ -214,7 +214,7 @@ public class EduControlerPattern extends OpticsPane {
         // Beam Shifting tab
         beamShiftingPanel = new BeamShiftingPanel(labels, bindingGroup, panelPattern, tabbedControl);
         // Import Formula tab
-        importFormulaPanel = new ImportFormulaPanel(labels, bindingGroup, panelPattern, tabbedControl);
+        //importFormulaPanel = new ImportFormulaPanel(labels, bindingGroup, panelPattern, tabbedControl);
         
         buttonPanel = new javax.swing.JPanel();
         tabbedPaneOptics.hide();
@@ -256,7 +256,7 @@ public class EduControlerPattern extends OpticsPane {
         // BeamShifting tab
         tabbedControl.addTab(labels.getString("tabBeamShifting"), beamShiftingPanel.getPanel());
         // Import formula tab
-        tabbedControl.addTab(labels.getString("tabImportFormula"), importFormulaPanel.getPanel());
+        //tabbedControl.addTab(labels.getString("tabImportFormula"), importFormulaPanel.getPanel());
         
         tabbedControl.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -313,7 +313,7 @@ public class EduControlerPattern extends OpticsPane {
                         jScrollDes.setViewportView(desMicroscope);
                         tabbedDesLog.addTab(labels.getString("tabDescription"), jScrollDes);
                         
-                        jScrollPane2.setViewportView(amplitudePanel.getLogArea());
+                        //jScrollPane2.setViewportView(amplitudePanel.getLogArea());
                         tabbedDesLog.addTab("Log", jScrollPane2);
 
                         lblDiagram.setIcon(new ImageIcon(getClass().getResource("/resources/diagram/exp_1_2_3.png")));
@@ -1249,7 +1249,7 @@ public class EduControlerPattern extends OpticsPane {
         jScrollDes.setViewportView(desMicroscope);
         tabbedDesLog.addTab("Description", jScrollDes);
         
-        jScrollPane2.setViewportView(amplitudePanel.getLogArea());
+        //jScrollPane2.setViewportView(amplitudePanel.getLogArea());
         tabbedDesLog.addTab("Log", jScrollPane2);
 
         lblDiagram.setIcon(new ImageIcon(getClass().getResource("/resources/diagram/exp_1_2_3.png")));
@@ -1357,7 +1357,7 @@ public class EduControlerPattern extends OpticsPane {
                         buttonPanel.removeAll();
                         buttonPanel.add(amplitudePanel.getPanelButton());
                         // log tab
-                        jScrollPane2.setViewportView(amplitudePanel.getLogArea());
+                        //jScrollPane2.setViewportView(amplitudePanel.getLogArea());
                         tabbedDesLog.addTab("Log", jScrollPane2);
                     }
                 }
@@ -1505,7 +1505,7 @@ public class EduControlerPattern extends OpticsPane {
                         buttonPanel.removeAll();
                         buttonPanel.add(signalPhotoPanel.getPanelButton());
                         // log tab
-                        jScrollPane2.setViewportView(signalPhotoPanel.getLogArea());
+                        //jScrollPane2.setViewportView(signalPhotoPanel.getLogArea());
                         tabbedDesLog.addTab("Log", jScrollPane2);
                     }
                 }
@@ -1599,7 +1599,7 @@ public class EduControlerPattern extends OpticsPane {
                         buttonPanel.add(talbotPhotoPanel.getPanelButton());
                         // log tab
                         jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
-                        jScrollPane2.setViewportView(talbotPhotoPanel.getLogArea());
+                        //jScrollPane2.setViewportView(talbotPhotoPanel.getLogArea());
                     }
                 }
                 
