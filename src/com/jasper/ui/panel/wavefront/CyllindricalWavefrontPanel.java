@@ -438,9 +438,12 @@ public class CyllindricalWavefrontPanel extends OpticsPane{
             double yoffCyllin = Double.valueOf(txtYPositionCyllin.getText());
             double focalCyllin = Double.valueOf(txtFocalCyllin.getText());
             
-            this.xoffCyllin = xoffCyllin * 10;
-            this.yoffCyllin = yoffCyllin * 10;
-            this.focalCyllin = focalCyllin/1000;  
+            //this.xoffCyllin = xoffCyllin * 10;
+            //this.yoffCyllin = yoffCyllin * 10;
+            //this.focalCyllin = focalCyllin/1000;  
+            this.xoffCyllin = xoffCyllin;
+            this.yoffCyllin = yoffCyllin;
+            this.focalCyllin = focalCyllin/100;
             ret = true;
             
         } catch (Exception e) {
