@@ -22,33 +22,20 @@ import javax.swing.JLabel;
  */
 public class EduDescription {
 
-    public static javax.swing.JLabel desTelephotoLens =
-            new JLabel();
-    public static javax.swing.JLabel desMicroscope =
-            new JLabel();
-    public static javax.swing.JLabel desAberration =
-            new JLabel();
-    public static javax.swing.JLabel desMichelson =
-            new JLabel();
-    public static javax.swing.JLabel desDiffaction =
-            new JLabel();
-    public static javax.swing.JLabel desSpectrometer =
-            new JLabel();
-    public static javax.swing.JLabel desSignalProcessing =
-            new JLabel();
-    public static javax.swing.JLabel desPhaseRetarder =
-            new JLabel();
-    public static javax.swing.JLabel desTalbotImage =
-            new JLabel();
-    public static javax.swing.JLabel desWavefront =
-            new JLabel();
-    public static javax.swing.JLabel desWavelength =
-            new JLabel();
-    public static javax.swing.JLabel desCalibration =
-            new JLabel();
-    public static javax.swing.JLabel desImportfile =
-            new JLabel();
-    static String a = "<html>"
+    public static javax.swing.JLabel desSLM = new JLabel();
+    public static javax.swing.JLabel desAmplitude = new JLabel();
+    public static javax.swing.JLabel desPhaseModulation = new JLabel();
+    public static javax.swing.JLabel desMichelson = new JLabel();
+    public static javax.swing.JLabel desDiffaction = new JLabel();
+    public static javax.swing.JLabel desSpectrometer = new JLabel();
+    public static javax.swing.JLabel desSignalProcessing = new JLabel();
+    public static javax.swing.JLabel desPhaseRetarder = new JLabel();
+    public static javax.swing.JLabel desTalbot = new JLabel();
+    public static javax.swing.JLabel desWavefront = new JLabel();
+    public static javax.swing.JLabel desBeamShifting = new JLabel();
+    public static javax.swing.JLabel desImportFormula = new JLabel();
+    
+    static String strSLM = "<html>"
             + "<div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; LCoS-SLM (Liquid Crystal on Silicon-Spatial Light Modulator) can modulate<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "amplitude, phase, or polarization of light waves in space and time.<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
@@ -61,7 +48,7 @@ public class EduDescription {
             + "including diffraction efficiency, and the change in polarization state, using<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "these characteristics we can calculate the basic SLM parameters such as: the<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "pixel size, aperture ratio, and with the angle.<br /></div></html>";
-    static String b = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strAmplitude = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; SLM can be used as Phase modulator or Amplitude modulator "
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "with the angle adjustment of polarizer and analyzer."
@@ -78,7 +65,7 @@ public class EduDescription {
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "<br /></div></html>";
-    static String c = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strPhaseModulation = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; In the second experiment, the analyzer and polarized arranged at the"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "angle of 45 degrees to the rubbing angle."
@@ -96,7 +83,7 @@ public class EduDescription {
             + ""
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "<br /></div></html>";
-    static String d = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strMichelson = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The Michelson interferometer is the most common configuration for"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "optical interferometry and was invented by Albert Abraham Michelson."
@@ -115,7 +102,7 @@ public class EduDescription {
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "coherence length of the light source."
             + "<br /></div></html>";
-    static String e = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strDiffaction = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; The phenomenon of diffraction can be understood using Huygens ’"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "principle which states that every unobstructed point on a wavefront will act"
@@ -159,7 +146,7 @@ public class EduDescription {
             + "bands correspond to interference minima."
             + "<br /></div></html>";
     
-    static String g = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strSpectrometer = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; A spectrophotometer is employed to measure the amount of light that a"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "sample absorbs. The instrument operates by passing a beam of light through"
@@ -187,7 +174,7 @@ public class EduDescription {
             + "wavelength. "
             + "<br /></div></html>";
     
-    static String h = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strSignalProcessing = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; 4f optical system on a common signal processing system consist lenses "
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "and filter as the two main components. "
@@ -208,7 +195,7 @@ public class EduDescription {
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "<br /></div></html>";
     
-    static String i = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strPhaseRetarder = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Holography is one popular choice among several techniques for the"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "imaging and display of three-dimensional (3D) objects."
@@ -246,7 +233,7 @@ public class EduDescription {
             + "combined to extract the amplitude and phase profiles."
             + "<br /></div></html>";
     
-    static String k = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strTalbot = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; The near field diffraction theory (Fresnel Diffraction) has a very complicated"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "integral formula."
@@ -273,7 +260,7 @@ public class EduDescription {
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "<br /></div></html>";
     
-    static String l = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
+    static String strWavefront = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
             + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; A Spatial Light Modulator (SLM) is a device that is used to modulate"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "amplitude, phase, or polarization of light waves in space and time."
@@ -307,32 +294,31 @@ public class EduDescription {
         final ResourceBundle labels = ResourceBundle
                 .getBundle("resources/description", EduUIMainView.supportedLocales[0]);
 
-//        desTelephotoLens.setText(labels.getString("desTelephotoLens"));
-//        desMicroscope.setText(labels.getString("desMicroscope"));
-//        desAberration.setText(labels.getString("desAberration"));
+        //desSLM.setText(labels.getString("desSLM"));
+//        desAmplitude.setText(labels.getString("desAmplitude"));
+//        desPhaseModulation.setText(labels.getString("desPhaseModulation"));
 //        desMichelson.setText(labels.getString("desMichelson"));
 //        desDiffaction.setText(labels.getString("desDiffaction"));
 //        desSpectrometer.setText(labels.getString("desSpectrometer"));
 //        desSignalProcessing.setText(labels.getString("desSignalProcessing"));
 //        desPhaseRetarder.setText(labels.getString("desPhaseRetarder"));
-//        desTalbotImage.setText(labels.getString("desTalbotImage"));
+//        desTalbot.setText(labels.getString("desTalbot"));
 //        desWavefront.setText(labels.getString("desWavefront"));
 //        desWavelength.setText(labels.getString("desWavelength"));
-//        desCalibration.setText(labels.getString("desCalibration"));
-//        desImportfile.setText(labels.getString("desImportfile"));
-        desTelephotoLens.setText(a);
-        desMicroscope.setText(b);
-        desAberration.setText(c);
-        desMichelson.setText(d);
-        desDiffaction.setText(e);
-        desSpectrometer.setText(g);
-        desSignalProcessing.setText(h);
-        desPhaseRetarder.setText(i);
-        desTalbotImage.setText(k);
-        desWavefront.setText(l);
-        desWavelength.setText(labels.getString("desWavelength"));
-        desCalibration.setText(labels.getString("desCalibration"));
-        desImportfile.setText(labels.getString("desImportfile"));
+//        desBeamShifting.setText(labels.getString("desBeamShifting"));
+//        desImportFormula.setText(labels.getString("desImportFormula"));
+        desSLM.setText(strSLM);
+        desAmplitude.setText(strAmplitude);
+        desPhaseModulation.setText(strPhaseModulation);
+        desMichelson.setText(strMichelson);
+        desDiffaction.setText(strDiffaction);
+        desSpectrometer.setText(strSpectrometer);
+        desSignalProcessing.setText(strSignalProcessing);
+        desPhaseRetarder.setText(strPhaseRetarder);
+        desTalbot.setText(strTalbot);
+        desWavefront.setText(strWavefront);
+        desBeamShifting.setText(labels.getString("desBeamShifting"));
+        desImportFormula.setText(labels.getString("desImportFormula"));
 
     }
 }
