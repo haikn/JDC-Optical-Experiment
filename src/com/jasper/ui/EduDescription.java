@@ -292,7 +292,7 @@ public class EduDescription {
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "to these DOE. "
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
-            + "For example, a blazed grating can change the orientation of light propagation, "
+            + "For example, a blazed grating can change the orientation of light propagation"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "a zone plate can change the imaging plane backward or forward and other"
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
@@ -301,23 +301,6 @@ public class EduDescription {
             + ""
             + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + ""
-            + "<br /></div></html>";
-    
-    static String m = "<html><div style=\"padding-left:5px;padding-top:5px;margin: 0 0.07em 0 -0.13em;background-color:white;width:100%;word-spacing:30px;font-family:MS Mincho;font-size:11px;font-weight: normal;\">"
-            + "&nbsp; &nbsp; &nbsp; "
-            + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
-            + ""
-            + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
-            + ""
-            + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
-            + ""
-            + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
-            + ""
-            + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
-            + ""
-            + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
-            + ""
-            + "<br /><div style=\\\"width:100%;height:3px;\\\"></div>"
             + "<br /></div></html>";
 
     public static void initDescription() {
@@ -347,7 +330,7 @@ public class EduDescription {
         desPhaseRetarder.setText(i);
         desTalbotImage.setText(k);
         desWavefront.setText(l);
-        desWavelength.setText(m);
+        desWavelength.setText(labels.getString("desWavelength"));
         desCalibration.setText(labels.getString("desCalibration"));
         desImportfile.setText(labels.getString("desImportfile"));
 
