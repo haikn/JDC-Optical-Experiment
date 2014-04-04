@@ -427,14 +427,14 @@ public class PatternImage {
         flag = 1;
         tuningFlag = true;
     }
-    // Cylindircal algorithms
-    public void paintCylindircal() {
+    // Cylindrical algorithms
+    public void paintCylindrical() {
         WritableRaster raster = canvas.getRaster();
         // wave=exp(1i*pi/wl*xt.^2);
         int[] iArray = new int[1];
         double x1, y1, x2, phase;
 
-        //double fixpart2 = 2.0 * Math.PI / lambda;
+        double fixpart2 = 2.0 * Math.PI / lambda;
         double fixpart = Math.PI / lambda / (focalCyllin);
 
         double costheta = Math.cos(Math.toRadians((yoffCyllin)));
@@ -447,7 +447,9 @@ public class PatternImage {
                 y1 = (double) (j - width / 2 + 1) * pxsize;
                 x2 = x1 * costheta - y1 * sintheta;
                 x2 = Math.pow(x2, 2.0);
-                phase = fixpart * x2 ;
+                //phase = fixpart * x2 + fixpart2 * y1;
+                //phase = fixpart * x2 + fixpart2 * Math.pow(x2, 2.0);
+                phase = fixpart * x2;
 
                 iArray[0] = phase2gray(phase);
                 raster.setPixel(j, i, iArray);
