@@ -405,7 +405,7 @@ public class ImportFormulaPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterImportFile(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
-            image.paintImportFile();
+            image.paintImportFormula();
             EduPatternShowOn.updateLensPatternPattern(image, "");
             setLog("");
             imageGenerated = true;
@@ -420,7 +420,7 @@ public class ImportFormulaPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterImportFile(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
-            image.paintImportFile();
+            image.paintImportFormula();
             EduPatternShowOn.updateLensPatternPattern(image, "");
             setLog("");
             imageGenerated = true;
@@ -433,7 +433,7 @@ public class ImportFormulaPanel extends OpticsPane{
         if (parseArguments()) {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterImportFile(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
-            image.paintImportFile();
+            image.paintImportFormula();
             EduPatternShowOn.updateLensPatternPattern(image, "");
             setLog("");
             imageGenerated = true;
@@ -485,7 +485,7 @@ public class ImportFormulaPanel extends OpticsPane{
             } else {
                 PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
                 image.updateParameterImportFile(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
-                image.paintImportFile();
+                image.paintImportFormula();
                 EduPatternShowOn.updatePatternSecondDisplay(image, "");
                 setLog("");
                 imageGenerated = true;

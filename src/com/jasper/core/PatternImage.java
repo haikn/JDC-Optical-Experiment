@@ -1262,7 +1262,7 @@ public class PatternImage {
         tuningFlag = true;
     }
 
-    public void paintImportFile() {
+    public void paintImportFormula() {
 
         // TO DO
         // U1 = Uexp[j(k.r+e)]
@@ -1327,10 +1327,32 @@ public class PatternImage {
         AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
         at.scale(scale, scale);
         /// AffineTransform at = AffineTransform.getScaleInstance(1920, 1080);
-        g2.drawRenderedImage(buffImg, at);
+        //g2.drawRenderedImage(buffImg, at);
         buferPattern = compute(canvas);
         flag = 1;
         tuningFlag = true;
+        double phase, xt, yt;
+        //phy and theta uses "radian"
+        double phy = Math.toRadians(100);
+        double theta = Math.toRadians(100);
+
+        double xm = Math.sin(phy) * Math.cos(theta);
+        double ym = Math.sin(phy) * Math.sin(theta);
+        double fixpart = 2.0 * Math.PI / lambda;
+        WritableRaster raster = canvas.getRaster();
+        double[] iArray = new double[1];
+        for (int i = 0; i < width; i++) {
+                xt = (double) (i - width / 2 + 1) * pxsize;
+                xt = xm * xt;
+                for (int j = 0; j < height; j++) {
+                    yt = (double) (height / 2 - j + 1) * pxsize;
+                    yt = ym * yt;
+
+                    phase = fixpart * (xt + yt) + buferPattern[i][j];
+                    iArray[0] = phase2gray(phase);
+                    raster.setPixel(i, j, iArray);
+                }
+            }
     }
     
     public void paintDynamic(BufferedImage buffImg) {

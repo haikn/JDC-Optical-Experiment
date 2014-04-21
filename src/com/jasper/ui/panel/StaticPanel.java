@@ -246,17 +246,18 @@ public class StaticPanel extends OpticsPane{
             if (ext.equals("")) {
                 JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
             } else {
-                try {
+                try { 
                     buffImages = ImageIO.read(new File(file.getAbsolutePath()));
-                    String fileName = file.getAbsolutePath();
+                    String fileName = file.getName();
                     PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                    image.signalPhoto(buffImages);
-                    EduPatternShowOn.updateLensPatternPattern(image, fileName);
-                    setLog(fileName);
+                    image.paintStatic(buffImages);
+                    EduPatternShowOn.updateLensPatternPattern(image, "");
+                    setLog(Constant.TEXT_FORMAT_CGH + Constant.LOG_NAME + fileName + "\n"
+                            + Constant.LOG_DATE + Utils.dateNow() + "\n"
+                            + Constant.TEXT_FORMAT_CGH );
                     imageGenerated = true;
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
-                    //System.out.println("problem accessing file" + file.getAbsolutePath());
                 }
             }
         } else {
@@ -272,7 +273,7 @@ public class StaticPanel extends OpticsPane{
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
         image.paintStatic(buffImages);
         EduPatternShowOn.updateLensPatternPattern(image, "");
-        setLog(genLog());
+        //setLog(genLog());
         imageGenerated = true;
     }
 
@@ -337,12 +338,21 @@ public class StaticPanel extends OpticsPane{
         }
     }
     
-     private String genLog() {
-        return String.format(logMessage);
-    }
-    
     public void setLog(String msg) {
-        //txtLogArea.append(msg + System.getProperty("line.separator"));
+        String filePath;
+        try {
+            txtBox.append(msg);
+            txtBox.setCaretPosition(txtBox.getText().length() - 1);
+            filePath = Constant.FILE_PATH + File.separator + Constant.FILE_NAME_STATIC;
+            // Check file logs exists
+            if(Utils.checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_STATIC)) {
+                Utils.writeFile(filePath, msg, false);
+            } else {
+                Utils.createDirectory(File.separator + Constant.FILE_NAME_STATIC);
+                Utils.writeFile(filePath, msg, false);
+            }
+        } catch (Exception e) {
+        }
     }
 
     @Override

@@ -248,13 +248,15 @@ public class DynamicPanel extends OpticsPane{
             } else {
                 try {
                     buffImages = ImageIO.read(new File(file.getAbsolutePath()));
-                    String fileName = file.getAbsolutePath();
+                    String fileName = file.getName();
                     PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                    image.signalPhoto(buffImages);
-                    EduPatternShowOn.updateLensPatternPattern(image, fileName);
-                    setLog(fileName);
+                    image.paintDynamic(buffImages);
+                    EduPatternShowOn.updateLensPatternPattern(image, "");
+                    setLog(Constant.TEXT_FORMAT_CGH + Constant.LOG_NAME + fileName + "\n"
+                            + Constant.LOG_DATE + Utils.dateNow() + "\n"
+                            + Constant.TEXT_FORMAT_CGH );
                     imageGenerated = true;
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                     //System.out.println("problem accessing file" + file.getAbsolutePath());
                 }
