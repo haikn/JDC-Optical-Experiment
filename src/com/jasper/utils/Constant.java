@@ -45,6 +45,7 @@ public class Constant {
     public static final String FILE_NAME_SIGNAL         = "SIGNAL_Log.txt";
     public static final String FILE_NAME_TALBOT         = "TALBOT_Log.txt";
     public static final String FILE_NAME_STATIC         = "STATIC_Log.txt";
+    public static final String FILE_NAME_DYNAMIC        = "DYNAMIC_Log.txt";
     // format log file content CGH
     public static final String TEXT_FORMAT_CGH          = "+ \n";
     public static final String LOG_NAME                 = "|Name: ";

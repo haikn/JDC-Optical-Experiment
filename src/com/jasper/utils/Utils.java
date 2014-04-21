@@ -113,6 +113,7 @@ public class Utils {
         File fileSignal;
         File fileTalbot;
         File fileStatic;
+        File fileDynamic;
         
         File fileDirectory;
         try {
@@ -165,6 +166,10 @@ public class Utils {
                 fileStatic.createNewFile();
             }
             
+            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_DYNAMIC)) {
+                fileDynamic = new File(Constant.FILE_PATH, Constant.FILE_NAME_DYNAMIC);
+                fileDynamic.createNewFile();
+            }
             
         } catch (Exception ex) {
             ex.printStackTrace();

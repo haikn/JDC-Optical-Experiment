@@ -451,7 +451,7 @@ public class EduControllerPattern extends OpticsPane {
                     jScrollDes.getViewport();
                     tabbedDesLog.addTab(labels.getString("tabDescription"), jScrollDes);
                     
-                    jScrollPane2.setViewportView(dynamicPanel.getLogArea());
+                    //jScrollPane2.setViewportView(dynamicPanel.getLogArea());
                     tabbedDesLog.addTab(labels.getString("tabLog"), jScrollPane2);
 
                     lblDiagram.setIcon(lblDiagram.getIcon());

@@ -40,11 +40,14 @@ import org.jdesktop.beansbinding.BindingGroup;
 
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
+import com.jasper.utils.Constant;
+import com.jasper.utils.Utils;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JTextArea;
 
 /**
  *
@@ -61,7 +64,10 @@ public class StaticPanel extends OpticsPane{
     private javax.swing.JButton buttonDisplaySecondOn;
     private javax.swing.JLabel lblSelect;
     private javax.swing.JPanel panel;
-    private javax.swing.JTextArea txtLogArea;
+    private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JLabel lblFilePath;
+    private javax.swing.JTextArea txtBox;
+    private String getText;
     
     private static BufferedImage buffImages;
     private JPanel panelPattern;
@@ -74,7 +80,6 @@ public class StaticPanel extends OpticsPane{
     
     public StaticPanel(ResourceBundle labels, BindingGroup bindingGroup,JPanel panelPattern) {
         this.labels = labels;
-        this.txtLogArea = new javax.swing.JTextArea();
         this.panelPattern = panelPattern;
         image1 = ((EduPatternJPanel) panelPattern).pimage;
         
@@ -89,6 +94,19 @@ public class StaticPanel extends OpticsPane{
         btnGenerate = new javax.swing.JButton();
         buttonLensOn = new javax.swing.JButton();
         buttonDisplaySecondOn = new javax.swing.JButton();
+        
+        lblFilePath = new javax.swing.JLabel();
+        scrollPane = new javax.swing.JScrollPane();
+        txtBox = new javax.swing.JTextArea();
+        getText = Utils.readFile(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_STATIC);
+        
+        txtBox.setColumns(10);
+        txtBox.setRows(4);
+        txtBox.setText(getText);
+        scrollPane.setViewportView(txtBox);
+        lblFilePath.setText(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_STATIC);
+        lblFilePath.setForeground(Color.blue);
+        lblFilePath.setFont(new Font("Arial", Font.PLAIN , 10));
         
         btnBrowse.setText("Browse...");
         btnBrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -154,46 +172,50 @@ public class StaticPanel extends OpticsPane{
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                    .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(280, Short.MAX_VALUE))
+                        .addComponent(lblSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
                         .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
-                        .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        //.addGap(57, 57, 57)
-                )))
+                        .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                )
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(120, 120, 120)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSelect))
-                .addGap(145, 145, 145)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblSelect)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblFilePath)
+                        .addGap(3, 3, 3)
+                        .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25))
+                .addContainerGap())
         );
     }
     
     public JPanel getPanel(){
         return panel;
-    }
-    
-    
-    public JTextArea getLogArea(){
-        return txtLogArea;
     }
     
     private void openFileActionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,7 +270,7 @@ public class StaticPanel extends OpticsPane{
         buttonLensOn.setEnabled(true);
 
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.dynamic(buffImages);
+        image.paintStatic(buffImages);
         EduPatternShowOn.updateLensPatternPattern(image, "");
         setLog(genLog());
         imageGenerated = true;
@@ -256,7 +278,7 @@ public class StaticPanel extends OpticsPane{
 
     private void buttonLensOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button11LensOnProcessingPhotoActionPerformed
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.dynamic(buffImages);
+        image.paintStatic(buffImages);
         EduPatternShowOn.updateLensPatternPattern(image, "");
         //setLog(genLog());
         imageGenerated = true;
@@ -303,7 +325,7 @@ public class StaticPanel extends OpticsPane{
         } else {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             // image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel);
-            image.dynamic(buffImages);
+            image.paintStatic(buffImages);
             EduPatternShowOn.updateLensPatternPattern(image, "");
             //setLog(genLog());
             //EduPatternTest.updateLensPatternPattern(image, genLog());
@@ -320,7 +342,7 @@ public class StaticPanel extends OpticsPane{
     }
     
     public void setLog(String msg) {
-        txtLogArea.append(msg + System.getProperty("line.separator"));
+        //txtLogArea.append(msg + System.getProperty("line.separator"));
     }
 
     @Override
