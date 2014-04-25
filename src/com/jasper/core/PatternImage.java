@@ -23,6 +23,7 @@ package com.jasper.core;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -30,6 +31,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
+import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 import java.io.BufferedReader;
 import java.io.File;
@@ -129,6 +131,11 @@ public class PatternImage {
     private double[][] buferPattern;
     private byte flag = 0;
     private boolean tuningFlag = false;
+    private SampleModel sampleModel;
+    private static BufferedImage buffVideo;
+    private int wVideo;
+    private int hVideo;
+    private DaemonThread myThread = null;
     // title string
     public String title;
 
@@ -1355,29 +1362,97 @@ public class PatternImage {
             }
     }
     
-    public void paintDynamic(BufferedImage buffImg) {
+    public void paintDynamic(BufferedImage buffImg, int w, int h) {
+//        buffVideo = buffImg;
+//        wVideo = w;
+//        hVideo = h;
+//        myThread = new DaemonThread();
+//            Thread t = new Thread(myThread);
+//            t.setDaemon(true);
+//            myThread.runnable = true;
+//            t.start();
+        Raster raster = buffImg.getData();
+        sampleModel = raster.getSampleModel();
+        WritableRaster rasterSample = Raster.createWritableRaster(sampleModel, new Point(0, 0));
+            int x = 0;
+            int y = 100;
+            double phy = Math.toRadians(x);
+            double theta = Math.toRadians(y);
+            double xm = Math.sin(phy) * Math.cos(theta);
+            double ym = Math.sin(phy) * Math.sin(theta);
+            double fixpart = 2.0 * Math.PI / 10;
+            double pxsize = 100;
+            double phase, xa, ya;
+            System.out.println("width: " + width + " height: " + height);
 
-        double scale = 1.0;
-        // scale = d_zoom / 100.0D;
-        //buffImg = buffImg.gets
-        buffImg = PatternImage.resizeImage(buffImg, buffImg.getType(), 1920, 1080);
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        double canvasX = canvas.getWidth() / 2;
-        double canvasY = canvas.getHeight() / 2;
-        int imageWidth = buffImg.getWidth();
-        int imageHeight = buffImg.getHeight();
-        double x = (scale * imageWidth) / 2;
-        double y = (scale * imageHeight) / 2;
-        AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
-        at.scale(scale, scale);
-        /// AffineTransform at = AffineTransform.getScaleInstance(1920, 1080);
-        g2.drawRenderedImage(buffImg, at);
-        buferPattern = compute(canvas);
-        flag = 1;
-        tuningFlag = true;
+            for (int i = 0; i < w; i++) {
+                xa = (double) (i - x / 2 + 1) * pxsize;
+                xa = xm * xa;
+                for (int j = 0; j < h; j++) {
+                    ya = (double) (y / 2 - j + 1) * pxsize;
+                    ya = ym * ya;
+                    phase = fixpart * (xa + ya) + raster.getSample(i, j, 0);
+                    rasterSample.setSample(i, j, 0, phase);
+                }
+            }
+
+            BufferedImage image1 = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY);
+
+
+            Graphics g = canvas.getGraphics();
+            //Graphics2D g = (Graphics2D) canvas.getGraphics();
+            image1.setData(rasterSample);
+
+            if (g.drawImage(image1, 0, 0, canvas.getWidth(),
+                    canvas.getHeight(), 0, 0, w, h, null)) {
+            }
+    }
+    
+    class DaemonThread implements Runnable {
+        protected volatile boolean runnable = false;
+
+        @Override
+        public  void run() {
+            double phase, xa, ya;
+            synchronized(this) {
+                while(runnable) {
+                Raster raster = buffVideo.getData();
+                sampleModel = raster.getSampleModel();
+                WritableRaster rasterSample = Raster.createWritableRaster(sampleModel, new Point(0, 0));
+                    int x = 0;
+                    int y = 100;
+                    double phy = Math.toRadians(x);
+                    double theta = Math.toRadians(y);
+                    double xm = Math.sin(phy) * Math.cos(theta);
+                    double ym = Math.sin(phy) * Math.sin(theta);
+                    double fixpart = 2.0 * Math.PI / 10;
+                    double pxsize = 100;
+                    System.out.println("width: " + width + " height: " + height);
+
+                    for (int i = 0; i < wVideo; i++) {
+                        xa = (double) (i - x / 2 + 1) * pxsize;
+                        xa = xm * xa;
+                        for (int j = 0; j < hVideo; j++) {
+                            ya = (double) (y / 2 - j + 1) * pxsize;
+                            ya = ym * ya;
+                            phase = fixpart * (xa + ya) + raster.getSample(i, j, 0);
+                            rasterSample.setSample(i, j, 0, phase);
+                        }
+                    }
+
+                    BufferedImage image1 = new BufferedImage(wVideo, hVideo, BufferedImage.TYPE_BYTE_GRAY);
+
+
+                    Graphics g = canvas.getGraphics();
+                    //Graphics2D g = (Graphics2D) canvas.getGraphics();
+                    image1.setData(rasterSample);
+
+                    if (g.drawImage(image1, 0, 0, canvas.getWidth(),
+                            canvas.getHeight(), 0, 0, wVideo, hVideo, null)) {
+                    }
+                    }
+            }
+        }
     }
 
     public void paintImportFileMichelson(BufferedImage buffImg) {

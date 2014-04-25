@@ -1,5 +1,5 @@
 /*
- * @(#)StaticPanel.java
+ * @(#)DynamicPanel.java
  *
  * This program is version 2.0 of JDC Education Kit for Optical Experiments.
  * Copyright (C) Jasper Display Corporation 2013.
@@ -20,6 +20,9 @@
  */
 package com.jasper.ui.panel;
 
+import com.googlecode.javacv.FrameGrabber;
+import com.googlecode.javacv.OpenCVFrameGrabber;
+import com.googlecode.javacv.cpp.opencv_core;
 import com.jasper.core.OpticsPane;
 import java.awt.GraphicsDevice;
 import javax.swing.JOptionPane;
@@ -47,6 +50,8 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -72,6 +77,7 @@ public class DynamicPanel extends OpticsPane{
     private static BufferedImage buffImages;
     private JPanel panelPattern;
     private JFrame magFrameLenon;
+    private FrameGrabber grabber;
     
     private int countLenOn = 1;
     private int countSecondDisplay = 1;
@@ -219,54 +225,73 @@ public class DynamicPanel extends OpticsPane{
     }
     
     private void openFileActionPerformed(java.awt.event.ActionEvent evt) {
-        String args[] = {"", "" };
-        DynamicHolography obj = new DynamicHolography();
-        obj.main(args);
-//        int returnVal = openFile.showOpenDialog(this);
-//        if (returnVal == openFile.APPROVE_OPTION) {
-//            File file = openFile.getSelectedFile();
-//            String ext = "";
-//            String extension = file.getName();
-//            extension = extension.toLowerCase();
-//            if (extension.contains("jpg")) {
-//                ext = ".jpg";
-//            }
-//            if (extension.contains("png")) {
-//                ext = ".png";
-//            }
-//            if (extension.contains("gif")) {
-//                ext = ".gif";
-//            }
-//            if (extension.contains("wbmp")) {
-//                ext = ".wbmp";
-//            }
-//            if (extension.contains("jpeg")) {
-//                ext = ".jpeg";
-//            }
-//            if (extension.contains("bmp")) {
-//                ext = ".bmp";
-//            }
-//            if (ext.equals("")) {
-//                JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
-//            } else {
-//                try {
-//                    buffImages = ImageIO.read(new File(file.getAbsolutePath()));
-//                    String fileName = file.getName();
-//                    PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-//                    image.paintDynamic(buffImages);
-//                    EduPatternShowOn.updateLensPatternPattern(image, "");
-//                    setLog(Constant.TEXT_FORMAT_CGH + Constant.LOG_NAME + fileName + "\n"
-//                            + Constant.LOG_DATE + Utils.dateNow() + "\n"
-//                            + Constant.TEXT_FORMAT_CGH );
-//                    imageGenerated = true;
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                    //System.out.println("problem accessing file" + file.getAbsolutePath());
-//                }
-//            }
-//        } else {
-//            //System.out.println("File access cancelled by user.");
-//        }
+        try {
+            // Set up webcam
+            grabber = new OpenCVFrameGrabber(0);
+            grabber.start();
+            opencv_core.IplImage grabbed = grabber.grab();
+            
+            buttonDisplaySecondOn.setEnabled(true);
+        buttonLensOn.setEnabled(true);
+        buffImages = grabbed.getBufferedImage();
+
+        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+        int w = grabber.getImageWidth(), h = grabber.getImageHeight();
+        image.paintDynamic(buffImages, w, h);
+        EduPatternShowOn.updateLensPatternPattern(image, "");
+//        setLog(genLog());
+//        imageGenerated = true;
+            String args[] = {"", "" };
+    //        DynamicHolography obj = new DynamicHolography();
+    //        obj.main(args);
+    //        int returnVal = openFile.showOpenDialog(this);
+    //        if (returnVal == openFile.APPROVE_OPTION) {
+    //            File file = openFile.getSelectedFile();
+    //            String ext = "";
+    //            String extension = file.getName();
+    //            extension = extension.toLowerCase();
+    //            if (extension.contains("jpg")) {
+    //                ext = ".jpg";
+    //            }
+    //            if (extension.contains("png")) {
+    //                ext = ".png";
+    //            }
+    //            if (extension.contains("gif")) {
+    //                ext = ".gif";
+    //            }
+    //            if (extension.contains("wbmp")) {
+    //                ext = ".wbmp";
+    //            }
+    //            if (extension.contains("jpeg")) {
+    //                ext = ".jpeg";
+    //            }
+    //            if (extension.contains("bmp")) {
+    //                ext = ".bmp";
+    //            }
+    //            if (ext.equals("")) {
+    //                JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
+    //            } else {
+    //                try {
+    //                    buffImages = ImageIO.read(new File(file.getAbsolutePath()));
+    //                    String fileName = file.getName();
+    //                    PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+    //                    image.paintDynamic(buffImages);
+    //                    EduPatternShowOn.updateLensPatternPattern(image, "");
+    //                    setLog(Constant.TEXT_FORMAT_CGH + Constant.LOG_NAME + fileName + "\n"
+    //                            + Constant.LOG_DATE + Utils.dateNow() + "\n"
+    //                            + Constant.TEXT_FORMAT_CGH );
+    //                    imageGenerated = true;
+    //                } catch (Exception ex) {
+    //                    ex.printStackTrace();
+    //                    //System.out.println("problem accessing file" + file.getAbsolutePath());
+    //                }
+    //            }
+    //        } else {
+    //        }
+    //        }
+        } catch (FrameGrabber.Exception ex) {
+            Logger.getLogger(DynamicPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
                 
@@ -275,7 +300,7 @@ public class DynamicPanel extends OpticsPane{
         buttonLensOn.setEnabled(true);
 
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.paintDynamic(buffImages);
+        //image.paintDynamic(buffImages);
         EduPatternShowOn.updateLensPatternPattern(image, "");
         setLog(genLog());
         imageGenerated = true;
@@ -283,7 +308,7 @@ public class DynamicPanel extends OpticsPane{
 
     private void buttonLensOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button11LensOnProcessingPhotoActionPerformed
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.paintDynamic(buffImages);
+        //image.paintDynamic(buffImages);
         EduPatternShowOn.updateLensPatternPattern(image, "");
         //setLog(genLog());
         imageGenerated = true;
@@ -330,7 +355,7 @@ public class DynamicPanel extends OpticsPane{
         } else {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             // image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel);
-            image.paintDynamic(buffImages);
+            //image.paintDynamic(buffImages);
             EduPatternShowOn.updateLensPatternPattern(image, "");
             //setLog(genLog());
             //EduPatternTest.updateLensPatternPattern(image, genLog());
