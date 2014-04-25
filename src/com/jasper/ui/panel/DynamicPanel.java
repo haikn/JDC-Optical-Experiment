@@ -114,7 +114,7 @@ public class DynamicPanel extends OpticsPane{
         lblFilePath.setForeground(Color.blue);
         lblFilePath.setFont(new Font("Arial", Font.PLAIN , 10));
         
-        btnBrowse.setText("Browse...");
+        btnBrowse.setText("Camera");
         btnBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openFileActionPerformed(evt);
