@@ -26,25 +26,15 @@ import com.googlecode.javacv.OpenCVFrameGrabber;
 import com.googlecode.javacv.cpp.opencv_core;
 import static com.googlecode.javacv.cpp.opencv_core.cvClearMemStorage;
 import com.jasper.core.OpticsPane;
-import java.awt.GraphicsDevice;
 import javax.swing.JOptionPane;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.net.URL;
 import com.jasper.core.PatternImage;
-import com.jasper.ui.EduLensOn11;
 import com.jasper.ui.EduPatternJPanel;
-import com.jasper.ui.EduPatternShowOn;
 import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.jdesktop.beansbinding.BindingGroup;
 
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
-import static com.jasper.ui.EduPatternShowOn.patternFrame;
 import com.jasper.utils.Constant;
 import com.jasper.utils.Utils;
 import java.awt.Color;
@@ -52,10 +42,8 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.SwingWorker;
 import org.jdesktop.beansbinding.Binding;
 
@@ -247,7 +235,7 @@ public class DynamicPanel extends OpticsPane {
                                     .addComponent(txtYOff, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                                 .addGap(20, 20, 20)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(sliderXOff, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                                    .addComponent(sliderXOff, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
                                     .addComponent(sliderYOff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addGap(10, 10, 10))
         );
@@ -270,7 +258,7 @@ public class DynamicPanel extends OpticsPane {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(150, 150, 150)
+                .addGap(153, 153, 153)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
