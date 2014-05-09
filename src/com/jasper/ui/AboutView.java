@@ -33,7 +33,7 @@ import javax.swing.*;
  *
  * @version 1.0 28 Aug 2013
  *
- * @author Albert Nguyen
+ * @author sonnv
  *
  */
 public class AboutView extends JDialog {

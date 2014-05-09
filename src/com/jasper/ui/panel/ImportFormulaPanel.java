@@ -398,30 +398,28 @@ public class ImportFormulaPanel extends OpticsPane{
     }
     
     private void sliderGenerateActionPerformedImportFile(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderGenerateActionPerformedImportFile
-        actionTag = "ImportFile";
         if (parseArguments()) {
             buttonLensON.setEnabled(true);
             buttonSecond.setEnabled(true);
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateParameterImportFile(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
+            image.updateParameterImportFormula(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
             image.paintImportFormula();
-            EduPatternShowOn.updateLensPatternPattern(image, "");
+            EduPatternShowOn.updatePattern(image, "");
             setLog("");
             imageGenerated = true;
         }
     }//GEN-LAST:event_sliderGenerateActionPerformedImportFile
     
     private void buttonGenerateActionPerformedImportFile(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerateActionPerformedImportFile
-        actionTag = "ImportFile";
         if (parseArguments()) {
             buttonLensON.setEnabled(true);
             buttonSecond.setEnabled(true);
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateParameterImportFile(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
+            image.updateParameterImportFormula(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
             image.paintImportFormula();
-            EduPatternShowOn.updateLensPatternPattern(image, "");
+            EduPatternShowOn.updatePattern(image, "");
             setLog("");
             imageGenerated = true;
         }
@@ -429,12 +427,11 @@ public class ImportFormulaPanel extends OpticsPane{
     }
 
     private void button11LensOnImportFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button11LensOnImportFileActionPerformed
-        actionTag = "ImportFile";
         if (parseArguments()) {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateParameterImportFile(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
+            image.updateParameterImportFormula(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
             image.paintImportFormula();
-            EduPatternShowOn.updateLensPatternPattern(image, "");
+            EduPatternShowOn.updatePattern(image, "");
             setLog("");
             imageGenerated = true;
 
@@ -475,7 +472,6 @@ public class ImportFormulaPanel extends OpticsPane{
     }//GEN-LAST:event_button11LensOnImportFileActionPerformed
 
     private void buttonSecondGenerateActionPerformedImportFile(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondGenerateActionPerformedImportFile
-        actionTag = "ImportFile";
         if (parseArguments()) {
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice[] devices = env.getScreenDevices();
@@ -484,7 +480,7 @@ public class ImportFormulaPanel extends OpticsPane{
                 JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                image.updateParameterImportFile(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
+                image.updateParameterImportFormula(k, r, e, kr, width_importFile, position_importFile, rotation_importFile, grayLevel_importFile, formula);
                 image.paintImportFormula();
                 EduPatternShowOn.updatePatternSecondDisplay(image, "");
                 setLog("");
@@ -500,31 +496,10 @@ public class ImportFormulaPanel extends OpticsPane{
    public void setLog(String msg) {
         txtAreaLog.append(msg + System.getProperty("line.separator"));
     }
-
-    @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
-    }
     
     private boolean parseArguments() {
         boolean ret = false;
         try {          
-            // Import file
             String uImportFile = txtFormula.getText();
             double kImportFile = Double.valueOf(txtKImportFile.getText());
             double rImportFile= Double.valueOf(txtRImportFile.getText());
@@ -547,10 +522,6 @@ public class ImportFormulaPanel extends OpticsPane{
             ret = true;
             
         } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, warnings);
-            //textXpos.setText(String.valueOf(this.yoff));
-            //textYpos.setText(String.valueOf(this.yoff));
-            textFocal.setText(String.valueOf(this.focal));
         }
         return ret;
     }

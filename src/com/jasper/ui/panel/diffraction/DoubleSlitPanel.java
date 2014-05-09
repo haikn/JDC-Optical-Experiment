@@ -52,13 +52,9 @@ import javax.swing.JTextArea;
 public class DoubleSlitPanel extends OpticsPane{
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
-    private String actionTag = "Len";
     
-    private javax.swing.JSlider sliderFocal;
-    private javax.swing.JTextField textFocal;
     private JPanel panelPattern;
     private JFrame magFrameLenon;
-    private double xoff = 0.0, yoff = 0.0, focal = 0.0;
     
     private javax.swing.JButton buttonGennerateDoubleSlit;
     private javax.swing.JButton buttonSecondDisplayDoubleSlit;
@@ -81,6 +77,7 @@ public class DoubleSlitPanel extends OpticsPane{
     private javax.swing.JTextField text_single_rotationDoubleSlit;
     private javax.swing.JTextField text_single_spacingDoubleSlit;
     private javax.swing.JTextField text_single_widthDoubleSlit;
+    private int slit = 2;
     
     static String logmessageDoubleSlit = "Double Slit: w=%s r=%s p=%s g=%s s=%s";
     private double d_widthX_double = Double.valueOf(image1.getBounds().width), d_heightX_double = 100, d_rotation_double = 0, d_postionX_double = 0, d_grayLevel_double = 255, d_spacing_double = 400;
@@ -416,15 +413,14 @@ public class DoubleSlitPanel extends OpticsPane{
     }
     
      private void buttonGenerateActionPerformedDoubleSlit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerateActionPerformedDoubleSlit
-        actionTag = "DoubleSlit";
         if (parseArguments()) {
             buttong11LensOnDoubleSlit.setEnabled(true);
             buttonSecondDisplayDoubleSlit.setEnabled(true);
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateLensParameterDrawSlit(2, d_widthX_double, d_heightX_double, d_postionX_double, d_rotation_double, d_grayLevel_double, d_spacing_double);
-            image.slit(2);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogDoubleSlit());
+            image.paintSlit(slit);
+            EduPatternShowOn.updatePattern(image, genLogDoubleSlit());
             setLog(genLogDoubleSlit());
             imageGenerated = true;
         }
@@ -432,12 +428,11 @@ public class DoubleSlitPanel extends OpticsPane{
     }//GEN-LAST:event_buttonGenerateActionPerformedDoubleSlit
 
     private void button11LensOnDoubleSlitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button11LensOnDoubleSlitActionPerformed
-        actionTag = "DoubleSlit";
         if (parseArguments()) {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateLensParameterDrawSlit(2, d_widthX_double, d_heightX_double, d_postionX_double, d_rotation_double, d_grayLevel_double, d_spacing_double);
-            image.slit(2);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogDoubleSlit());
+            image.paintSlit(slit);
+            EduPatternShowOn.updatePattern(image, genLogDoubleSlit());
             setLog(genLogDoubleSlit());
             imageGenerated = true;
 
@@ -477,7 +472,6 @@ public class DoubleSlitPanel extends OpticsPane{
     }//GEN-LAST:event_button11LensOnDoubleSlitActionPerformed
 
     private void buttonSecondGenerateActionPerformedDoubleSlit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondGenerateActionPerformedDoubleSlit
-        actionTag = "DoubleSlit";
         if (parseArguments()) {
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice[] devices = env.getScreenDevices();
@@ -487,10 +481,9 @@ public class DoubleSlitPanel extends OpticsPane{
             } else {
                 PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
                 image.updateLensParameterDrawSlit(2, d_widthX_double, d_heightX_double, d_postionX_double, d_rotation_double, d_grayLevel_double, d_spacing_double);
-                image.slit(2);
+                image.paintSlit(slit);
                 EduPatternShowOn.updatePatternSecondDisplay(image, genLogDoubleSlit());
                 setLog(genLogDoubleSlit());
-                //EduPatternTest.updateLensPatternPattern(image, genLog());
                 imageGenerated = true;
                 if (countSecondDisplayDoubleSlit % 2 == 0) {
                     patternFrameDoubleClick.dispose();
@@ -501,29 +494,27 @@ public class DoubleSlitPanel extends OpticsPane{
     }//GEN-LAST:event_buttonSecondGenerateActionPerformedDoubleSlit
 
     private void sliderGenerateActionPerformedDoubleSlit(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderGenerateActionPerformedDoubleSlit
-        actionTag = "DoubleSlit";
         if (parseArguments()) {
             buttong11LensOnDoubleSlit.setEnabled(true);
             buttonSecondDisplayDoubleSlit.setEnabled(true);
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateLensParameterDrawSlit(2, d_widthX_double, d_heightX_double, d_postionX_double, d_rotation_double, d_grayLevel_double, d_spacing_double);
-            image.slit(2);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogDoubleSlit());
+            image.paintSlit(slit);
+            EduPatternShowOn.updatePattern(image, genLogDoubleSlit());
             setLog(genLogDoubleSlit());
             imageGenerated = true;
         }
     }//GEN-LAST:event_sliderGenerateActionPerformedDoubleSlit
     private void keyeventGenerateActionPerformedDoubleSlit(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyeventGenerateActionPerformedDoubleSlit
-        actionTag = "DoubleSlit";
         if (parseArguments()) {
             buttong11LensOnDoubleSlit.setEnabled(true);
             buttonSecondDisplayDoubleSlit.setEnabled(true);
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateLensParameterDrawSlit(2, d_widthX_double, d_heightX_double, d_postionX_double, d_rotation_double, d_grayLevel_double, d_spacing_double);
-            image.slit(2);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogDoubleSlit());
+            image.paintSlit(slit);
+            EduPatternShowOn.updatePattern(image, genLogDoubleSlit());
             setLog(genLogDoubleSlit());
             imageGenerated = true;
         }
@@ -558,25 +549,5 @@ public class DoubleSlitPanel extends OpticsPane{
     
      public void setLog(String msg) {
         txtAreaLog.append(msg + System.getProperty("line.separator"));
-    }
-    
-     @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

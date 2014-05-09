@@ -50,15 +50,14 @@ import javax.swing.JTextArea;
  *
  * @author sonnv
  */
-public class CyllindricalMichelsonPanel extends OpticsPane{
+public class CyllindricalMichelsonPanel extends OpticsPane {
+
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
     private String actionTag = "Len";
-    
     private javax.swing.JTabbedPane jTabbedControler;
     private JPanel panelPattern;
     private JFrame magFrameLenon;
-    
     public javax.swing.JLabel lblFocalCyllin;
     private javax.swing.JLabel lblXPosCyllin;
     private javax.swing.JLabel lblYPosCyllin;
@@ -76,27 +75,26 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
     private javax.swing.JPanel jPanelCyllindrical;
     private javax.swing.JPanel panelButton;
     private javax.swing.JTextArea textAreaLog;
-    
     private double xoff = 0.0, yoff = 0.0, focal = 0.0;
     private int countLenOnCyllin = 1;
     private int countSecondDisplayCyllin = 1;
     private double xoffCyllin = 0, yoffCyllin = 0, focalCyllin = 0.0;
     static String logmessageCyllin = "Cyllin : Focal length=%s X Position=%s Y Position=%s";
-    
-     public CyllindricalMichelsonPanel(ResourceBundle labels, BindingGroup bindingGroup,JPanel panelPattern) {
+
+    public CyllindricalMichelsonPanel(ResourceBundle labels, BindingGroup bindingGroup, JPanel panelPattern) {
         this.labels = labels;
         this.textAreaLog = new javax.swing.JTextArea();
         this.panelPattern = panelPattern;
         //this.jTabbedControler = jTabbedControler;
-        
+
         image1 = ((EduPatternJPanel) panelPattern).pimage;
         initComponents(bindingGroup);
     }
-     
-     private void initComponents(BindingGroup bindingGroup) {
+
+    private void initComponents(BindingGroup bindingGroup) {
         textFocal = new javax.swing.JTextField();
         sliderFocal = new javax.swing.JSlider();
-        
+
         jPanelCyllindrical = new javax.swing.JPanel();
         lblFocalCyllin = new javax.swing.JLabel();
         lblXPosCyllin = new javax.swing.JLabel();
@@ -110,7 +108,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
         buttonCyllinLensOn = new javax.swing.JButton();
         buttonCyllinDisplaySecondOn = new javax.swing.JButton();
         buttonCyllinGeneral = new javax.swing.JButton();
-        
+
         lblFocalCyllin.setText(labels.getString("lblFocalLength"));
         Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jSliderFocalCyllin, org.jdesktop.beansbinding.ELProperty.create("${value}"), txtFocalCyllin, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
@@ -124,9 +122,9 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jSliderYPositionCyllin, org.jdesktop.beansbinding.ELProperty.create("${value}"), txtYPositionCyllin, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
-        txtFocalCyllin.addKeyListener(new KeyAdapter(){
+        txtFocalCyllin.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent ke) {
-                if(txtFocalCyllin.getText() == null || txtFocalCyllin.getText().equals("")){
+                if (txtFocalCyllin.getText() == null || txtFocalCyllin.getText().equals("")) {
                     lblFocalCyllin.setForeground(Color.red);
                 } else {
                     lblFocalCyllin.setForeground(Color.black);
@@ -134,9 +132,9 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 keyeventGenerateActionPerformedCyllin(ke);
             }
         });
-        txtXPositionCyllin.addKeyListener(new KeyAdapter(){
+        txtXPositionCyllin.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent ke) {
-                if(txtXPositionCyllin.getText() == null || txtXPositionCyllin.getText().equals("")){
+                if (txtXPositionCyllin.getText() == null || txtXPositionCyllin.getText().equals("")) {
                     lblXPosCyllin.setForeground(Color.red);
                 } else {
                     lblXPosCyllin.setForeground(Color.black);
@@ -144,9 +142,9 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 keyeventGenerateActionPerformedCyllin(ke);
             }
         });
-        txtYPositionCyllin.addKeyListener(new KeyAdapter(){
+        txtYPositionCyllin.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent ke) {
-                if(txtYPositionCyllin.getText() == null || txtYPositionCyllin.getText().equals("")){
+                if (txtYPositionCyllin.getText() == null || txtYPositionCyllin.getText().equals("")) {
                     lblYPosCyllin.setForeground(Color.red);
                 } else {
                     lblYPosCyllin.setForeground(Color.black);
@@ -154,7 +152,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 keyeventGenerateActionPerformedCyllin(ke);
             }
         });
-        
+
         buttonCyllinGeneral.setText(labels.getString("btnGenerate"));
         buttonCyllinGeneral.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -174,7 +172,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                         public void mouseClicked(java.awt.event.MouseEvent evt) {
                             patternFrameDoubleClick.show();
                         }
-                        });
+                    });
                 } else {
                     buttonCyllinLensOn.setText(labels.getString("btnLensOn"));
                 }
@@ -234,8 +232,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 .addGap(20, 20, 20)
                 .addComponent(buttonCyllinLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(buttonCyllinDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                )));
+                .addComponent(buttonCyllinDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))));
         panelCyllinLayout.setVerticalGroup(
                 panelCyllinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelCyllinLayout.createSequentialGroup()
@@ -243,8 +240,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 .addGroup(panelCyllinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonCyllinDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonCyllinLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(buttonCyllinGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                ));
+                .addComponent(buttonCyllinGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))));
 
         javax.swing.GroupLayout jPanelCyllindricalLayout = new javax.swing.GroupLayout(jPanelCyllindrical);
         jPanelCyllindrical.setLayout(jPanelCyllindricalLayout);
@@ -269,8 +265,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 .addGroup(jPanelCyllindricalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                 .addComponent(jSliderFocalCyllin, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
                 .addComponent(jSliderXPositionCyllin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jSliderYPositionCyllin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                )
+                .addComponent(jSliderYPositionCyllin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(5, Short.MAX_VALUE)));
         jPanelCyllindricalLayout.setVerticalGroup(
                 jPanelCyllindricalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,26 +288,25 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 .addComponent(lblYPosCyllin)
                 .addComponent(txtYPositionCyllin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addComponent(jSliderYPositionCyllin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                ));
-     }
-     
+                .addGap(15, 15, 15)));
+    }
+
     public JPanel getJPanelCyllindrical() {
         return jPanelCyllindrical;
     }
-     
+
     public JPanel getJPanelButton() {
         return panelButton;
     }
-     
+
     public JTextArea getLogArea() {
         return textAreaLog;
     }
-    
+
     public void setLog(String msg) {
         textAreaLog.append(msg + System.getProperty("line.separator"));
     }
-     
+
     private void keyeventGenerateActionPerformedCyllin(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sliderGenerateActionPerformedCyllin
         actionTag = "Cyllin";
         if (parseArguments()) {
@@ -322,12 +316,12 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateCyllindricalParameter(xoffCyllin, yoffCyllin, focalCyllin);
             image.paintCylindrical();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogCyllin());
+            EduPatternShowOn.updatePattern(image, genLogCyllin());
             setLog(genLogCyllin());
             imageGenerated = true;
         }
     }//GEN-LAST:event_sliderGenerateActionPerformedCyllin
-    
+
     private void buttonGenerateActionPerformedCyllin(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerateActionPerformedCyllin
         actionTag = "Cyllin";
         if (parseArguments()) {
@@ -337,7 +331,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateCyllindricalParameter(xoffCyllin, yoffCyllin, focalCyllin);
             image.paintCylindrical();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogCyllin());
+            EduPatternShowOn.updatePattern(image, genLogCyllin());
             setLog(genLogCyllin());
             imageGenerated = true;
         }
@@ -350,7 +344,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateCyllindricalParameter(xoffCyllin, yoffCyllin, focalCyllin);
             image.paintCylindrical();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogCyllin());
+            EduPatternShowOn.updatePattern(image, genLogCyllin());
             setLog(genLogCyllin());
             imageGenerated = true;
 
@@ -367,7 +361,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 Toolkit kit = Toolkit.getDefaultToolkit();
                 Image img = kit.createImage(url);
                 magFrameLenon.setIconImage(img);
-                
+
                 EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
                 magFrameLenon.getContentPane().add(mag);
                 magFrameLenon.pack();
@@ -377,9 +371,9 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
                 magFrameLenon.setAlwaysOnTop(true);
                 magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
-                            countLenOnCyllin--;
-                            buttonCyllinLensOn.setText(labels.getString("btnLensOn"));
-                            magFrameLenon.dispose();
+                        countLenOnCyllin--;
+                        buttonCyllinLensOn.setText(labels.getString("btnLensOn"));
+                        magFrameLenon.dispose();
                     }
                 });
             }
@@ -421,58 +415,31 @@ public class CyllindricalMichelsonPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateCyllindricalParameter(xoffCyllin, yoffCyllin, focalCyllin);
             image.paintCylindrical();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogCyllin());
+            EduPatternShowOn.updatePattern(image, genLogCyllin());
             setLog(genLogCyllin());
             imageGenerated = true;
         }
     }//GEN-LAST:event_sliderGenerateActionPerformedCyllin
-    
+
     private boolean parseArguments() {
         boolean ret = false;
-        try {          
-           
+        try {
             double xoffCyllin = Double.valueOf(txtXPositionCyllin.getText());
             double yoffCyllin = Double.valueOf(txtYPositionCyllin.getText());
             double focalCyllin = Double.valueOf(txtFocalCyllin.getText());
-            
-//            this.xoffCyllin = xoffCyllin * 10;
-//            this.yoffCyllin = yoffCyllin * 10;
-//            this.focalCyllin = focalCyllin/1000;  
-                this.xoffCyllin = xoffCyllin;
-                this.yoffCyllin = yoffCyllin;
-                this.focalCyllin = focalCyllin/100;
+
+            this.xoffCyllin = xoffCyllin;
+            this.yoffCyllin = yoffCyllin;
+            this.focalCyllin = focalCyllin / 100;
             ret = true;
-            
+
         } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, warnings);
-            //textXpos.setText(String.valueOf(this.yoff));
-            //textYpos.setText(String.valueOf(this.yoff));
-            textFocal.setText(String.valueOf(this.focal));
+            e.printStackTrace();
         }
         return ret;
     }
-    
+
     private String genLogCyllin() {
         return String.format(logmessageCyllin, Double.toString(focalCyllin), Double.toString(xoffCyllin), Double.toString(yoffCyllin));
-    }
-    
-    @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

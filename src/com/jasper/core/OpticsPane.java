@@ -35,8 +35,4 @@ public abstract class OpticsPane extends javax.swing.JPanel {
             component.setEnabled(enabled);
         }
     }
-
-    public abstract void updatePatternScreen();
-
-    public abstract void updateRegenerate();
 }

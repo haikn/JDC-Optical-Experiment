@@ -48,6 +48,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -56,16 +58,13 @@ import javax.imageio.ImageIO;
 public class CGH1Panel extends OpticsPane{
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
-    private String actionTag = "Len";
     
-    private javax.swing.JFileChooser openFile;
     private javax.swing.JButton buttonLensOn;
     private javax.swing.JButton buttonDisplaySecondOn;
     private javax.swing.JButton buttonGeneral;
     private javax.swing.JButton buttonOpenFile;
     private javax.swing.JLabel lblPleaseSelect;
     private javax.swing.JLabel lblFilePath;
-    private File fileCGH;
     // Textbox CGH
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTextArea txtCGH;
@@ -94,7 +93,6 @@ public class CGH1Panel extends OpticsPane{
     private void initComponents(BindingGroup bindingGroup) {
         panelButton = new javax.swing.JPanel();
         panel = new javax.swing.JPanel();
-        openFile = new javax.swing.JFileChooser();
         buttonOpenFile = new javax.swing.JButton();
         buttonGeneral = new javax.swing.JButton();
         buttonLensOn = new javax.swing.JButton();
@@ -240,53 +238,33 @@ public class CGH1Panel extends OpticsPane{
     }
     
     private void openFileActionPerformed(java.awt.event.ActionEvent evt) {
-        int returnVal = openFile.showOpenDialog(this);
-        if (returnVal == openFile.APPROVE_OPTION) {
-            fileCGH = openFile.getSelectedFile();
-            String ext = "";
-            String extension = fileCGH.getName();
-            extension = extension.toLowerCase();
-            if (extension.contains("jpg")) {
-                ext = ".jpg";
-            }
-            if (extension.contains("png")) {
-                ext = ".png";
-            }
-            if (extension.contains("gif")) {
-                ext = ".gif";
-            }
-            if (extension.contains("wbmp")) {
-                ext = ".wbmp";
-            }
-            if (extension.contains("jpeg")) {
-                ext = ".jpeg";
-            }
-            if (extension.contains("bmp")) {
-                ext = ".bmp";
-            }
-            if (ext.equals("")) {
-                JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
-            } else {
-                try {
-                    buffImages = ImageIO.read(new File(fileCGH.getAbsolutePath()));
-                    //String file = fileCGH.getAbsolutePath();
-                    String fileName = fileCGH.getName();
+        FileNameExtensionFilter filter = 
+                new FileNameExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg", "wbmp", "bmp");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                String fileName = fileChooser.getSelectedFile().getName();
+                String type = fileName.substring(fileName.length() - 4, fileName.length());
+                type = type.toLowerCase();
+                if (type.contains("jpg") || type.contains("png") || type.contains("gif") 
+                        || type.contains("jpeg") || type.contains("wbmp") || type.contains("bmp")) {
+                    buffImages = ImageIO.read(new File(fileChooser.getSelectedFile().getPath()));
                     PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                    image.paintCGH1(buffImages, fileCGH);
-                    EduPatternShowOn.updateLensPatternPattern(image, "");
+                    image.paintAmplitude(buffImages);
+                    EduPatternShowOn.updatePattern(image, "");
                     setLog(Constant.TEXT_FORMAT_CGH + Constant.LOG_NAME + fileName + "\n"
                             + Constant.LOG_DATE + Utils.dateNow() + "\n"
-                            + Constant.TEXT_FORMAT_CGH );
+                            + Constant.TEXT_FORMAT_CGH);
                     imageGenerated = true;
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    //System.out.println("problem accessing file" + file.getAbsolutePath());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        } else {
-            //System.out.println("File access cancelled by user.");
         }
-
     }
     
     private void buttonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed
@@ -294,15 +272,15 @@ public class CGH1Panel extends OpticsPane{
         buttonDisplaySecondOn.setEnabled(true);
 
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.paintCGH1(buffImages, fileCGH);
-        EduPatternShowOn.updateLensPatternPattern(image, "");
+        image.paintAmplitude(buffImages);
+        EduPatternShowOn.updatePattern(image, "");
         imageGenerated = true;
     }
 
     private void button11LensOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.paintCGH1(buffImages, fileCGH);
-        EduPatternShowOn.updateLensPatternPattern(image, "");
+        image.paintAmplitude(buffImages);
+        EduPatternShowOn.updatePattern(image, "");
         imageGenerated = true;
 
         if (countLenOn % 2 == 0) {
@@ -346,7 +324,7 @@ public class CGH1Panel extends OpticsPane{
             JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.paintCGH1(buffImages, fileCGH);
+            image.paintAmplitude(buffImages);
             EduPatternShowOn.updatePatternSecondDisplay(image, "");
             imageGenerated = true;
             if (countSecondDisplay % 2 == 0) {
@@ -371,13 +349,5 @@ public class CGH1Panel extends OpticsPane{
             }
         } catch (Exception e) {
         }
-    }
-
-    @Override
-    public void updatePatternScreen() {
-    }
-
-    @Override
-    public void updateRegenerate() {
     }
 }

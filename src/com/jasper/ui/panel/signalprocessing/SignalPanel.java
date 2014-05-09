@@ -509,8 +509,8 @@ public class SignalPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel, processing_spacing);
-            image.signalProcessing();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogProcessing());
+            image.paintSignalProcessing();
+            EduPatternShowOn.updatePattern(image, genLogProcessing());
             setLog(genLogProcessing());
             imageGenerated = true;
         }
@@ -523,8 +523,8 @@ public class SignalPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel, processing_spacing);
-            image.signalProcessing();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogProcessing());
+            image.paintSignalProcessing();
+            EduPatternShowOn.updatePattern(image, genLogProcessing());
             setLog(genLogProcessing());
             imageGenerated = true;
         }
@@ -538,8 +538,8 @@ public class SignalPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel, processing_spacing);
-            image.signalProcessing();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogProcessing());
+            image.paintSignalProcessing();
+            EduPatternShowOn.updatePattern(image, genLogProcessing());
             setLog(genLogProcessing());
             imageGenerated = true;
         }
@@ -551,8 +551,8 @@ public class SignalPanel extends OpticsPane{
         if (parseArguments()) {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel, processing_spacing);
-            image.signalProcessing();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogProcessing());
+            image.paintSignalProcessing();
+            EduPatternShowOn.updatePattern(image, genLogProcessing());
             setLog(genLogProcessing());
             imageGenerated = true;
             if (countLenOnProcessing % 2 == 0) {
@@ -602,10 +602,9 @@ public class SignalPanel extends OpticsPane{
             } else {
                 PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
                 image.updateParameterDrawSignalProcessing(processing_widthX, processing_widthY, processing_heightX, processing_heightY, processing_positionX, processing_positionY, processing_rotation, processing_grayLevel, processing_spacing);
-                image.signalProcessing();
+                image.paintSignalProcessing();
                 EduPatternShowOn.updatePatternSecondDisplay(image, genLogProcessing());
                 setLog(genLogProcessing());
-                //EduPatternTest.updateLensPatternPattern(image, genLog());
                 imageGenerated = true;
                 if (countSecondDisplayProcessing % 2 == 0) {
                     patternFrameDoubleClick.dispose();
@@ -642,25 +641,5 @@ public class SignalPanel extends OpticsPane{
     
      public void setLog(String msg) {
         txtLogArea.append(msg + System.getProperty("line.separator"));
-    }
-    
-     @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

@@ -325,7 +325,7 @@ public class CyllindricalWavefrontPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateCyllindricalParameter(xoffCyllin, yoffCyllin, focalCyllin);
             image.paintCylindrical();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogCyllin());
+            EduPatternShowOn.updatePattern(image, genLogCyllin());
             setLog(genLogCyllin());
             imageGenerated = true;
         }
@@ -340,7 +340,7 @@ public class CyllindricalWavefrontPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateCyllindricalParameter(xoffCyllin, yoffCyllin, focalCyllin);
             image.paintCylindrical();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogCyllin());
+            EduPatternShowOn.updatePattern(image, genLogCyllin());
             setLog(genLogCyllin());
             imageGenerated = true;
         }
@@ -353,7 +353,7 @@ public class CyllindricalWavefrontPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateCyllindricalParameter(xoffCyllin, yoffCyllin, focalCyllin);
             image.paintCylindrical();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogCyllin());
+            EduPatternShowOn.updatePattern(image, genLogCyllin());
             setLog(genLogCyllin());
             imageGenerated = true;
 
@@ -424,7 +424,7 @@ public class CyllindricalWavefrontPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateCyllindricalParameter(xoffCyllin, yoffCyllin, focalCyllin);
             image.paintCylindrical();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogCyllin());
+            EduPatternShowOn.updatePattern(image, genLogCyllin());
             setLog(genLogCyllin());
             imageGenerated = true;
         }
@@ -454,25 +454,5 @@ public class CyllindricalWavefrontPanel extends OpticsPane{
     
     private String genLogCyllin() {
         return String.format(logmessageCyllin, Double.toString(focalCyllin), Double.toString(xoffCyllin), Double.toString(yoffCyllin));
-    }
-    
-    @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

@@ -48,6 +48,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -241,52 +243,33 @@ public class TalbotPhotoPanel extends OpticsPane{
     }
     
     private void openFileActionPerformed(java.awt.event.ActionEvent evt) {
-        int returnVal = openFile.showOpenDialog(this);
-        if (returnVal == openFile.APPROVE_OPTION) {
-            fileLog = openFile.getSelectedFile();
-            String ext = "";
-            String extension = fileLog.getName();
-            extension = extension.toLowerCase();
-            if (extension.contains("jpg")) {
-                ext = ".jpg";
-            }
-            if (extension.contains("png")) {
-                ext = ".png";
-            }
-            if (extension.contains("gif")) {
-                ext = ".gif";
-            }
-            if (extension.contains("wbmp")) {
-                ext = ".wbmp";
-            }
-            if (extension.contains("jpeg")) {
-                ext = ".jpeg";
-            }
-            if (extension.contains("bmp")) {
-                ext = ".bmp";
-            }
-            if (ext.equals("")) {
-                JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
-            } else {
-                try {
-                    buffImages = ImageIO.read(new File(fileLog.getAbsolutePath()));
-                    String fileName = fileLog.getName();
+        FileNameExtensionFilter filter = 
+                new FileNameExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg", "wbmp", "bmp");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                String fileName = fileChooser.getSelectedFile().getName();
+                String type = fileName.substring(fileName.length() - 4, fileName.length());
+                type = type.toLowerCase();
+                if (type.contains("jpg") || type.contains("png") || type.contains("gif") 
+                        || type.contains("jpeg") || type.contains("wbmp") || type.contains("bmp")) {
+                    buffImages = ImageIO.read(new File(fileChooser.getSelectedFile().getPath()));
                     PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
                     image.paintTalbotPhoto(buffImages);
-                    EduPatternShowOn.updateLensPatternPattern(image, "");
+                    EduPatternShowOn.updatePattern(image, "");
                     setLog(Constant.TEXT_FORMAT_CGH + Constant.LOG_NAME + fileName + "\n"
                             + Constant.LOG_DATE + Utils.dateNow() + "\n"
-                            + Constant.TEXT_FORMAT_CGH );
+                            + Constant.TEXT_FORMAT_CGH);
                     imageGenerated = true;
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    //System.out.println("problem accessing file" + file.getAbsolutePath());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        } else {
-            //System.out.println("File access cancelled by user.");
         }
-
     }
     
     private void buttonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed1
@@ -295,14 +278,14 @@ public class TalbotPhotoPanel extends OpticsPane{
 
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
         image.paintTalbotPhoto(buffImages);
-        EduPatternShowOn.updateLensPatternPattern(image, "");
+        EduPatternShowOn.updatePattern(image, "");
         imageGenerated = true;
     }
 
     private void button11LensOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed1
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
         image.paintTalbotPhoto(buffImages);
-        EduPatternShowOn.updateLensPatternPattern(image, "");
+        EduPatternShowOn.updatePattern(image, "");
         imageGenerated = true;
 
         if (countLenOn % 2 == 0) {
@@ -371,13 +354,5 @@ public class TalbotPhotoPanel extends OpticsPane{
             }
         } catch (Exception e) {
         }
-    }
-
-    @Override
-    public void updatePatternScreen() {
-    }
-
-    @Override
-    public void updateRegenerate() {
     }
 }

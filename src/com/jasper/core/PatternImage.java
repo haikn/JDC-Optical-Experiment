@@ -23,7 +23,6 @@ package com.jasper.core;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -31,11 +30,8 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
-import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -56,7 +52,6 @@ public class PatternImage {
     private double lambda;
     private double xoff;
     private double yoff;
-    private double angle;
     private double pxsize;
     private double focal;
     private double mirrorTheta;
@@ -76,9 +71,7 @@ public class PatternImage {
     private double d_postionY;
     private double d_rotation;
     private double d_grayLevel;
-    private double d_zoom;
     private double d_spacing;
-    //end
     // Talbot
     private double d_widthXTalbot;
     private double d_widthYTalbot;
@@ -115,27 +108,22 @@ public class PatternImage {
     // Beam  Shifting
     private double xoffBeamShifting;
     private double yoffBeamShifting;
-    // Import file
+    // Static 
+    private double staticPhy;
+    private double staticTheta;
+    
+    private double[][] buferPattern;
+    private boolean tuningFlag = false;
+    // Import formula
     private double k;
     private double r;
     private double e;
     private double kr;
-    private String formula_importFile;
-    private double width_importFile;
-    private double rotation_importFile;
-    private double position_importFile;
-    private double grayLevel_importFile;
-    private PatternImage patternImage;
-    private BufferedImage buffImgCGH1;
-    private File fileCGH1;
-    private double[][] buferPattern;
-    private byte flag = 0;
-    private boolean tuningFlag = false;
-    private SampleModel sampleModel;
-    private static BufferedImage buffVideo;
-    private int wVideo;
-    private int hVideo;
-    private DaemonThread myThread = null;
+    private String formula;
+    private double widthImportFormula;
+    private double rotationImportFormula;
+    private double positionImportFormula;
+    private double grayLevel_ImportFormula;
     // title string
     public String title;
 
@@ -165,7 +153,6 @@ public class PatternImage {
         this.lambda = lambda;
         this.xoff = 0.0;
         this.yoff = 0.0;
-        this.angle = 0.0;
         this.pxsize = 6.4e-6;
         this.focal = 1.0;
         gray2phase = new int[256];
@@ -178,13 +165,6 @@ public class PatternImage {
 
     public Rectangle getBounds() {
         return new Rectangle(width, height);
-    }
-
-    public void updateLensParameter(double xoff, double yoff, double focal) {
-        this.xoff = xoff;
-        this.yoff = yoff;
-        this.focal = focal;
-        title = "lens " + xoff + " " + yoff + " " + focal;
     }
 
     public void updateLensMichelsonParameter(double xoff, double yoff, double focal) {
@@ -292,19 +272,25 @@ public class PatternImage {
         this.mirrorThetaSpectometer = theta;
         title = "mirror " + phy + " " + theta;
     }
-
-    public void updateParameterImportFile(double k, double r, double e, double kr
+    
+    public void updateStaticParameter(double phy, double theta) {
+        this.staticPhy = phy;
+        this.staticTheta = theta;
+        title = "static " + phy + " " + theta;
+    }
+    
+    public void updateParameterImportFormula(double k, double r, double e, double kr
             , double width, double positions, double rotation, double grayLevel, String formula) {
         this.k = k;
         this.r = r;
         this.e = e;
         this.kr = kr;
-        this.formula_importFile = formula;
-        this.width_importFile = width;
-        this.rotation_importFile = rotation;
-        this.position_importFile = positions;
-        this.grayLevel_importFile = grayLevel;
-        title = "ImportFile ";
+        this.formula = formula;
+        this.widthImportFormula = width;
+        this.rotationImportFormula = rotation;
+        this.positionImportFormula = positions;
+        this.grayLevel_ImportFormula = grayLevel;
+        title = "import formula ";
     }
 
     private void initGray2phase() {
@@ -322,63 +308,11 @@ public class PatternImage {
         return gray2phase[gray];
     }
 
-    private byte phase2grayImportFile(double phase) {
-        int scale = gray2phase.length;
-        phase = phase / 2.0d / Math.PI;
-        phase -= Math.floor(phase);
-        int gray = Math.min((int) Math.round(phase * scale), scale - 1);
-        //Math.getExponent(gray);
-        return gray2phaseFinetuning[gray];
-    }
-
     public void paintZoom(Rectangle rec) {
-
         Graphics2D g2 = (Graphics2D) canvas.getGraphics();
         g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         g2.draw(rec);
         g2.fill(rec);
-        // g2.D
-    }
-
-    // Telephoto Lens algorithms
-    public void paintLens() {
-        WritableRaster raster = canvas.getRaster();
-        int[] iArray = new int[1];
-        double x2, y2, phase;
-        double y1;
-        double fixpart = Math.PI / lambda / focal;
-        // 2*pi/la*0.1*x*psize
-        //double fixpart2 = 2.0 * Math.PI / lambda * 0.1;
-
-        // calculate phase of each pixel;
-        for (int i = 0; i < height; i++) {
-            x2 = (double) (i - height / 2 + 1) * pxsize;
-            x2 -= (-yoff);
-            //x2 -= 0.0;
-            x2 = Math.pow(x2, 2.0);
-            // Albert 2013/09/05
-            Math.getExponent(x2);
-            // 2*pi/la*0.1*x*psize
-            double fixpart2 = 2.0 * Math.PI / lambda * x2 * 0.1;
-            for (int j = 0; j < width; j++) {
-                y2 = (double) (j - width / 2 + 1) * pxsize;
-                y2 -= (xoff);
-                //y2 -= 0.0;
-                y1 = y2;
-                y2 = Math.pow(y2, 2.0);
-
-                // Albert 2013/09/05
-                Math.getExponent(y2);
-                phase = fixpart * (x2 + y2);
-                phase += fixpart2 * x2 * y2;
-
-                iArray[0] = phase2gray(phase);
-                raster.setPixel(j, i, iArray);
-            }
-        }
-        buferPattern = compute(canvas);
-        flag = 1;
-        tuningFlag = true;
     }
 
     // Michelson Lens algorithms
@@ -410,49 +344,15 @@ public class PatternImage {
             }
         }
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
-    // Microscope algorithms
-    public void paintMicroscope() {
-        WritableRaster raster = canvas.getRaster();
-        int[] iArray = new int[1];
-        double x2, y2, phase;
-        double fixpart = Math.PI / lambda / (focalMicroscope);
-
-        // calculate phase of each pixel;
-        for (int i = 0; i < height; i++) {
-            x2 = (double) (i - height / 2 + 1) * pxsize;
-            x2 -= (-yoffMicroscope / 1000);
-            x2 = Math.pow(x2, 2.0);
-            Math.getExponent(x2);
-            // 2*pi/la*0.1*x*psize
-            double fixpart2 = 2.0 * Math.PI / lambda * x2 * 0.1;
-            for (int j = 0; j < width; j++) {
-                y2 = (double) (j - width / 2 + 1) * pxsize;
-                y2 -= (xoffMicroscope / 1000);
-                y2 = Math.pow(y2, 2.0);
-
-                Math.getExponent(y2);
-                phase = fixpart * (x2 + y2);
-                phase += fixpart2 * x2 * y2;
-                iArray[0] = phase2gray(phase);
-                raster.setPixel(j, i, iArray);
-            }
-        }
-        buferPattern = compute(canvas);
-        flag = 1;
-        tuningFlag = true;
-    }
     // Cylindrical algorithms
     public void paintCylindrical() {
         WritableRaster raster = canvas.getRaster();
         // wave=exp(1i*pi/wl*xt.^2);
         int[] iArray = new int[1];
         double x1, y1, x2, phase;
-
-        double fixpart2 = 2.0 * Math.PI / lambda;
         double fixpart = Math.PI / lambda / (focalCyllin);
 
         double costheta = Math.cos(Math.toRadians((yoffCyllin)));
@@ -465,8 +365,6 @@ public class PatternImage {
                 y1 = (double) (j - width / 2 + 1) * pxsize;
                 x2 = x1 * costheta - y1 * sintheta;
                 x2 = Math.pow(x2, 2.0);
-                //phase = fixpart * x2 + fixpart2 * y1;
-                //phase = fixpart * x2 + fixpart2 * Math.pow(x2, 2.0);
                 phase = fixpart * x2;
 
                 iArray[0] = phase2gray(phase);
@@ -474,7 +372,6 @@ public class PatternImage {
             }
         }
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
@@ -505,7 +402,6 @@ public class PatternImage {
             }
         }
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
@@ -536,7 +432,6 @@ public class PatternImage {
             }
         }
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
@@ -568,13 +463,11 @@ public class PatternImage {
             }
         }
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
 
     }
 
     public void paintBeamShifting() {
-        double[][] cHGPattern;
         WritableRaster raster = canvas.getRaster();
         double[] iArray = new double[1];
         double phase, x, y;
@@ -585,12 +478,40 @@ public class PatternImage {
         double xm = Math.sin(phy) * Math.cos(theta);
         double ym = Math.sin(phy) * Math.sin(theta);
         double fixpart = 2.0 * Math.PI / lambda;
-        if(tuningFlag && flag == 2) {
+        if (tuningFlag) {
+            for (int i = 0; i < width; i++) {
+                x = (double) (i - width / 2 + 1) * pxsize;
+                x = xm * x;
+                for (int j = 0; j < height; j++) {
+                    y = (double) (height / 2 - j + 1) * pxsize;
+                    y = ym * y;
+
+                    phase = fixpart * (x + y) + buferPattern[i][j];
+                    iArray[0] = phase2gray(phase);
+                    raster.setPixel(i, j, iArray);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "There is no pattern to Fine tune. Please select an experiment or import a CGH pattern", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void paintStatic(String filePath) {
+        double[][] cHGPattern;
+        WritableRaster raster = canvas.getRaster();
+        double[] iArray = new double[1];
+        double phase, x, y;
+        //phy and theta uses "radian"
+        double phy = Math.toRadians(staticPhy);
+        double theta = Math.toRadians(staticTheta);
+
+        double xm = Math.sin(phy) * Math.cos(theta);
+        double ym = Math.sin(phy) * Math.sin(theta);
+        double fixpart = 2.0 * Math.PI / lambda;
             try {
-                String canonicalPathTmp = fileCGH1.getCanonicalPath();
-                String canonicalPath = canonicalPathTmp.substring(0, canonicalPathTmp.length() - 4) + "tmp.jpg";
+                String canonicalPath = filePath.substring(0, filePath.length() - 4) + "tmp.jpg";
                 File tmpFile = new File(canonicalPath);
-                BufferedImage originalImage = ImageIO.read(fileCGH1);
+                BufferedImage originalImage = ImageIO.read(new File(filePath));
                 BufferedImage resizeImageJpg = resizeImage(originalImage, originalImage.getType(), width, height);
                 ImageIO.write(resizeImageJpg, "jpg", tmpFile);
 
@@ -611,23 +532,51 @@ public class PatternImage {
             } catch (IOException ex) {
                 Logger.getLogger(PatternImage.class.getName()).log(Level.SEVERE, null, ex);
             }
+    }
+    
+    public void paintImportFormula() {
 
-        } else if (tuningFlag && flag == 1) {
-            for (int i = 0; i < width; i++) {
-                x = (double) (i - width / 2 + 1) * pxsize;
-                x = xm * x;
-                for (int j = 0; j < height; j++) {
-                    y = (double) (height / 2 - j + 1) * pxsize;
-                    y = ym * y;
+        // TO DO
+        // U1 = Uexp[j(k.r+e)]
+        //    phase = k.r + e
+        //    exp[j(k.r + e)] = cos(phase) + isin(phase)
+        //    fixpart = U = 2.0 * Math.PI / lambda
+        WritableRaster raster = canvas.getRaster();
+        int[] iArray = new int[1];
+        double x2, y2, phase;
+        double y1;
+        double fixpart = 2.0 * Math.PI / lambda;
 
-                    phase = fixpart * (x + y) + buferPattern[i][j];
-                    iArray[0] = phase2gray(phase);
-                    raster.setPixel(i, j, iArray);
-                }
+        double phy = Math.toRadians(widthImportFormula);
+        //double xcomp = Math.sin(phy) * Math.cos(theta);
+
+        //System.out.println("fixpar: " + fixpart);
+
+        for (int i = 0; i < height; i++) {
+            x2 = (double) (i - height / 2 + 1) * pxsize;
+            //x2 = xcomp * x2;
+            //x2 = (double) (i - height / 2 + 1) * pxsize;
+            //x2 -= (-yoffMichelson / 1000);
+            //x2 = Math.pow(x2, 2.0);
+            //Math.getExponent(x2);
+            //double fixpart2 = 2.0 * Math.PI / lambda * x2 * 0.1;
+            for (int j = 0; j < width; j++) {
+                //y2 = (double) (j - width / 2 + 1) * pxsize;
+                //y2 -= (xoffMichelson / 1000);
+                //y1 = y2;
+                //y2 = Math.pow(y2, 2.0);
+
+                //Math.getExponent(y2);
+                phase = fixpart * (k*r + e);
+                //System.out.println("phase: " + phase + " at x =" + i + " and j =" + j);
+                //phase += fixpart2 * x2 * y2;
+
+                iArray[0] = phase2gray(phase);
+                raster.setPixel(j, i, iArray);
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "There is no pattern to Fine tune. Please select an experiment or import a CGH pattern", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        buferPattern = compute(canvas);
+        tuningFlag = true;
     }
 
     public double[][] compute(File file) {
@@ -689,145 +638,11 @@ public class PatternImage {
         }
         return image;
     }
-
-    public void paintFineTuning(BufferedImage buffImg) {
-
-        double scale = 1.0;
-        buffImg = PatternImage.resizeImage(buffImg, buffImg.getType(), 1920, 1080);
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        double canvasX = canvas.getWidth() / 2;
-        double canvasY = canvas.getHeight() / 2;
-        int imageWidth = buffImg.getWidth();
-        int imageHeight = buffImg.getHeight();
-        double x = (scale * imageWidth) / 2;
-        double y = (scale * imageHeight) / 2;
-        AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
-        at.scale(scale, scale);
-        /// AffineTransform at = AffineTransform.getScaleInstance(1920, 1080);
-        //double k =(imread('testHologram.bmp'))/255*2*pi;
-        g2.drawRenderedImage(buffImg, at);
-    }
-
-    public void paintCGH1(BufferedImage buffImg, File file) {
-        fileCGH1 = file;
-        double scale = 1.0;
-        buffImg = PatternImage.resizeImage(buffImg, BufferedImage.TYPE_INT_RGB, 1366, 768);
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        double canvasX = canvas.getWidth() / 2;
-        double canvasY = canvas.getHeight() / 2;
-        int imageWidth = buffImg.getWidth();
-        int imageHeight = buffImg.getHeight();
-        double x = (scale * imageWidth) / 2;
-        double y = (scale * imageHeight) / 2;
-        AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
-        at.scale(scale, scale);
-        g2.drawRenderedImage(buffImg, null);
-        g2.drawImage(buffImg, null, width, width);
-        g2.dispose();
-        flag = 2;
-        tuningFlag = true;
-    }
-
-    private static int[] parseElement(String s) throws IOException {
-        int[] ret = new int[gray2phase.length];
-        int idx = 0;
-        int scale = gray2phase.length;
-        String elements[] = s.split(",");
-        for (String element : elements) {
-            if (element.contains(":")) {
-                String ends[] = element.split(":");
-                if (ends.length != 2) {
-                    throw new IOException();
-                }
-                int front = Integer.valueOf(ends[0]);
-                int rear = Integer.valueOf(ends[1]);
-                if (front > scale - 1 || front < 0 || rear > scale - 1 || rear < 0) {
-                    throw new IOException();
-                }
-                int offset = (rear - front) / Math.abs(rear - front);
-                for (int val = front; true; val += offset) {
-                    ret[idx++] = val;
-                    if (val == rear) {
-                        break;
-                    }
-                }
-            } else {
-                int p = Integer.valueOf(element);
-                if (p > scale - 1 || p < 0) {
-                    throw new IOException();
-                }
-                ret[idx++] = p;
-            }
-        }
-
-        // prepare the return array
-        int[] retVal = new int[idx];
-        for (int i = 0; i < idx; i++) {
-            retVal[i] = ret[i];
-        }
-
-        return retVal;
-    }
-
-    public static boolean openFile(String filename) {
-        boolean retValue = false;
-        BufferedReader br = null;
-
-        // initialize new table with values in the old table
-        int newTable[] = new int[gray2phase.length];
-        for (int i = 0; i < gray2phase.length; i++) {
-            newTable[i] = gray2phase[i];
-        }
-        try {
-            br = new BufferedReader(new FileReader(filename));
-            String strLine;
-            while ((strLine = br.readLine()) != null) {
-                if (strLine.length() != 0 && strLine.charAt(0) != '#') {
-                    String[] tokens = strLine.trim().split("[\t ]+");
-                    for (String token : tokens) {
-                        String lrhs[] = token.split("=");
-                        if (lrhs.length != 2) {
-                            throw new IOException();
-                        }
-                        int lhs[] = parseElement(lrhs[0]);
-                        int rhs[] = parseElement(lrhs[1]);
-                        if (lhs.length != rhs.length) {
-                            throw new IOException();
-                        }
-                        for (int i = 0; i < lhs.length; i++) {
-                            newTable[lhs[i]] = rhs[i];
-                        }
-                    }
-                }
-            }
-            // update with the new table values
-            for (int i = 0; i < gray2phase.length; i++) {
-                gray2phase[i] = newTable[i];
-            }
-            retValue = true;
-        } catch (Exception e) {
-            // System.out.println("parse or IO error");
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-            }
-        }
-        return retValue;
-    }
-
-    public void slit(int slit) {
+    
+    public void paintSlit(int slit) {
         if (slit == 0) {
             slit = 1;
         }
-
         int lineWidth = (int) d_widthX;
         int lineHeight = (int) d_heightX;
         int lineRotation = (int) d_rotation;
@@ -866,67 +681,10 @@ public class PatternImage {
             g.fill(rect2);
         }
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
-    public void signalProcessing0() {
-
-        int lineWidthX = (int) d_widthX;
-        int lineHeightX = (int) d_heightX;
-        int lineWidthY = (int) d_widthY;
-        int lineHeightY = (int) d_heightY;
-        int lineRotation = (int) d_rotation;
-        int linePostionX = (int) d_postionX;
-        int linePostionY = (int) d_postionY;
-        int lineGray = (int) d_grayLevel;
-        int spac = (int) d_spacing;
-        Graphics2D g = (Graphics2D) canvas.getGraphics();
-        g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        int NumCol = 5;
-        int NumRow = 2;
-        int[] ColX;
-        int[] RowY;
-        ColX = new int[NumCol];
-        int DelX = canvas.getWidth() / NumCol;
-        for (int i = 0; i < ColX.length; i++) {
-            ColX[i] = ((linePostionY + canvas.getWidth() / 2) - canvas.getWidth() / 2) + (DelX / 2 + DelX * i);
-        }
-        RowY = new int[NumRow];
-        int DelY = canvas.getHeight() / NumRow;
-        for (int i = 0; i < RowY.length; i++) {
-            if (i % 2 == 0) {
-                RowY[i] = ((linePostionX + canvas.getHeight() / 2) - canvas.getHeight() / 2) + ((DelY) - spac / 2);
-            } else {
-                RowY[i] = ((linePostionX + canvas.getHeight() / 2) - canvas.getHeight() / 2) + ((DelY) + spac / 2);
-            }
-        }
-        Rectangle rect2;
-        for (int i = 0; i < NumCol; i++) {
-            g = (Graphics2D) canvas.getGraphics();
-            g.setColor(new Color(lineGray, lineGray, lineGray));
-            rect2 = new Rectangle(ColX[i] - lineWidthY / 2, (canvas.getHeight() - lineHeightY) / 2, lineWidthY, lineHeightY);
-            // g.rotate(Math.toRadians(lineRotation), rect2.x + rect2.width / 2, rect2.y + rect2.height / 2);
-            g.rotate(Math.toRadians(lineRotation), canvas.getWidth() / 2, canvas.getHeight() / 2);
-            g.draw(rect2);
-            g.fill(rect2);
-        }
-        for (int i = 0; i < NumRow; i++) {
-            g = (Graphics2D) canvas.getGraphics();
-            g.setColor(new Color(lineGray, lineGray, lineGray));
-            rect2 = new Rectangle((canvas.getWidth() - lineWidthX) / 2, RowY[i] - lineHeightX / 2, lineWidthX, lineHeightX);
-            //g.rotate(Math.toRadians(lineRotation), rect2.x + rect2.width / 2, rect2.y + rect2.height / 2);
-            g.rotate(Math.toRadians(lineRotation), canvas.getWidth() / 2, canvas.getHeight() / 2);
-            g.draw(rect2);
-            g.fill(rect2);
-        }
-        buferPattern = compute(canvas);
-        flag = 1;
-        tuningFlag = true;
-    }
-
-    public void signalProcessing() {
-
+    public void paintSignalProcessing() {
         int lineWidthX = (int) d_widthX;
         int lineHeightX = (int) d_heightX;
         int lineWidthY = (int) d_widthY;
@@ -937,8 +695,6 @@ public class PatternImage {
         int lineGray = (int) d_grayLevel;
         int spac = (int) d_spacing;
 
-
-        //System.out.println(spac);
         int MaxHeight = (int) (Math .sqrt(Math .pow(canvas.getHeight(), 2) + Math.pow(canvas.getWidth(), 2)));
 
         Graphics2D g = (Graphics2D) canvas.getGraphics();
@@ -1044,7 +800,6 @@ public class PatternImage {
         }
 
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
@@ -1058,7 +813,6 @@ public class PatternImage {
         int linePostionY = (int) d_postionYTalbot;
         int lineGray = (int) d_grayLevelTalbot;
         int spac = (int) d_spacingTalbot;
-        //System.out.println(spac);
         int MaxHeight = (int) (Math .sqrt(Math .pow(canvas.getHeight(), 2) + Math.pow(canvas.getWidth(), 2)));
 
         Graphics2D g = (Graphics2D) canvas.getGraphics();
@@ -1164,15 +918,11 @@ public class PatternImage {
         }
 
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
-    public void signalPhoto(BufferedImage buffImg) {
-
+    public void paintAmplitude(BufferedImage buffImg) {
         double scale = 1.0;
-        // scale = d_zoom / 100.0D;
-        //buffImg = buffImg.gets
         buffImg = PatternImage.resizeImage(buffImg, buffImg.getType(), 1920, 1080);
         Graphics2D g2 = (Graphics2D) canvas.getGraphics();
         g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -1186,53 +936,13 @@ public class PatternImage {
         double y = (scale * imageHeight) / 2;
         AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
         at.scale(scale, scale);
-        /// AffineTransform at = AffineTransform.getScaleInstance(1920, 1080);
+        
         g2.drawRenderedImage(buffImg, at);
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
-    public void fresnel(BufferedImage buffImg) {
-        int width = 0;
-        try {
-            width = (int) d_widthX;
-        } catch (Exception e) {
-        }
-        if (width < 17) {
-            width = 17;
-        }
-        width = (width / 10) * 16;
-        int height = 0;
-        try {
-            height = (int) d_heightX;
-        } catch (Exception e) {
-        }
-        if (height < 15) {
-            height = 15;
-        }
-        height = (height / 10) * 9;
-        double scale = 1.0;
-        buffImg = PatternImage.resizeImage(buffImg, buffImg.getType(), width, height);
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        double canvasX = canvas.getWidth() / 2;
-        double canvasY = canvas.getHeight() / 2;
-        int imageWidth = buffImg.getWidth();
-        int imageHeight = buffImg.getHeight();
-        double x = (scale * imageWidth) / 2;
-        double y = (scale * imageHeight) / 2;
-        AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
-        at.scale(scale, scale);
-        g2.drawRenderedImage(buffImg, at);
-        buferPattern = compute(canvas);
-        flag = 1;
-        tuningFlag = true;
-    }
-
-    public void phaseRetarder() {
+    public void paintPhaseRetarder() {
         Graphics2D g = (Graphics2D) canvas.getGraphics();
         g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         g.setColor(new Color((int) d_grayLevel, (int) d_grayLevel, (int) d_grayLevel));
@@ -1240,15 +950,11 @@ public class PatternImage {
         g.draw(rect);
         g.fill(rect);
         buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 
     public void paintTalbotPhoto(BufferedImage buffImg) {
-
         double scale = 1.0;
-        // scale = d_zoom / 100.0D;
-        //buffImg = buffImg.gets
         buffImg = PatternImage.resizeImage(buffImg, buffImg.getType(), 1920, 1080);
         Graphics2D g2 = (Graphics2D) canvas.getGraphics();
         g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -1262,221 +968,8 @@ public class PatternImage {
         double y = (scale * imageHeight) / 2;
         AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
         at.scale(scale, scale);
-        /// AffineTransform at = AffineTransform.getScaleInstance(1920, 1080);
         g2.drawRenderedImage(buffImg, at);
         buferPattern = compute(canvas);
-        flag = 1;
-        tuningFlag = true;
-    }
-
-    public void paintImportFormula() {
-
-        // TO DO
-        // U1 = Uexp[j(k.r+e)]
-        //    phase = k.r + e
-        //    exp[j(k.r + e)] = cos(phase) + isin(phase)
-        //    fixpart = U = 2.0 * Math.PI / lambda
-        WritableRaster raster = canvas.getRaster();
-        int[] iArray = new int[1];
-        double x2, y2, phase;
-        double y1;
-        double fixpart = 2.0 * Math.PI / lambda;
-
-        double phy = Math.toRadians(width_importFile);
-        //double xcomp = Math.sin(phy) * Math.cos(theta);
-
-        //System.out.println("fixpar: " + fixpart);
-
-        for (int i = 0; i < height; i++) {
-            x2 = (double) (i - height / 2 + 1) * pxsize;
-            //x2 = xcomp * x2;
-            //x2 = (double) (i - height / 2 + 1) * pxsize;
-            //x2 -= (-yoffMichelson / 1000);
-            //x2 = Math.pow(x2, 2.0);
-            //Math.getExponent(x2);
-            //double fixpart2 = 2.0 * Math.PI / lambda * x2 * 0.1;
-            for (int j = 0; j < width; j++) {
-                //y2 = (double) (j - width / 2 + 1) * pxsize;
-                //y2 -= (xoffMichelson / 1000);
-                //y1 = y2;
-                //y2 = Math.pow(y2, 2.0);
-
-                //Math.getExponent(y2);
-                phase = fixpart * (k*r + e);
-                //System.out.println("phase: " + phase + " at x =" + i + " and j =" + j);
-                //phase += fixpart2 * x2 * y2;
-
-                iArray[0] = phase2gray(phase);
-                raster.setPixel(j, i, iArray);
-            }
-        }
-        buferPattern = compute(canvas);
-        flag = 1;
-        tuningFlag = true;
-    }
-    
-    public void paintStatic(BufferedImage buffImg) {
-
-        double scale = 1.0;
-        // scale = d_zoom / 100.0D;
-        //buffImg = buffImg.gets
-        buffImg = PatternImage.resizeImage(buffImg, buffImg.getType(), 1920, 1080);
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        double canvasX = canvas.getWidth() / 2;
-        double canvasY = canvas.getHeight() / 2;
-        int imageWidth = buffImg.getWidth();
-        int imageHeight = buffImg.getHeight();
-        double x = (scale * imageWidth) / 2;
-        double y = (scale * imageHeight) / 2;
-        AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
-        at.scale(scale, scale);
-        /// AffineTransform at = AffineTransform.getScaleInstance(1920, 1080);
-        //g2.drawRenderedImage(buffImg, at);
-        buferPattern = compute(canvas);
-        flag = 1;
-        tuningFlag = true;
-        double phase, xt, yt;
-        //phy and theta uses "radian"
-        double phy = Math.toRadians(100);
-        double theta = Math.toRadians(100);
-
-        double xm = Math.sin(phy) * Math.cos(theta);
-        double ym = Math.sin(phy) * Math.sin(theta);
-        double fixpart = 2.0 * Math.PI / lambda;
-        WritableRaster raster = canvas.getRaster();
-        double[] iArray = new double[1];
-        for (int i = 0; i < width; i++) {
-                xt = (double) (i - width / 2 + 1) * pxsize;
-                xt = xm * xt;
-                for (int j = 0; j < height; j++) {
-                    yt = (double) (height / 2 - j + 1) * pxsize;
-                    yt = ym * yt;
-
-                    phase = fixpart * (xt + yt) + buferPattern[i][j];
-                    iArray[0] = phase2gray(phase);
-                    raster.setPixel(i, j, iArray);
-                }
-            }
-    }
-    
-    public void paintDynamic(BufferedImage buffImg, int w, int h) {
-//        buffVideo = buffImg;
-//        wVideo = w;
-//        hVideo = h;
-//        myThread = new DaemonThread();
-//            Thread t = new Thread(myThread);
-//            t.setDaemon(true);
-//            myThread.runnable = true;
-//            t.start();
-        Raster raster = buffImg.getData();
-        sampleModel = raster.getSampleModel();
-        WritableRaster rasterSample = Raster.createWritableRaster(sampleModel, new Point(0, 0));
-            int x = 0;
-            int y = 100;
-            double phy = Math.toRadians(x);
-            double theta = Math.toRadians(y);
-            double xm = Math.sin(phy) * Math.cos(theta);
-            double ym = Math.sin(phy) * Math.sin(theta);
-            double fixpart = 2.0 * Math.PI / 10;
-            double pxsize = 100;
-            double phase, xa, ya;
-            System.out.println("width: " + width + " height: " + height);
-
-            for (int i = 0; i < w; i++) {
-                xa = (double) (i - x / 2 + 1) * pxsize;
-                xa = xm * xa;
-                for (int j = 0; j < h; j++) {
-                    ya = (double) (y / 2 - j + 1) * pxsize;
-                    ya = ym * ya;
-                    phase = fixpart * (xa + ya) + raster.getSample(i, j, 0);
-                    rasterSample.setSample(i, j, 0, phase);
-                }
-            }
-
-            BufferedImage image1 = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY);
-
-
-            Graphics g = canvas.getGraphics();
-            //Graphics2D g = (Graphics2D) canvas.getGraphics();
-            image1.setData(rasterSample);
-
-            if (g.drawImage(image1, 0, 0, canvas.getWidth(),
-                    canvas.getHeight(), 0, 0, w, h, null)) {
-            }
-    }
-    
-    class DaemonThread implements Runnable {
-        protected volatile boolean runnable = false;
-
-        @Override
-        public  void run() {
-            double phase, xa, ya;
-            synchronized(this) {
-                while(runnable) {
-                Raster raster = buffVideo.getData();
-                sampleModel = raster.getSampleModel();
-                WritableRaster rasterSample = Raster.createWritableRaster(sampleModel, new Point(0, 0));
-                    int x = 0;
-                    int y = 100;
-                    double phy = Math.toRadians(x);
-                    double theta = Math.toRadians(y);
-                    double xm = Math.sin(phy) * Math.cos(theta);
-                    double ym = Math.sin(phy) * Math.sin(theta);
-                    double fixpart = 2.0 * Math.PI / 10;
-                    double pxsize = 100;
-                    System.out.println("width: " + width + " height: " + height);
-
-                    for (int i = 0; i < wVideo; i++) {
-                        xa = (double) (i - x / 2 + 1) * pxsize;
-                        xa = xm * xa;
-                        for (int j = 0; j < hVideo; j++) {
-                            ya = (double) (y / 2 - j + 1) * pxsize;
-                            ya = ym * ya;
-                            phase = fixpart * (xa + ya) + raster.getSample(i, j, 0);
-                            rasterSample.setSample(i, j, 0, phase);
-                        }
-                    }
-
-                    BufferedImage image1 = new BufferedImage(wVideo, hVideo, BufferedImage.TYPE_BYTE_GRAY);
-
-
-                    Graphics g = canvas.getGraphics();
-                    //Graphics2D g = (Graphics2D) canvas.getGraphics();
-                    image1.setData(rasterSample);
-
-                    if (g.drawImage(image1, 0, 0, canvas.getWidth(),
-                            canvas.getHeight(), 0, 0, wVideo, hVideo, null)) {
-                    }
-                    }
-            }
-        }
-    }
-
-    public void paintImportFileMichelson(BufferedImage buffImg) {
-
-        double scale = 1.0;
-        // scale = d_zoom / 100.0D;
-        //buffImg = buffImg.gets
-        buffImg = PatternImage.resizeImage(buffImg, buffImg.getType(), 1920, 1080);
-        Graphics2D g2 = (Graphics2D) canvas.getGraphics();
-        g2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        double canvasX = canvas.getWidth() / 2;
-        double canvasY = canvas.getHeight() / 2;
-        int imageWidth = buffImg.getWidth();
-        int imageHeight = buffImg.getHeight();
-        double x = (scale * imageWidth) / 2;
-        double y = (scale * imageHeight) / 2;
-        AffineTransform at = AffineTransform.getTranslateInstance(canvasX - x, canvasY - y);
-        at.scale(scale, scale);
-        /// AffineTransform at = AffineTransform.getScaleInstance(1920, 1080);
-        g2.drawRenderedImage(buffImg, at);
-        buferPattern = compute(canvas);
-        flag = 1;
         tuningFlag = true;
     }
 

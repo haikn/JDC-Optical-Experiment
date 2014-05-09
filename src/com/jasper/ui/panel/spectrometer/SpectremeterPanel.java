@@ -278,7 +278,7 @@ public class SpectremeterPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorSpectometerParameter(phySpectrometer, thetaSpectrometer);
             image.paintMirrorSpectrometer();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirrorSpectrometer());
+            EduPatternShowOn.updatePattern(image, genLogMirrorSpectrometer());
             setLog(genLogMirrorSpectrometer());
             imageGenerated = true;
         }
@@ -291,7 +291,7 @@ public class SpectremeterPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorSpectometerParameter(phySpectrometer, thetaSpectrometer);
             image.paintMirrorSpectrometer();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirrorSpectrometer());
+            EduPatternShowOn.updatePattern(image, genLogMirrorSpectrometer());
             setLog(genLogMirrorSpectrometer());
             imageGenerated = true;
 
@@ -357,7 +357,7 @@ public class SpectremeterPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorSpectometerParameter(phySpectrometer, thetaSpectrometer);
             image.paintMirrorSpectrometer();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirrorSpectrometer());
+            EduPatternShowOn.updatePattern(image, genLogMirrorSpectrometer());
             setLog(genLogMirrorSpectrometer());
             imageGenerated = true;
         }
@@ -372,7 +372,7 @@ public class SpectremeterPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorSpectometerParameter(phySpectrometer, thetaSpectrometer);
             image.paintMirrorSpectrometer();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirrorSpectrometer());
+            EduPatternShowOn.updatePattern(image, genLogMirrorSpectrometer());
             setLog(genLogMirrorSpectrometer());
             imageGenerated = true;
         }
@@ -400,25 +400,5 @@ public class SpectremeterPanel extends OpticsPane{
     
     public void setLog(String msg) {
         txtLogArea.append(msg + System.getProperty("line.separator"));
-    }
-
-    @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

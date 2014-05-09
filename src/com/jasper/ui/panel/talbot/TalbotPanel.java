@@ -525,7 +525,7 @@ public class TalbotPanel extends OpticsPane {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterDrawTalbot(talbot_widthX, talbot_widthY, talbot_heightX, talbot_heightY, talbot_positionX, talbot_positionY, talbot_rotation, talbot_grayLevel, talbot_spacing);
             image.paintTalbot();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogTalbot());
+            EduPatternShowOn.updatePattern(image, genLogTalbot());
             setLog(genLogTalbot());
             imageGenerated = true;
         }
@@ -540,7 +540,7 @@ public class TalbotPanel extends OpticsPane {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterDrawTalbot(talbot_widthX, talbot_widthY, talbot_heightX, talbot_heightY, talbot_positionX, talbot_positionY, talbot_rotation, talbot_grayLevel, talbot_spacing);
             image.paintTalbot();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogTalbot());
+            EduPatternShowOn.updatePattern(image, genLogTalbot());
             setLog(genLogTalbot());
             imageGenerated = true;
         }
@@ -555,7 +555,7 @@ public class TalbotPanel extends OpticsPane {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterDrawTalbot(talbot_widthX, talbot_widthY, talbot_heightX, talbot_heightY, talbot_positionX, talbot_positionY, talbot_rotation, talbot_grayLevel, talbot_spacing);
             image.paintTalbot();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogTalbot());
+            EduPatternShowOn.updatePattern(image, genLogTalbot());
             setLog(genLogTalbot());
             imageGenerated = true;
         }
@@ -568,7 +568,7 @@ public class TalbotPanel extends OpticsPane {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateParameterDrawTalbot(talbot_widthX, talbot_widthY, talbot_heightX, talbot_heightY, talbot_positionX, talbot_positionY, talbot_rotation, talbot_grayLevel, talbot_spacing);
             image.paintTalbot();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogTalbot());
+            EduPatternShowOn.updatePattern(image, genLogTalbot());
             setLog(genLogTalbot());
             imageGenerated = true;
             if (countLenOnTalbot % 2 == 0) {
@@ -653,25 +653,5 @@ public class TalbotPanel extends OpticsPane {
 
     private String genLogTalbot() {
         return String.format(logmessageTalbot, Double.toString(talbot_heightX), Double.toString(talbot_widthY), Double.toString(talbot_rotation), Double.toString(talbot_positionX), Double.toString(talbot_positionY), Double.toString(talbot_grayLevel), Double.toString(talbot_spacing));
-    }
-
-    @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

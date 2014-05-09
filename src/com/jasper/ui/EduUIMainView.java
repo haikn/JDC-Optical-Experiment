@@ -58,13 +58,7 @@ public class EduUIMainView extends javax.swing.JFrame {
         jTextAreaDesc = new javax.swing.JTextArea();
         jMenuBarMain = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
-        jMenuLanguage = new javax.swing.JMenu();
         jMenuItemExit = new javax.swing.JMenuItem();
-        jMenuItemImport = new javax.swing.JMenuItem();
-        jMenuItemImportExperiment = new javax.swing.JMenuItem();
-        jMenuItemLanguageEnglish = new javax.swing.JMenuItem();
-        jMenuItemLanguageChineseTraditional = new javax.swing.JMenuItem();
-        jMenuItemLanguageChineseSimplified = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItemAbout = new javax.swing.JMenuItem();
         panelOptic =  new EduControllerPattern(locale);
@@ -84,23 +78,6 @@ public class EduUIMainView extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTextAreaLog);
 
         jMenuFile.setText(labels.getString("mnuFile"));
-        
-//        jMenuItemImportExperiment.setText(labels.getString("mnuImportExperiment"));
-//        jMenuItemImportExperiment.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                //jMenuItemExitActionPerformed(evt);
-//            }
-//        });
-//        jMenuFile.add(jMenuItemImportExperiment);
-//        
-//        jMenuItemImport.setText(labels.getString("mnuFileImport"));
-//        jMenuItemImport.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                //jMenuItemExitActionPerformed(evt);
-//            }
-//        });
-//        jMenuFile.add(jMenuItemImport);
-
         jMenuItemExit.setText(labels.getString("mnuExit"));
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -108,35 +85,8 @@ public class EduUIMainView extends javax.swing.JFrame {
             }
         });
         jMenuFile.add(jMenuItemExit);
-
         jMenuBarMain.add(jMenuFile);
-//
-//        jMenuLanguage.setText(labels.getString("mnuLanguage"));
-//        jMenuItemLanguageEnglish.setText(labels.getString("mnuItemLanguageEnglish"));
-//        jMenuItemLanguageEnglish.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                locale = 0;
-//            }
-//        });
-//        jMenuItemLanguageChineseTraditional.setText(labels.getString("mnuItemLanguageChineseTraditional"));
-//        jMenuItemLanguageChineseTraditional.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                locale = 1;
-//            }
-//        });
-//        
-//        jMenuItemLanguageChineseSimplified.setText(labels.getString("mnuItemLanguageChineseSimplified"));
-//        jMenuItemLanguageChineseSimplified.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                locale = 2;
-//            }
-//        });
-
-//        jMenuLanguage.add(jMenuItemLanguageEnglish);
-//        jMenuLanguage.add(jMenuItemLanguageChineseTraditional);
-//        jMenuLanguage.add(jMenuItemLanguageChineseSimplified);
-//        jMenuBarMain.add(jMenuLanguage);
-
+        
         jMenuHelp.setText(labels.getString("mnuHelp"));
         jMenuItemAbout.setText(labels.getString("mnuAbout"));
         jMenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
@@ -148,7 +98,6 @@ public class EduUIMainView extends javax.swing.JFrame {
         jMenuBarMain.add(jMenuHelp);
 
         setJMenuBar(jMenuBarMain);
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         jScrollPaneApp.getViewport().setView(panelOptic);
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -182,12 +131,6 @@ public class EduUIMainView extends javax.swing.JFrame {
         about.setLocationRelativeTo(null);
         about.setVisible(true);
     }//GEN-LAST:event_jMenuAboutActionPerformed
-
-    public void changeLabTitle(String msg) {
-        logString("Optical experiment " + msg);
-        this.setTitle(eduKitTitle + " (" + msg + ")");
-        EduPatternShowOn.disablePatternFrame();
-    }
     /*
      * Log String
      */
@@ -244,26 +187,13 @@ public class EduUIMainView extends javax.swing.JFrame {
         }
         c.setEnabled(enabled);
     }
-
-    public void updateRegenerate() {
-        for (OpticsPane op : panelist) {
-            op.updateRegenerate();
-            op.repaint();
-        }
-    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar jMenuBarMain;
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenu jMenuHelp;
-    private javax.swing.JMenu jMenuLanguage;
     private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemExit;
-    private javax.swing.JMenuItem jMenuItemImport;
-    private javax.swing.JMenuItem jMenuItemImportExperiment;
-    private javax.swing.JMenuItem jMenuItemLanguageEnglish;
-    private javax.swing.JMenuItem jMenuItemLanguageChineseTraditional;
-    private javax.swing.JMenuItem jMenuItemLanguageChineseSimplified;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneApp;
     private javax.swing.JPanel jTabbedPaneOptics;

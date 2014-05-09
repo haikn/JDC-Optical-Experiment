@@ -279,7 +279,7 @@ public class MirrorWavefrontPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorParameter(phy, theta);
             image.paintMirror();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirror());
+            EduPatternShowOn.updatePattern(image, genLogMirror());
             setLog(genLogMirror());
             imageGenerated = true;
         }
@@ -292,7 +292,7 @@ public class MirrorWavefrontPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorParameter(phy, theta);
             image.paintMirror();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirror());
+            EduPatternShowOn.updatePattern(image, genLogMirror());
             setLog(genLogMirror());
             imageGenerated = true;
 
@@ -363,7 +363,7 @@ public class MirrorWavefrontPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorParameter(phy, theta);
             image.paintMirror();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirror());
+            EduPatternShowOn.updatePattern(image, genLogMirror());
             setLog(genLogMirror());
             imageGenerated = true;
         }
@@ -377,7 +377,7 @@ public class MirrorWavefrontPanel extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorParameter(phy, theta);
             image.paintMirror();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirror());
+            EduPatternShowOn.updatePattern(image, genLogMirror());
             setLog(genLogMirror());
             imageGenerated = true;
         }
@@ -408,25 +408,5 @@ public class MirrorWavefrontPanel extends OpticsPane{
     
      public void setLog(String msg) {
         txtAreaLog.append(msg + System.getProperty("line.separator"));
-    }
-    
-     @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

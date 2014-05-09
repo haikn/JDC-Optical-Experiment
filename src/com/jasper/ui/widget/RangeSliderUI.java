@@ -38,8 +38,11 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 /**
+ * 
  * UI delegate for the RangeSlider component.  RangeSliderUI paints two thumbs,
  * one for the lower value and one for the upper value.
+ * @author sonnv
+ * 
  */
 class RangeSliderUI extends BasicSliderUI {
 

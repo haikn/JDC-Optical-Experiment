@@ -316,8 +316,8 @@ public class SingleSlitPanel extends OpticsPane{
                 }
                 PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
                 image.updateLensParameterDrawSlit(slit, d_widthX, d_heightX, d_postionX, d_rotation, d_grayLevel, d_spacing);
-                image.slit(slit);
-                EduPatternShowOn.updateLensPatternPattern(image, genLogSlit());
+                image.paintSlit(slit);
+                EduPatternShowOn.updatePattern(image, genLogSlit());
                 imageGenerated = true;
             }
         });
@@ -432,8 +432,8 @@ public class SingleSlitPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateLensParameterDrawSlit(1, d_widthX, d_heightX, d_postionX, d_rotation, d_grayLevel, d_spacing);
-            image.slit(slit);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogSlit());
+            image.paintSlit(slit);
+            EduPatternShowOn.updatePattern(image, genLogSlit());
             setLog(genLogSlit());
             imageGenerated = true;
         }
@@ -445,8 +445,8 @@ public class SingleSlitPanel extends OpticsPane{
         if (parseArguments()) {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateLensParameterDrawSlit(1, d_widthX, d_heightX, d_postionX, d_rotation, d_grayLevel, d_spacing);
-            image.slit(slit);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogSlit());
+            image.paintSlit(slit);
+            EduPatternShowOn.updatePattern(image, genLogSlit());
             setLog(genLogSlit());
             imageGenerated = true;
 
@@ -496,7 +496,7 @@ public class SingleSlitPanel extends OpticsPane{
             } else {
                 PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
                 image.updateLensParameterDrawSlit(slit, d_widthX, d_heightX, d_postionX, d_rotation, d_grayLevel, d_spacing);
-                image.slit(slit);
+                image.paintSlit(slit);
                 EduPatternShowOn.updatePatternSecondDisplay(image, genLogSlit());
                 setLog(genLogSlit());
                 //EduPatternTest.updateLensPatternPattern(image, genLog());
@@ -517,8 +517,8 @@ public class SingleSlitPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateLensParameterDrawSlit(slit, d_widthX, d_heightX, d_postionX, d_rotation, d_grayLevel, d_spacing);
-            image.slit(slit);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogSlit());
+            image.paintSlit(slit);
+            EduPatternShowOn.updatePattern(image, genLogSlit());
             setLog(genLogSlit());
             imageGenerated = true;
         }
@@ -532,8 +532,8 @@ public class SingleSlitPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateLensParameterDrawSlit(slit, d_widthX, d_heightX, d_postionX, d_rotation, d_grayLevel, d_spacing);
-            image.slit(slit);
-            EduPatternShowOn.updateLensPatternPattern(image, genLogSlit());
+            image.paintSlit(slit);
+            EduPatternShowOn.updatePattern(image, genLogSlit());
             setLog(genLogSlit());
             imageGenerated = true;
         }
@@ -546,7 +546,6 @@ public class SingleSlitPanel extends OpticsPane{
     private boolean parseArguments() {
         boolean ret = false;
         try {          
-           
             double widthSlit = Double.valueOf(s_single_width.getValue());
             double heightSlit = Double.valueOf(s_single_height.getValue());
             double postionSlit = Double.valueOf(s_single_position.getValue());
@@ -560,7 +559,6 @@ public class SingleSlitPanel extends OpticsPane{
             this.d_grayLevel = grayLevelSlit;
             this.d_spacing = spacingSlit;
             ret = true;
-            
         } catch (Exception e) {
         }
         return ret;
@@ -568,25 +566,5 @@ public class SingleSlitPanel extends OpticsPane{
     
      public void setLog(String msg) {
         txtAreaLog.append(msg + System.getProperty("line.separator"));
-    }
-    
-     @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

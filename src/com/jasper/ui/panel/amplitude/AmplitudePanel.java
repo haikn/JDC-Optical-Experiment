@@ -48,15 +48,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author sonnv
  */
-public class AmplitudePanel extends OpticsPane{
+public class AmplitudePanel extends OpticsPane {
+
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
-    
     private javax.swing.JFileChooser openFile;
     private javax.swing.JButton buttonLensOn;
     private javax.swing.JButton buttonDisplaySecondOn;
@@ -64,32 +66,27 @@ public class AmplitudePanel extends OpticsPane{
     private javax.swing.JButton buttonOpenFile;
     private javax.swing.JLabel lblPleaseSelect;
     private javax.swing.JLabel lblFilePath;
-    private File fileLog;
     // Textbox Log
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTextArea txtLog;
     private String getText;
-    
     private javax.swing.JPanel panel;
     private javax.swing.JPanel panelButton;
-    
     private static BufferedImage buffImages;
     private JPanel panelPattern;
     private JFrame magFrameLenon;
-    
     private int countLenOn = 1;
     private int countSecondDisplay = 1;
-    
     static String logMessage = "Amplitude : image=%s";
-    
-    public AmplitudePanel(ResourceBundle labels, BindingGroup bindingGroup,JPanel panelPattern) {
+
+    public AmplitudePanel(ResourceBundle labels, BindingGroup bindingGroup, JPanel panelPattern) {
         this.labels = labels;
         this.panelPattern = panelPattern;
         image1 = ((EduPatternJPanel) panelPattern).pimage;
-        
+
         initComponents(bindingGroup);
     }
-    
+
     private void initComponents(BindingGroup bindingGroup) {
         panelButton = new javax.swing.JPanel();
         panel = new javax.swing.JPanel();
@@ -100,7 +97,7 @@ public class AmplitudePanel extends OpticsPane{
         buttonDisplaySecondOn = new javax.swing.JButton();
         lblPleaseSelect = new javax.swing.JLabel();
         lblFilePath = new javax.swing.JLabel();
-        
+
         buttonGeneral.setText(labels.getString("btnGenerate"));
         buttonGeneral.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,9 +118,9 @@ public class AmplitudePanel extends OpticsPane{
                     if (countLenOn % 2 == 0) {
                         buttonLensOn.setText(labels.getString("btnLensOff"));
                         panelPattern.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
-                            patternFrameDoubleClick.show();
-                        }
+                            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                                patternFrameDoubleClick.show();
+                            }
                         });
                     } else {
                         buttonLensOn.setText(labels.getString("btnLensOn"));
@@ -151,19 +148,19 @@ public class AmplitudePanel extends OpticsPane{
                 }
             }
         });
-        
+
         buttonOpenFile.setText("Browse...");
         buttonOpenFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openFileActionPerformed(evt);
             }
         });
-        lblPleaseSelect.setText("Select the file to import.");
-        
+        lblPleaseSelect.setText(labels.getString("lblSelectToImport"));
+
         lblFilePath.setText(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_AMPLITUDE);
         lblFilePath.setForeground(Color.blue);
-        lblFilePath.setFont(new Font("Arial", Font.PLAIN , 10));
-        
+        lblFilePath.setFont(new Font("Arial", Font.PLAIN, 10));
+
         panelButton = new javax.swing.JPanel();
         javax.swing.GroupLayout panelButtonCGH8Layout = new javax.swing.GroupLayout(panelButton);
         panelButton.setLayout(panelButtonCGH8Layout);
@@ -178,9 +175,7 @@ public class AmplitudePanel extends OpticsPane{
                 .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(190, Short.MAX_VALUE)
-                )
-                )));
+                .addContainerGap(190, Short.MAX_VALUE)))));
         panelButtonCGH8Layout.setVerticalGroup(
                 panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonCGH8Layout.createSequentialGroup()
@@ -188,121 +183,98 @@ public class AmplitudePanel extends OpticsPane{
                 .addGroup(panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(buttonGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                ));
-        
+                .addComponent(buttonGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))));
+
         scrollPane = new javax.swing.JScrollPane();
         txtLog = new javax.swing.JTextArea();
         getText = Utils.readFile(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_AMPLITUDE);
-        
+
         txtLog.setColumns(10);
         txtLog.setRows(4);
         txtLog.setText(getText);
         scrollPane.setViewportView(txtLog);
-        
+
         javax.swing.GroupLayout CGH8Layout = new javax.swing.GroupLayout(panel);
         panel.setLayout(CGH8Layout);
         CGH8Layout.setHorizontalGroup(
-            CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CGH8Layout.createSequentialGroup()
+                CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(CGH8Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addComponent(lblPleaseSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                )
-        );
+                .addComponent(lblFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))));
         CGH8Layout.setVerticalGroup(
-            CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CGH8Layout.createSequentialGroup()
+                CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(CGH8Layout.createSequentialGroup()
                 .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(CGH8Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblPleaseSelect)))
-                    .addGroup(CGH8Layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(lblFilePath)
-                        .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(7, 7, 7))))
-        );
+                .addGroup(CGH8Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblPleaseSelect)))
+                .addGroup(CGH8Layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addComponent(lblFilePath)
+                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)))));
     }
-    
-    public JPanel getPanel(){
+
+    public JPanel getPanel() {
         return panel;
     }
-    
-    public JPanel getPanelButton(){
+
+    public JPanel getPanelButton() {
         return panelButton;
     }
-    
+
     private void openFileActionPerformed(java.awt.event.ActionEvent evt) {
-        int returnVal = openFile.showOpenDialog(this);
-        if (returnVal == openFile.APPROVE_OPTION) {
-            fileLog = openFile.getSelectedFile();
-            String ext = "";
-            String extension = fileLog.getName();
-            extension = extension.toLowerCase();
-            if (extension.contains("jpg")) {
-                ext = ".jpg";
-            }
-            if (extension.contains("png")) {
-                ext = ".png";
-            }
-            if (extension.contains("gif")) {
-                ext = ".gif";
-            }
-            if (extension.contains("wbmp")) {
-                ext = ".wbmp";
-            }
-            if (extension.contains("jpeg")) {
-                ext = ".jpeg";
-            }
-            if (extension.contains("bmp")) {
-                ext = ".bmp";
-            }
-            if (ext.equals("")) {
-                JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
-            } else {
-                try {
-                    buffImages = ImageIO.read(new File(fileLog.getAbsolutePath()));
-                    String fileName = fileLog.getName();
+        FileNameExtensionFilter filter = 
+                new FileNameExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg", "wbmp", "bmp");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                String fileName = fileChooser.getSelectedFile().getName();
+                String type = fileName.substring(fileName.length() - 4, fileName.length());
+                type = type.toLowerCase();
+                if (type.contains("jpg") || type.contains("png") || type.contains("gif") 
+                        || type.contains("jpeg") || type.contains("wbmp") || type.contains("bmp")) {
+                    buffImages = ImageIO.read(new File(fileChooser.getSelectedFile().getPath()));
                     PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                    image.signalPhoto(buffImages);
-                    EduPatternShowOn.updateLensPatternPattern(image, "");
+                    image.paintAmplitude(buffImages);
+                    EduPatternShowOn.updatePattern(image, "");
                     setLog(Constant.TEXT_FORMAT_CGH + Constant.LOG_NAME + fileName + "\n"
                             + Constant.LOG_DATE + Utils.dateNow() + "\n"
-                            + Constant.TEXT_FORMAT_CGH );
+                            + Constant.TEXT_FORMAT_CGH);
                     imageGenerated = true;
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    //System.out.println("problem accessing file" + file.getAbsolutePath());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Formats incorrect!", "Failure", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        } else {
-            //System.out.println("File access cancelled by user.");
         }
-
     }
-    
+
     private void buttonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed1
         buttonLensOn.setEnabled(true);
         buttonDisplaySecondOn.setEnabled(true);
 
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.signalPhoto(buffImages);
-        EduPatternShowOn.updateLensPatternPattern(image, "");
+        image.paintAmplitude(buffImages);
+        EduPatternShowOn.updatePattern(image, "");
         imageGenerated = true;
     }
 
     private void button11LensOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformed1
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.signalPhoto(buffImages);
-        EduPatternShowOn.updateLensPatternPattern(image, "");
+        image.paintAmplitude(buffImages);
+        EduPatternShowOn.updatePattern(image, "");
         imageGenerated = true;
 
         if (countLenOn % 2 == 0) {
@@ -324,14 +296,14 @@ public class AmplitudePanel extends OpticsPane{
             magFrameLenon.getContentPane().add(mag);
             magFrameLenon.pack();
             magFrameLenon.setLocation(new Point(505, 420));
-                magFrameLenon.setResizable(false);
+            magFrameLenon.setResizable(false);
             magFrameLenon.setVisible(true);
             magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                 public void windowClosing(java.awt.event.WindowEvent e) {
-                        countLenOn--;
-                        buttonLensOn.setText(labels.getString("btnLensOn"));
-                        magFrameLenon.dispose();
+                    countLenOn--;
+                    buttonLensOn.setText(labels.getString("btnLensOn"));
+                    magFrameLenon.dispose();
                 }
             });
         }
@@ -346,7 +318,7 @@ public class AmplitudePanel extends OpticsPane{
             JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.signalPhoto(buffImages);
+            image.paintAmplitude(buffImages);
             EduPatternShowOn.updatePatternSecondDisplay(image, "");
             imageGenerated = true;
             if (countSecondDisplay % 2 == 0) {
@@ -355,7 +327,7 @@ public class AmplitudePanel extends OpticsPane{
             }
         }
     }
-    
+
     public void setLog(String msg) {
         String filePath;
         try {
@@ -363,7 +335,7 @@ public class AmplitudePanel extends OpticsPane{
             txtLog.setCaretPosition(txtLog.getText().length() - 1);
             filePath = Constant.FILE_PATH + File.separator + Constant.FILE_NAME_AMPLITUDE;
             // Check file logs exists
-            if(Utils.checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_AMPLITUDE)) {
+            if (Utils.checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_AMPLITUDE)) {
                 Utils.writeFile(filePath, msg, false);
             } else {
                 Utils.createDirectory(File.separator + Constant.FILE_NAME_AMPLITUDE);
@@ -371,13 +343,5 @@ public class AmplitudePanel extends OpticsPane{
             }
         } catch (Exception e) {
         }
-    }
-
-    @Override
-    public void updatePatternScreen() {
-    }
-
-    @Override
-    public void updateRegenerate() {
     }
 }

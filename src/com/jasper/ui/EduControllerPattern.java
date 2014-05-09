@@ -27,11 +27,11 @@ import com.jasper.ui.panel.amplitude.AmplitudePanel;
 import com.jasper.ui.panel.phasemodulation.BeamSteere;
 import com.jasper.ui.panel.BeamShiftingPanel;
 import com.jasper.ui.panel.DynamicPanel;
+import com.jasper.ui.panel.ImportFormulaPanel;
+import com.jasper.ui.panel.StaticPanel;
 import com.jasper.ui.panel.michelson.CyllindricalMichelsonPanel;
 import com.jasper.ui.panel.wavefront.CyllindricalWavefrontPanel;
 import com.jasper.ui.panel.diffraction.DoubleSlitPanel;
-import com.jasper.ui.panel.ImportFormulaPanel;
-import com.jasper.ui.panel.StaticPanel;
 import com.jasper.ui.panel.cgh.CGH10Panel;
 import com.jasper.ui.panel.cgh.CGH1Panel;
 import com.jasper.ui.panel.cgh.CGH3Panel;
@@ -61,7 +61,6 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
-import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -77,7 +76,6 @@ import java.util.ResourceBundle;
  * @author sonnv
  */
 public class EduControllerPattern extends OpticsPane {
-
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
 
@@ -225,14 +223,15 @@ public class EduControllerPattern extends OpticsPane {
         cgh10Panel = new CGH10Panel(labels, bindingGroup, panelPattern);
         
         // Beam Shifting tab
-        beamShiftingPanel = new BeamShiftingPanel(labels, bindingGroup, panelPattern, tabbedControl);
-        // Import Formula tab
-        importFormulaPanel = new ImportFormulaPanel(labels, bindingGroup, panelPattern, tabbedControl);
+        beamShiftingPanel = new BeamShiftingPanel(labels, bindingGroup, panelPattern);
         // Dynamic tab
         dynamicPanel = new DynamicPanel(labels, bindingGroup, panelPattern);
         // Static tab
         staticPanel = new StaticPanel(labels, bindingGroup, panelPattern);
+        // Import formula
+        importFormulaPanel = new ImportFormulaPanel(labels, bindingGroup, panelPattern, tabbedControl);
         
+        // layout frame
         buttonPanel = new javax.swing.JPanel();
         tabbedPaneOptics.hide();
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
@@ -275,7 +274,7 @@ public class EduControllerPattern extends OpticsPane {
         tabbedControl.addTab(labels.getString("tabStatic"), staticPanel.getPanel());
         // Dynamic tab
         tabbedControl.addTab(labels.getString("tabDynamic"), dynamicPanel.getPanel());
-        // Import formula tab
+        // Dynamic tab
         tabbedControl.addTab(labels.getString("tabImportFormula"), importFormulaPanel.getPanel());
         
         tabbedControl.addChangeListener(new ChangeListener() {
@@ -436,13 +435,14 @@ public class EduControllerPattern extends OpticsPane {
                     jScrollDes.getViewport();
                     tabbedDesLog.addTab(labels.getString("tabDescription"), jScrollDes);
                     
-                    //jScrollPane2.setViewportView(staticPanel.getLogArea());
+                    jScrollPane2.setViewportView(staticPanel.getLogArea());
                     tabbedDesLog.addTab(labels.getString("tabLog"), jScrollPane2);
 
                     lblDiagram.setIcon(lblDiagram.getIcon());
                     lblDiagram.setText(lblDiagram.getText());
                     diagramLens.add(lblDiagram);
                     layoutDiagram.add(diagramLens);
+                    
                 } else if (index == 3) {
                     layoutDiagram.removeAll();
                     diagramLens.removeAll();
@@ -451,28 +451,14 @@ public class EduControllerPattern extends OpticsPane {
                     jScrollDes.getViewport();
                     tabbedDesLog.addTab(labels.getString("tabDescription"), jScrollDes);
                     
-                    //jScrollPane2.setViewportView(dynamicPanel.getLogArea());
+                    //jScrollPane2.setViewportView(beamShiftingPanel.getLogArea());
                     tabbedDesLog.addTab(labels.getString("tabLog"), jScrollPane2);
 
                     lblDiagram.setIcon(lblDiagram.getIcon());
                     lblDiagram.setText(lblDiagram.getText());
                     diagramLens.add(lblDiagram);
                     layoutDiagram.add(diagramLens);
-                } else if (index == 4) {
-                    layoutDiagram.removeAll();
-                    diagramLens.removeAll();
-                    tabbedDesLog.removeAll();
                     
-                    jScrollDes.getViewport();
-                    tabbedDesLog.addTab(labels.getString("tabDescription"), jScrollDes);
-                    
-                    jScrollPane2.setViewportView(importFormulaPanel.getLogArea());
-                    tabbedDesLog.addTab(labels.getString("tabLog"), jScrollPane2);
-
-                    lblDiagram.setIcon(lblDiagram.getIcon());
-                    lblDiagram.setText(lblDiagram.getText());
-                    diagramLens.add(lblDiagram);
-                    layoutDiagram.add(diagramLens);
                 }
             }
         });
@@ -491,7 +477,6 @@ public class EduControllerPattern extends OpticsPane {
         
         panelPattern.setBounds(5, 2, 563, 368);
         panelPattern.setBorder(javax.swing.BorderFactory.createLineBorder(Color.RED, 1));
-        //javax.swing.JLayeredPane
         
         //  BEGIN show full screen
         layoutControl.add(panelPattern, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -1686,7 +1671,7 @@ public class EduControllerPattern extends OpticsPane {
     private void generateActionPerformedDefault(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSecondActionPerformedCGH10
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
         image.paintDefault();
-        EduPatternShowOn.updateLensPatternPattern(image, "");
+        EduPatternShowOn.updatePattern(image, "");
         imageGenerated = true;
     }
     // End Action Performed
@@ -1787,40 +1772,12 @@ public class EduControllerPattern extends OpticsPane {
     
     // Beam Shifting tab
     private BeamShiftingPanel beamShiftingPanel;
-    // Import Formula tab
-    private ImportFormulaPanel importFormulaPanel;
     // Dynamic tab
     private DynamicPanel dynamicPanel;
     // Dynamic tab
     private StaticPanel staticPanel;
-    
-    private ArrayList<OpticsPane> panelist;
-    
-    @Override
-    public void updateRegenerate() {
-        for (OpticsPane op : panelist) {
-            op.updateRegenerate();
-            op.repaint();
-        }
-    }
-    
-    @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(0.0, 0.0, 0.0);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-    // paint boot screen, lens only
-
-    void bootScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.paintDefault();
-        EduPatternShowOn.updateLensPatternPattern(image, "");
-    }
+    // Import formula
+    private ImportFormulaPanel importFormulaPanel;
     
     public PatternImage pimg;
 }

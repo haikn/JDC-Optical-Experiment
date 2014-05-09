@@ -247,8 +247,8 @@ public class SLMBasicPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updatePhaseRetarderParameter(grayLevelValue);
-            image.phaseRetarder();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogPhase());
+            image.paintPhaseRetarder();
+            EduPatternShowOn.updatePattern(image, genLogPhase());
             setLog(genLogPhase());
             imageGenerated = true;
         }
@@ -259,8 +259,8 @@ public class SLMBasicPanel extends OpticsPane{
         if (parseArguments()) {
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updatePhaseRetarderParameter(grayLevelValue);
-            image.phaseRetarder();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogPhase());
+            image.paintPhaseRetarder();
+            EduPatternShowOn.updatePattern(image, genLogPhase());
             setLog(genLogPhase());
             imageGenerated = true;
 
@@ -309,7 +309,7 @@ public class SLMBasicPanel extends OpticsPane{
             } else {
                 PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
                 image.updatePhaseRetarderParameter(grayLevelValue);
-                image.phaseRetarder();
+                image.paintPhaseRetarder();
                 EduPatternShowOn.updatePatternSecondDisplay(image, genLogPhase());
                 setLog(genLogPhase());
                 //EduPatternTest.updateLensPatternPattern(image, genLog());
@@ -330,8 +330,8 @@ public class SLMBasicPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updatePhaseRetarderParameter(grayLevelValue);
-            image.phaseRetarder();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogPhase());
+            image.paintPhaseRetarder();
+            EduPatternShowOn.updatePattern(image, genLogPhase());
             setLog(genLogPhase());
             imageGenerated = true;
         }
@@ -344,8 +344,8 @@ public class SLMBasicPanel extends OpticsPane{
 
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updatePhaseRetarderParameter(grayLevelValue);
-            image.phaseRetarder();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogPhase());
+            image.paintPhaseRetarder();
+            EduPatternShowOn.updatePattern(image, genLogPhase());
             setLog(genLogPhase());
             imageGenerated = true;
         }
@@ -378,25 +378,5 @@ public class SLMBasicPanel extends OpticsPane{
             e.printStackTrace();
         }
         return ret;
-    }
-    
-     @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

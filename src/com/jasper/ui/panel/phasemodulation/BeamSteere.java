@@ -233,8 +233,8 @@ public class BeamSteere extends OpticsPane{
                             .addComponent(txtPhyMirror, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE))
                         .addGap(8, 8, 8)
                         .addGroup(jPanelMirrorlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jSliderThetaMirror, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
-                            .addComponent(jSliderPhyMirror, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jSliderThetaMirror, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSliderPhyMirror, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 0, 0))
         );
         jPanelMirrorlLayout.setVerticalGroup(
@@ -282,7 +282,7 @@ public class BeamSteere extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorParameter(phy, theta);
             image.paintMirror();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirror());
+            EduPatternShowOn.updatePattern(image, genLogMirror());
             setLog(genLogMirror());
             imageGenerated = true;
         }
@@ -295,7 +295,7 @@ public class BeamSteere extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorParameter(phy, theta);
             image.paintMirror();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirror());
+            EduPatternShowOn.updatePattern(image, genLogMirror());
             setLog(genLogMirror());
             imageGenerated = true;
 
@@ -366,7 +366,7 @@ public class BeamSteere extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorParameter(phy, theta);
             image.paintMirror();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirror());
+            EduPatternShowOn.updatePattern(image, genLogMirror());
             setLog(genLogMirror());
             imageGenerated = true;
         }
@@ -380,7 +380,7 @@ public class BeamSteere extends OpticsPane{
             PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
             image.updateMirrorParameter(phy, theta);
             image.paintMirror();
-            EduPatternShowOn.updateLensPatternPattern(image, genLogMirror());
+            EduPatternShowOn.updatePattern(image, genLogMirror());
             setLog(genLogMirror());
             imageGenerated = true;
         }
@@ -411,25 +411,5 @@ public class BeamSteere extends OpticsPane{
     
      public void setLog(String msg) {
         txtAreaLog.append(msg + System.getProperty("line.separator"));
-    }
-    
-     @Override
-    public void updatePatternScreen() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (!imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-            imageGenerated = true;
-        }
-        EduPatternShowOn.updatePatternScreen(image, "");
-    }
-
-    @Override
-    public void updateRegenerate() {
-        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        if (imageGenerated) {
-            image.updateLensParameter(xoff, yoff, focal);
-            image.paintLens();
-        }
     }
 }

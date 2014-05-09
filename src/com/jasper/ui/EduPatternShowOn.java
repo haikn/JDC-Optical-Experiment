@@ -20,7 +20,6 @@
  */
 package com.jasper.ui;
 
-import com.jasper.core.KeyReaderTrial;
 import com.jasper.core.PatternImage;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -74,9 +73,6 @@ public class EduPatternShowOn {
 
         pimage = new PatternImage(bounds.width, bounds.height);
         pimage.init(lambda);
-        
-        // for debugging purpose, show wavelength
-        // System.out.println("wavelength = " + pimage.getLambda());
 
         patternPanel = new EduPatternJPanel(pimage);
 
@@ -127,26 +123,7 @@ public class EduPatternShowOn {
         patternFrame.dispose();
     }
 
-    public static void updateRegenerate() {
-        controlFrame.updateRegenerate();
-        patternPanel.revalidate();
-        patternFrame.repaint();
-        controlFrame.repaint();
-    }
-
-    public static void updateLensPattern(PatternImage pimage, String log) {
-        controlFrame.logString(log);
-        patternPanel.setImage(pimage);
-        patternPanel.revalidate();
-
-        patternFrame.repaint();
-        patternFrame.setVisible(true);
-        patternFrameDoubleClick.repaint();
-        patternFrameDoubleClick.setVisible(true);
-        controlFrame.repaint();
-    }
-
-    public static void updateLensPatternPattern(PatternImage pimage, String log) {
+    public static void updatePattern(PatternImage pimage, String log) {
         controlFrame.logString(log);
         controlFrame.updatePattern(pimage);
         patternPanel.setImage(pimage);
@@ -169,37 +146,7 @@ public class EduPatternShowOn {
         patternFrame.setVisible(true);
         controlFrame.repaint();
     }
-
-    public static void updateUiPatternPattern(PatternImage pimage, String log, String desc, String diagram) {
-        controlFrame.logString(log);
-        controlFrame.updatePattern(pimage);
-        patternPanel.setImage(pimage);
-        patternPanel.revalidate();
-        patternPanel2.setImage(pimage);
-        patternPanel2.revalidate();
-
-        patternFrame.repaint();
-        controlFrame.repaint();
-    }
-
-    public static void updateCylindricalPattern(PatternImage pimage, String log) {
-        controlFrame.logString(log);
-        patternPanel.setImage(pimage);
-        patternPanel.revalidate();
-        patternFrame.repaint();
-        patternFrame.setVisible(true);
-        controlFrame.repaint();
-    }
-
-    public static void updateMirrorPattern(PatternImage pimage, String log) {
-        controlFrame.logString(log);
-        patternPanel.setImage(pimage);
-        patternPanel.revalidate();
-        patternFrame.repaint();
-        patternFrame.setVisible(true);
-        controlFrame.repaint();
-    }
-
+    
     public static void updatePatternScreen(PatternImage pimage, String log) {
         controlFrame.logString(log);
         patternPanel.setImage(pimage);
@@ -312,26 +259,19 @@ public class EduPatternShowOn {
     
     public static void main(String[] args) {
         try {
-            KeyReaderTrial keyreader = new KeyReaderTrial();
-            boolean key = keyreader.verifyKey();
-            if(key) {
-                // parse arguments
-                for (String arg : args) {
-                    parse_opt(arg);
-                }
-                EduPatternShowOn.initPatternFrame();
-                EduPatternShowOn.initControlFrame();
-                //EduPatternShowOn.initPatternFrameFullScreen();
-
-                // set icon using JDC logo
-                URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                Toolkit kit = Toolkit.getDefaultToolkit();
-                Image img = kit.createImage(url);
-                controlFrame.setIconImage(img);
-                patternFrame.setIconImage(img);
-            } else {
-                JOptionPane.showMessageDialog(null, "This trial has expired. Please contact us for further information!");
+            // parse arguments
+            for (String arg : args) {
+                parse_opt(arg);
             }
+            EduPatternShowOn.initPatternFrame();
+            EduPatternShowOn.initControlFrame();
+
+            // set icon using JDC logo
+            URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+            Toolkit kit = Toolkit.getDefaultToolkit();
+            Image img = kit.createImage(url);
+            controlFrame.setIconImage(img);
+            patternFrame.setIconImage(img);
         } catch (IOException ex) {
             Logger.getLogger(EduPatternShowOn.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex.toString());

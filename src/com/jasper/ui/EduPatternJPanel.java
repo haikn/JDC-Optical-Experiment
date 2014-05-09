@@ -38,7 +38,7 @@ import javax.swing.JPanel;
  *
  * @version 1.0 28 Aug 2013
  *
- * @author Albert Nguyen
+ * @author sonnv
  *
  */
 public class EduPatternJPanel extends JPanel {
