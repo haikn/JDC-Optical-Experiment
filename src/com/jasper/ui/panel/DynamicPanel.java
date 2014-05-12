@@ -39,6 +39,8 @@ import com.jasper.utils.Constant;
 import com.jasper.utils.Utils;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -375,13 +377,19 @@ public class DynamicPanel extends OpticsPane {
     public void startCamera() throws Exception {
         frame = new CanvasFrame("Dynamic Holography");
         frame.setBounds(0, 0, 640, 480);
-
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                btnStart.setEnabled(true);
+                btnStop.setEnabled(false);
+                frame.dispose();
+            }
+        });
         grabber = new OpenCVFrameGrabber(0);
         opencv_core.CvMemStorage storage = opencv_core.CvMemStorage.create();
         grabber.start();
         grabbedImage = grabber.grab();
         while (frame.isVisible() && (grabbedImage = grabber.grab()) != null) {
-            BufferedImage bfimg = new BufferedImage(grabbedImage.width(), grabbedImage.height(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage bfimg = new BufferedImage(grabbedImage.width(), grabbedImage.height(), BufferedImage.TYPE_BYTE_GRAY);
             grabbedImage.copyTo(bfimg);
             WritableRaster raster = bfimg.getRaster();
 
