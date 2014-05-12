@@ -55,7 +55,6 @@ public class DynamicPanel extends OpticsPane {
 
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
-    private String actionTag = "Len";
     private javax.swing.JButton btnStop;
     private javax.swing.JButton btnStart;
     private javax.swing.JLabel lblXOff;
@@ -275,9 +274,7 @@ public class DynamicPanel extends OpticsPane {
         try {
              btnStart.setEnabled(true);
              btnStop.setEnabled(false);
-            if (grabber != null) {
-                grabber.stop();
-            }
+             frame.dispose();
         } catch (Exception ex) {
             Logger.getLogger(DynamicPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
