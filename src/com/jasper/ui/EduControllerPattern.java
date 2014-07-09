@@ -27,7 +27,6 @@ import com.jasper.ui.panel.amplitude.AmplitudePanel;
 import com.jasper.ui.panel.phasemodulation.BeamSteere;
 import com.jasper.ui.panel.BeamShiftingPanel;
 import com.jasper.ui.panel.DynamicPanel;
-import com.jasper.ui.panel.ImportFormulaPanel;
 import com.jasper.ui.panel.StaticPanel;
 import com.jasper.ui.panel.michelson.CyllindricalMichelsonPanel;
 import com.jasper.ui.panel.wavefront.CyllindricalWavefrontPanel;
@@ -58,6 +57,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
@@ -70,6 +71,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.ResourceBundle;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 /**
  *
@@ -229,7 +232,7 @@ public class EduControllerPattern extends OpticsPane {
         // Static tab
         staticPanel = new StaticPanel(labels, bindingGroup, panelPattern);
         // Import formula
-        importFormulaPanel = new ImportFormulaPanel(labels, bindingGroup, panelPattern, tabbedControl);
+        //importFormulaPanel = new ImportFormulaPanel(labels, bindingGroup, panelPattern, tabbedControl);
         
         // layout frame
         buttonPanel = new javax.swing.JPanel();
@@ -275,7 +278,7 @@ public class EduControllerPattern extends OpticsPane {
         // Dynamic tab
         tabbedControl.addTab(labels.getString("tabDynamic"), dynamicPanel.getPanel());
         // Dynamic tab
-        tabbedControl.addTab(labels.getString("tabImportFormula"), importFormulaPanel.getPanel());
+        //tabbedControl.addTab(labels.getString("tabImportFormula"), importFormulaPanel.getPanel());
         
         tabbedControl.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -497,481 +500,27 @@ public class EduControllerPattern extends OpticsPane {
         jScrollPane2.setViewportView(jTextAreaLog);
         tabbedDesLog.addTab("Log", jScrollPane2);
         
-        // BEGIN show full screen for desSLM
-        desSLM.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desSLM.getText());
-                
-                    descriptionFullScreen.setBackground(Color.WHITE);
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desSLM
+        popupMenuLanguage();
+        desSLM.addMouseListener(new PopupTriggerListener());
+        desAmplitude.addMouseListener(new PopupTriggerListener());
+        desPhaseModulation.addMouseListener(new PopupTriggerListener());
+        desMichelson.addMouseListener(new PopupTriggerListener());
+        desDiffaction.addMouseListener(new PopupTriggerListener());
+        desSpectrometer.addMouseListener(new PopupTriggerListener());
+        desSignalProcessing.addMouseListener(new PopupTriggerListener());
+        desPhaseRetarder.addMouseListener(new PopupTriggerListener());
+        desTalbot.addMouseListener(new PopupTriggerListener());
+        desWavefront.addMouseListener(new PopupTriggerListener());
         
-        // BEGIN show full screen for desAmplitude
-        desAmplitude.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desAmplitude.getText());
-                
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    
-                   descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desAmplitude
-        
-        // BEGIN show full screen for desPhaseModulation
-        desPhaseModulation.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desPhaseModulation.getText());
-                
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desPhaseModulation
-        
-        // BEGIN show full screen for desMichelson
-        desMichelson.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desMichelson.getText());
-                
-                    descriptionFullScreen.setBackground(Color.WHITE);
-                    descriptionFullScreen.setForeground(Color.WHITE);
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desMichelson
-        
-        // BEGIN show full screen for desDiffaction
-        desDiffaction.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desDiffaction.getText());
-                
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desDiffaction
-        // BEGIN show full screen for desSpectrometer
-        desSpectrometer.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desSpectrometer.getText());
-                
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desSpectrometer
-        // BEGIN show full screen for desSignalProcessing
-        desSignalProcessing.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desSignalProcessing.getText());
-                
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desSignalProcessing
-        // BEGIN show full screen for desPhaseRetarder
-        desPhaseRetarder.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desPhaseRetarder.getText());
-                
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desPhaseRetarder
-        // BEGIN show full screen for desTalbot
-        desTalbot.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desTalbot.getText());
-                
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desTalbot
-        // BEGIN show full screen for desWavefront
-        desWavefront.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-              if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
-                
-                if(layoutDescriptionFullOpen ==  0){
-                    desFullScreen.setText(desWavefront.getText());
-                
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                    Toolkit kit = Toolkit.getDefaultToolkit();
-                    Image img = kit.createImage(url);
-                    descriptionFullScreen.setIconImage(img);
-                    descriptionFullScreen.getContentPane().add(desFullScreen);
-                    descriptionFullScreen.pack();
-                    layoutDescriptionFullOpen++;
-
-                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
-                    descriptionFullScreen.setVisible(true);
-                   
-                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    descriptionFullScreen.setAlwaysOnTop(true);
-                    descriptionFullScreen.setResizable(true);
-                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                            layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                    }
-                    });
-                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent evt) {
-                          if (evt.getClickCount() == 2) {
-                             layoutDescriptionFullOpen = 0;
-                            descriptionFullScreen.dispose();
-                          }
-                        }
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(null, "This window is already open");
-                }
-              }
-            }
-        });
-        //  END show full screen for desWavefront
-        
-        // BEGIN show full screen for desBeamShifting
         desBeamShifting.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
               if (evt.getClickCount() == 2) {
-                  desFullScreen = new javax.swing.JLabel();
-                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
+                  desFullScreen = new javax.swing.JTextArea();
+                  desFullScreen.setLineWrap(true);
+                  desFullScreen.setWrapStyleWord(true);
+                  desFullScreen.setEditable(false);
+                  desFullScreen.setOpaque(false);
+                  descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
                 
                 if(layoutDescriptionFullOpen ==  0){
                     desFullScreen.setText(desBeamShifting.getText());
@@ -1016,7 +565,12 @@ public class EduControllerPattern extends OpticsPane {
         desImportFormula.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
               if (evt.getClickCount() == 2) {
-                desFullScreen = new javax.swing.JLabel();
+                desFullScreen = new javax.swing.JTextArea();
+                desFullScreen.setLineWrap(true);
+                desFullScreen.setWrapStyleWord(true);
+                desFullScreen.setEditable(false);
+                desFullScreen.setOpaque(false);
+                
                 descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
                 
                 if(layoutDescriptionFullOpen ==  0){
@@ -1709,20 +1263,22 @@ public class EduControllerPattern extends OpticsPane {
     private JFrame diagramFullScreen;
     private JFrame descriptionFullScreen;
     // Description
-    private javax.swing.JLabel desFullScreen;
+    private javax.swing.JTextArea desFullScreen;
     private javax.swing.JLabel desNoSelect = new JLabel("");
-    private javax.swing.JLabel desSLM = EduDescription.desSLM;
-    private javax.swing.JLabel desAmplitude = EduDescription.desAmplitude;
-    private javax.swing.JLabel desPhaseModulation = EduDescription.desPhaseModulation;
-    private javax.swing.JLabel desMichelson = EduDescription.desMichelson;
-    private javax.swing.JLabel desDiffaction = EduDescription.desDiffaction;
-    private javax.swing.JLabel desSpectrometer = EduDescription.desSpectrometer;
-    private javax.swing.JLabel desSignalProcessing = EduDescription.desSignalProcessing;
-    private javax.swing.JLabel desPhaseRetarder = EduDescription.desPhaseRetarder;
-    private javax.swing.JLabel desTalbot = EduDescription.desTalbot;
-    private javax.swing.JLabel desWavefront = EduDescription.desWavefront;
-    private javax.swing.JLabel desBeamShifting = EduDescription.desBeamShifting;
-    private javax.swing.JLabel  desImportFormula = EduDescription.desImportFormula;
+    private javax.swing.JTextArea desSLM = EduDescription.desSLM;
+    private javax.swing.JTextArea desAmplitude = EduDescription.desAmplitude;
+    private javax.swing.JTextArea desPhaseModulation = EduDescription.desPhaseModulation;
+    private javax.swing.JTextArea desMichelson = EduDescription.desMichelson;
+    private javax.swing.JTextArea desDiffaction = EduDescription.desDiffaction;
+    private javax.swing.JTextArea desSpectrometer = EduDescription.desSpectrometer;
+    private javax.swing.JTextArea desSignalProcessing = EduDescription.desSignalProcessing;
+    private javax.swing.JTextArea desPhaseRetarder = EduDescription.desPhaseRetarder;
+    private javax.swing.JTextArea desTalbot = EduDescription.desTalbot;
+    private javax.swing.JTextArea desWavefront = EduDescription.desWavefront;
+    private javax.swing.JTextArea desBeamShifting = EduDescription.desBeamShifting;
+    private javax.swing.JTextArea  desImportFormula = EduDescription.desImportFormula;
+    JPopupMenu menu = new JPopupMenu("Popup");
+    
     // Temp
     private byte tmpSelected = 0;
     
@@ -1777,7 +1333,168 @@ public class EduControllerPattern extends OpticsPane {
     // Dynamic tab
     private StaticPanel staticPanel;
     // Import formula
-    private ImportFormulaPanel importFormulaPanel;
+    //private ImportFormulaPanel importFormulaPanel;
     
     public PatternImage pimg;
+    
+    class PopupTriggerListener extends MouseAdapter {
+
+        public void mousePressed(MouseEvent ev) {
+            if (ev.isPopupTrigger()) {
+                menu.show(ev.getComponent(), ev.getX(), ev.getY());
+            }
+        }
+
+        public void mouseReleased(MouseEvent ev) {
+            if (ev.isPopupTrigger()) {
+                menu.show(ev.getComponent(), ev.getX(), ev.getY());
+            }
+        }
+
+        public void mouseClicked(MouseEvent evt) {
+              if (evt.getClickCount() == 2) {
+                desFullScreen = new javax.swing.JTextArea();
+                desFullScreen.setLineWrap(true);
+                desFullScreen.setWrapStyleWord(true);
+                desFullScreen.setEditable(false);
+                desFullScreen.setOpaque(false);
+                
+                descriptionFullScreen = new JFrame("JDC Education Kit - Description full screen");
+                ResourceBundle labels = ResourceBundle
+                .getBundle("resources/description", EduUIMainView.supportedLocales[0]);
+        
+                desBeamShifting.setText(labels.getString("desBeamShifting"));
+                desImportFormula.setText(labels.getString("desImportFormula"));
+                
+                if(layoutDescriptionFullOpen ==  0){
+                    if (tmpSelected == 1) {
+                        desFullScreen.setText(desSLM.getText());
+                    } else if (tmpSelected == 2) {
+                        desFullScreen.setText(desAmplitude.getText());
+                    } else if (tmpSelected == 3) {
+                        desFullScreen.setText(desPhaseModulation.getText());
+                    } else if (tmpSelected == 4) {
+                        desFullScreen.setText(desMichelson.getText());
+                    } else if (tmpSelected == 5) {
+                        desFullScreen.setText(desDiffaction.getText());
+                    } else if (tmpSelected == 6) {
+                        desFullScreen.setText(desSpectrometer.getText());
+                    } else if (tmpSelected == 7) {
+                        desFullScreen.setText(desSignalProcessing.getText());
+                    } else if (tmpSelected == 8) {
+                        desFullScreen.setText(desPhaseRetarder.getText());
+                    } else if (tmpSelected == 9) {
+                        desFullScreen.setText(desTalbot.getText());
+                    } else if (tmpSelected == 10) {
+                        desFullScreen.setText(desWavefront.getText());
+                    }
+                
+                    descriptionFullScreen.setBackground(Color.WHITE);
+                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    descriptionFullScreen.setIconImage(img);
+                    descriptionFullScreen.getContentPane().add(desFullScreen);
+                    descriptionFullScreen.pack();
+                    layoutDescriptionFullOpen++;
+
+                    descriptionFullScreen.setBounds(0,0,screenSize.width, screenSize.height);
+                    descriptionFullScreen.setVisible(true);
+                   
+                    descriptionFullScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    descriptionFullScreen.setAlwaysOnTop(true);
+                    descriptionFullScreen.setResizable(true);
+                    descriptionFullScreen.addWindowListener(new java.awt.event.WindowAdapter() {
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                            layoutDescriptionFullOpen = 0;
+                            descriptionFullScreen.dispose();
+                    }
+                    });
+                    descriptionFullScreen.addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent evt) {
+                          if (evt.getClickCount() == 2) {
+                             layoutDescriptionFullOpen = 0;
+                            descriptionFullScreen.dispose();
+                          }
+                        }
+                    });
+                } else {
+                    JOptionPane.showMessageDialog(null, "This window is already open");
+                }
+              }
+            }
+    }
+    
+    private void popupMenuLanguage() {
+        JMenuItem item = new JMenuItem("English");
+        item.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                ResourceBundle labels = ResourceBundle.getBundle("resources/description", EduUIMainView.supportedLocales[0]);
+
+                desBeamShifting.setText(labels.getString("desBeamShifting"));
+                desImportFormula.setText(labels.getString("desImportFormula"));
+
+                if (tmpSelected == 1) {
+                    desSLM.setText(labels.getString("desSLM"));
+                } else if (tmpSelected == 2) {
+                    desAmplitude.setText(labels.getString("desAmplitude"));
+                } else if (tmpSelected == 3) {
+                    desPhaseModulation.setText(labels.getString("desPhaseModulation"));
+                } else if (tmpSelected == 4) {
+                    desMichelson.setText(labels.getString("desMichelson"));
+                } else if (tmpSelected == 5) {
+                    desDiffaction.setText(labels.getString("desDiffaction"));
+                } else if (tmpSelected == 6) {
+                    desSpectrometer.setText(labels.getString("desSpectrometer"));
+                } else if (tmpSelected == 7) {
+                    desSignalProcessing.setText(labels.getString("desSignalProcessing"));
+                } else if (tmpSelected == 8) {
+                    desPhaseRetarder.setText(labels.getString("desPhaseRetarder"));
+                } else if (tmpSelected == 9) {
+                    desTalbot.setText(labels.getString("desTalbot"));
+                } else if (tmpSelected == 10) {
+                    desWavefront.setText(labels.getString("desWavefront"));
+                }
+
+            }
+        });
+        menu.add(item);
+
+        item = new JMenuItem("Chinese");
+        item.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                ResourceBundle labels = ResourceBundle.getBundle("resources/description", EduUIMainView.supportedLocales[1]);
+
+                desBeamShifting.setText(labels.getString("desBeamShifting"));
+                desImportFormula.setText(labels.getString("desImportFormula"));
+
+                if (tmpSelected == 1) {
+                    desSLM.setText(labels.getString("desSLM"));
+                } else if (tmpSelected == 2) {
+                    desAmplitude.setText(labels.getString("desAmplitude"));
+                } else if (tmpSelected == 3) {
+                    desPhaseModulation.setText(labels.getString("desPhaseModulation"));
+                } else if (tmpSelected == 4) {
+                    desMichelson.setText(labels.getString("desMichelson"));
+                } else if (tmpSelected == 5) {
+                    desDiffaction.setText(labels.getString("desDiffaction"));
+                } else if (tmpSelected == 6) {
+                    desSpectrometer.setText(labels.getString("desSpectrometer"));
+                } else if (tmpSelected == 7) {
+                    desSignalProcessing.setText(labels.getString("desSignalProcessing"));
+                } else if (tmpSelected == 8) {
+                    desPhaseRetarder.setText(labels.getString("desPhaseRetarder"));
+                } else if (tmpSelected == 9) {
+                    desTalbot.setText(labels.getString("desTalbot"));
+                } else if (tmpSelected == 10) {
+                    desWavefront.setText(labels.getString("desWavefront"));
+                }
+
+            }
+        });
+        menu.add(item);
+    }
 }
