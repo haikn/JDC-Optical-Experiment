@@ -20,11 +20,11 @@
  */
 package com.jasper.ui.panel;
 
-import com.googlecode.javacv.CanvasFrame;
-import com.googlecode.javacv.FrameGrabber;
-import com.googlecode.javacv.OpenCVFrameGrabber;
-import com.googlecode.javacv.cpp.opencv_core;
-import static com.googlecode.javacv.cpp.opencv_core.cvClearMemStorage;
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamImageTransformer;
+import com.github.sarxos.webcam.WebcamPanel;
+import com.github.sarxos.webcam.WebcamResolution;
+
 import com.jasper.core.OpticsPane;
 import javax.swing.JOptionPane;
 import com.jasper.core.PatternImage;
@@ -39,8 +39,6 @@ import com.jasper.utils.Constant;
 import com.jasper.utils.Utils;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -53,7 +51,7 @@ import org.jdesktop.beansbinding.Binding;
  *
  * @author sonnv
  */
-public class DynamicPanel extends OpticsPane {
+public class DynamicPanel extends OpticsPane implements WebcamImageTransformer{
 
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
@@ -75,14 +73,12 @@ public class DynamicPanel extends OpticsPane {
     private String getText;
     private static BufferedImage buffImages;
     private JPanel panelPattern;
-    private JFrame magFrameLenon;
-    //private FrameGrabber grabber;
+    private JFrame window;
+    private Webcam webcam = null;
     private int countLenOn = 1;
     private int countSecondDisplay = 1;
     static String logMessage = "Amplitude : image=%s";
-    CanvasFrame frame;
-    private FrameGrabber grabber;
-    opencv_core.IplImage grabbedImage;
+    BufferedImage grabbedImage;
 
     public DynamicPanel(ResourceBundle labels, BindingGroup bindingGroup, JPanel panelPattern) {
         this.labels = labels;
@@ -276,7 +272,8 @@ public class DynamicPanel extends OpticsPane {
         try {
              btnStart.setEnabled(true);
              btnStop.setEnabled(false);
-             frame.dispose();
+             window.dispose();
+             if (webcam != null && webcam.isOpen()) webcam.close();
         } catch (Exception ex) {
             Logger.getLogger(DynamicPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -375,24 +372,40 @@ public class DynamicPanel extends OpticsPane {
     }
 
     public void startCamera() throws Exception {
-        frame = new CanvasFrame("Dynamic Holography");
-        frame.setBounds(0, 0, 640, 480);
-        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+        if (webcam != null && webcam.isOpen()) webcam.close();
+        webcam = Webcam.getDefault();
+        webcam.setViewSize(WebcamResolution.VGA.getSize());
+        webcam.setImageTransformer(this);
+
+        WebcamPanel panel = new WebcamPanel(webcam);
+        panel.setFPSDisplayed(true);
+        panel.setDisplayDebugInfo(true);
+        panel.setImageSizeDisplayed(true);
+        panel.setMirrored(true);
+
+        window = new JFrame("Dynamic Holography");
+        window.add(panel);
+        window.setResizable(true);
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.pack();
+        window.setVisible(true);
+        window.setBounds(0, 0, 640, 480);
+        window.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 btnStart.setEnabled(true);
                 btnStop.setEnabled(false);
-                frame.dispose();
+                window.dispose();
+                if (webcam != null && webcam.isOpen()) webcam.close();
             }
         });
-        grabber = new OpenCVFrameGrabber(0);
-        opencv_core.CvMemStorage storage = opencv_core.CvMemStorage.create();
-        grabber.start();
-        grabbedImage = grabber.grab();
-        while (frame.isVisible() && (grabbedImage = grabber.grab()) != null) {
-            BufferedImage bfimg = new BufferedImage(grabbedImage.width(), grabbedImage.height(), BufferedImage.TYPE_BYTE_GRAY);
-            grabbedImage.copyTo(bfimg);
-            WritableRaster raster = bfimg.getRaster();
-
+        window.setAlwaysOnTop(true);
+     
+    }
+    
+    @Override
+    public BufferedImage transform(BufferedImage image) {
+        WritableRaster raster = image.getRaster();
+            
             int x = sliderXOff.getValue();
             int y = sliderYOff.getValue();
             double phy = Math.toRadians(x);
@@ -403,23 +416,18 @@ public class DynamicPanel extends OpticsPane {
             double pxsize = 100;
             double phase, xa, ya;
 
-            for (int i = 0; i < grabbedImage.width(); i++) {
+            for (int i = 0; i < image.getWidth(); i++) {
                 xa = (double) (i - x / 2 + 1) * pxsize;
                 xa = xm * xa;
-                for (int j = 0; j < grabbedImage.height(); j++) {
+                for (int j = 0; j < image.getHeight(); j++) {
                     ya = (double) (y / 2 - j + 1) * pxsize;
                     ya = ym * ya;
                     phase = fixpart * (xa + ya) + raster.getSample(i, j, 0);
                     raster.setSample(i, j, 0, phase);
                 }
             }
-            bfimg.setData(raster);
-
-            frame.showImage(bfimg);
-            frame.setAlwaysOnTop(true);
-            cvClearMemStorage(storage);
-        }
-        grabber.stop();
+            image.setData(raster);
+            return image;
     }
 
     class CameraSwingWorker extends SwingWorker<String, Object> {
