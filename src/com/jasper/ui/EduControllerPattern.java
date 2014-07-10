@@ -79,6 +79,12 @@ import javax.swing.JPopupMenu;
  * @author sonnv
  */
 public class EduControllerPattern extends OpticsPane {
+    /**
+    * Static variables
+    */
+    static int patternWidth = 563;
+    static int patternHeight = 368;
+    
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
 
@@ -478,7 +484,7 @@ public class EduControllerPattern extends OpticsPane {
                 jPanelPatternLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGap(0, 290, Short.MAX_VALUE));
         
-        panelPattern.setBounds(5, 2, 563, 368);
+        panelPattern.setBounds(8, 5, patternWidth, patternHeight);
         panelPattern.setBorder(javax.swing.BorderFactory.createLineBorder(Color.RED, 1));
         
         //  BEGIN show full screen

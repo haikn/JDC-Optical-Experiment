@@ -74,11 +74,18 @@ public class EduPatternJPanel extends JPanel {
 
     public void paint(Graphics g) {
         Rectangle bounds = getBounds();
+        
+        //Re calculate bounds for pattern
+        int boundHeight = bounds.height;
+        int boundWidth = (int) (boundHeight*PatternImage.width)/PatternImage.height;
+        int boundStartX = (int) (bounds.width - boundWidth)/2;
+        
         if (bounds.width != PatternImage.width && bounds.height != PatternImage.height) {
-            g.drawImage(pimage.canvas, 0, 0, bounds.width, bounds.height, null);
+            g.drawImage(pimage.canvas, boundStartX, 0, boundWidth,boundHeight, null);
         } else {
             g.drawImage(pimage.canvas, 0, 0, null);
         }
+        
         if (pimage.action != 0) {
             capture = pimage.canvas.getSubimage(Math.max(0, pimage.rectLocale.x),
                     Math.max(0, pimage.rectLocale.y), pimage.rectSize.width, pimage.rectSize.height);
