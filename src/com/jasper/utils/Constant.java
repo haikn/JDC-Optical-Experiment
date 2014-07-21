@@ -31,6 +31,13 @@ import java.io.File;
  *
  */
 public class Constant {
+    public static final int LENS_ON_PANEL_WIDTH             = 120;
+    public static final int LENS_ON_PANEL_HEIGHT            = 120;
+    public static final int LENS_ON_LOCAL_X                 = 545;
+    public static final int LENS_ON_LOCAL_Y                 = 507;
+    public static final int LENS_ON_MOUSE_X                 = 550;
+    public static final int LENS_ON_MOUSE_Y                 = 510;
+    
     // path and file name of CGH log
     public static final String FILE_PATH                = System.getProperty("user.home") + File.separator + "JDCKit_Log";
     public static final String FILE_NAME_CGH1           = "CGH1_Log.txt";

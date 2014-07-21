@@ -45,6 +45,9 @@ import org.jdesktop.beansbinding.BindingGroup;
 
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
+import com.jasper.utils.Constant;
+import com.jasper.utils.Utils;
+import java.awt.Robot;
 import javax.swing.JTextArea;
 
 /**
@@ -209,7 +212,7 @@ public class SpectremeterPanel extends OpticsPane{
         panelButtonExp6Layout.setVerticalGroup(
                 panelButtonExp6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonExp6Layout.createSequentialGroup()
-                .addGap(121, 121, 121)
+                .addGap(149, 149, 149)
                 .addGroup(panelButtonExp6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonMirrorSpectometerDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonMirrorSpectometerLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -218,7 +221,9 @@ public class SpectremeterPanel extends OpticsPane{
         
         javax.swing.GroupLayout jPanelMirrorSpectometerlLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(jPanelMirrorSpectometerlLayout);
-        jPanelMirrorSpectometerlLayout.setHorizontalGroup(
+        
+        if (!Utils.isMac()) {
+            jPanelMirrorSpectometerlLayout.setHorizontalGroup(
                 jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanelMirrorSpectometerlLayout.createSequentialGroup()
                 .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,10 +244,48 @@ public class SpectremeterPanel extends OpticsPane{
                 .addComponent(jSliderPhyMirrorSpectometer, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
                 .addComponent(jSliderThetaMirrorSpectometer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 )));
-        jPanelMirrorSpectometerlLayout.setVerticalGroup(
+            jPanelMirrorSpectometerlLayout.setVerticalGroup(
+                    jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMirrorSpectometerlLayout.createSequentialGroup()
+                            .addGap(25, 25, 25)
+                            .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(lblPhySpectometer)
+                                            .addComponent(txtPhyMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jSliderPhyMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(15, 15, 15)
+                            .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(lblThetaMirrorSpectometer)
+                                            .addComponent(txtThetaMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jSliderThetaMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(8, 8, 8)));
+        } else {
+            jPanelMirrorSpectometerlLayout.setHorizontalGroup(
                 jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanelMirrorSpectometerlLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelMirrorSpectometerlLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(5, 5, 5)
+                .addComponent(lblThetaMirrorSpectometer, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                .addGroup(jPanelMirrorSpectometerlLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(lblPhySpectometer)
+                .addGap(8, 8, 8)
+                .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(txtThetaMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPhyMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(5, 5, 5)
+                .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(jSliderPhyMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSliderThetaMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                )));
+            jPanelMirrorSpectometerlLayout.setVerticalGroup(
+                jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelMirrorSpectometerlLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanelMirrorSpectometerlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(lblPhySpectometer)
@@ -255,6 +298,7 @@ public class SpectremeterPanel extends OpticsPane{
                 .addComponent(txtThetaMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addComponent(jSliderThetaMirrorSpectometer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8)));
+        }
     }
     
     public JPanel getPanel(){
@@ -298,20 +342,45 @@ public class SpectremeterPanel extends OpticsPane{
             if (countLenOnSpectrometer % 2 == 0) {
                 magFrameLenon.dispose();
             } else {
-                magFrameLenon = new JFrame("1:1 Lens On");
-                URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                Toolkit kit = Toolkit.getDefaultToolkit();
-                Image img = kit.createImage(url);
-                magFrameLenon.setIconImage(img);
-                
-                EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
-                magFrameLenon.getContentPane().add(mag);
-                magFrameLenon.pack();
-                magFrameLenon.setLocation(new Point(568, 450));
-                magFrameLenon.setResizable(false);
-                magFrameLenon.setVisible(true);
-                magFrameLenon.setAlwaysOnTop(true);
-                magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                if (!Utils.isMac()) {
+                    magFrameLenon = new JFrame("1:1 Lens On");
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    magFrameLenon.setIconImage(img);
+
+                    EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
+                    magFrameLenon.getContentPane().add(mag);
+                    magFrameLenon.pack();
+                    magFrameLenon.setLocation(new Point(568, 450));
+                    magFrameLenon.setResizable(false);
+                    magFrameLenon.setVisible(true);
+                    magFrameLenon.setAlwaysOnTop(true);
+                    magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                } else {
+                    Robot robot;
+                    try {
+                        robot = new Robot();
+                        robot.mouseMove(Constant.LENS_ON_MOUSE_X, Constant.LENS_ON_MOUSE_Y);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    magFrameLenon = new JFrame(labels.getString("btnLensOn"));
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    magFrameLenon.setIconImage(img);
+
+                    EduLensOn11 mag = new EduLensOn11(panelPattern,
+                            new Dimension(Constant.LENS_ON_PANEL_WIDTH, Constant.LENS_ON_PANEL_HEIGHT));
+                    magFrameLenon.getContentPane().add(mag);
+                    magFrameLenon.pack();
+                    magFrameLenon.setLocation(new Point(Constant.LENS_ON_LOCAL_X, Constant.LENS_ON_LOCAL_Y));
+                    magFrameLenon.setResizable(false);
+                    magFrameLenon.setVisible(true);
+                    magFrameLenon.setAlwaysOnTop(true);
+                    magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
                 magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                             countLenOnSpectrometer--;

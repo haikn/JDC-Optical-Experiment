@@ -44,6 +44,9 @@ import javax.swing.JPanel;
 import org.jdesktop.beansbinding.BindingGroup;
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
+import com.jasper.utils.Constant;
+import com.jasper.utils.Utils;
+import java.awt.Robot;
 import javax.swing.JTextArea;
 
 /**
@@ -233,6 +236,7 @@ public class CyllindricalMichelsonPanel extends OpticsPane {
                 .addComponent(buttonCyllinLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(buttonCyllinDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))));
+        if (!Utils.isMac()) {
         panelCyllinLayout.setVerticalGroup(
                 panelCyllinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelCyllinLayout.createSequentialGroup()
@@ -241,7 +245,16 @@ public class CyllindricalMichelsonPanel extends OpticsPane {
                 .addComponent(buttonCyllinDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonCyllinLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonCyllinGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))));
-
+        } else {
+            panelCyllinLayout.setVerticalGroup(
+                panelCyllinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelCyllinLayout.createSequentialGroup()
+                .addGap(118, 118, 118)
+                .addGroup(panelCyllinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                .addComponent(buttonCyllinDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonCyllinLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonCyllinGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))));
+        }
         javax.swing.GroupLayout jPanelCyllindricalLayout = new javax.swing.GroupLayout(jPanelCyllindrical);
         jPanelCyllindrical.setLayout(jPanelCyllindricalLayout);
         jPanelCyllindricalLayout.setHorizontalGroup(
@@ -356,19 +369,44 @@ public class CyllindricalMichelsonPanel extends OpticsPane {
                     }
                 });
             } else {
-                magFrameLenon = new JFrame("1:1 Lens On");
-                URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                Toolkit kit = Toolkit.getDefaultToolkit();
-                Image img = kit.createImage(url);
-                magFrameLenon.setIconImage(img);
+                if (!Utils.isMac()) {
+                    magFrameLenon = new JFrame("1:1 Lens On");
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    magFrameLenon.setIconImage(img);
 
-                EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
-                magFrameLenon.getContentPane().add(mag);
-                magFrameLenon.pack();
-                magFrameLenon.setLocation(new Point(568, 450));
-                magFrameLenon.setResizable(false);
-                magFrameLenon.setVisible(true);
-                magFrameLenon.setAlwaysOnTop(true);
+                    EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
+                    magFrameLenon.getContentPane().add(mag);
+                    magFrameLenon.pack();
+                    magFrameLenon.setLocation(new Point(568, 450));
+                    magFrameLenon.setResizable(false);
+                    magFrameLenon.setVisible(true);
+                    magFrameLenon.setAlwaysOnTop(true);
+                } else {
+                    Robot robot;
+                    try {
+                        robot = new Robot();
+                        robot.mouseMove(Constant.LENS_ON_MOUSE_X, Constant.LENS_ON_MOUSE_Y);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    magFrameLenon = new JFrame(labels.getString("btnLensOn"));
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    magFrameLenon.setIconImage(img);
+
+                    EduLensOn11 mag = new EduLensOn11(panelPattern,
+                            new Dimension(Constant.LENS_ON_PANEL_WIDTH, Constant.LENS_ON_PANEL_HEIGHT));
+                    magFrameLenon.getContentPane().add(mag);
+                    magFrameLenon.pack();
+                    magFrameLenon.setLocation(new Point(Constant.LENS_ON_LOCAL_X, Constant.LENS_ON_LOCAL_Y));
+                    magFrameLenon.setResizable(false);
+                    magFrameLenon.setVisible(true);
+                    magFrameLenon.setAlwaysOnTop(true);
+                    magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
                 magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         countLenOnCyllin--;
@@ -430,7 +468,11 @@ public class CyllindricalMichelsonPanel extends OpticsPane {
 
             this.xoffCyllin = xoffCyllin;
             this.yoffCyllin = yoffCyllin;
-            this.focalCyllin = focalCyllin / 100;
+            if (!Utils.isMac()) {
+                this.focalCyllin = focalCyllin / 100;
+            } else {
+                this.focalCyllin = focalCyllin / 1000;
+            }
             ret = true;
 
         } catch (Exception e) {

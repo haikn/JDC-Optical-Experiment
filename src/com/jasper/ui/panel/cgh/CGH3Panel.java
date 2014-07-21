@@ -44,6 +44,7 @@ import com.jasper.utils.Constant;
 import com.jasper.utils.Utils;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -180,6 +181,7 @@ public class CGH3Panel extends OpticsPane{
                 .addContainerGap(190, Short.MAX_VALUE)
                 )
                 )));
+        if (!Utils.isMac()) {
         panelButtonCGH3Layout.setVerticalGroup(
                 panelButtonCGH3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonCGH3Layout.createSequentialGroup()
@@ -189,7 +191,17 @@ public class CGH3Panel extends OpticsPane{
                 .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 ));
-        
+        } else {
+            panelButtonCGH3Layout.setVerticalGroup(
+                panelButtonCGH3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelButtonCGH3Layout.createSequentialGroup()
+                .addGap(149, 149, 149)
+                .addGroup(panelButtonCGH3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                ));
+        }
         scrollPane = new javax.swing.JScrollPane();
         txtCGH = new javax.swing.JTextArea();
         getText = Utils.readFile(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH3) ;
@@ -214,6 +226,7 @@ public class CGH3Panel extends OpticsPane{
                     .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
+        if (!Utils.isMac()) {
         CGH3Layout.setVerticalGroup(
             CGH3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CGH3Layout.createSequentialGroup()
@@ -229,6 +242,23 @@ public class CGH3Panel extends OpticsPane{
                         .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(5, 5, 5))))
                     );
+        } else {
+            CGH3Layout.setVerticalGroup(
+            CGH3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CGH3Layout.createSequentialGroup()
+                .addGroup(CGH3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(CGH3Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(CGH3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPleaseSelect)))
+                    .addGroup(CGH3Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(lblFilePath)
+                        .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(10, 10, 10))))
+                    );
+        }
     }
     
     public JPanel getPanel(){
@@ -294,19 +324,45 @@ public class CGH3Panel extends OpticsPane{
             });
 
         } else {
-            magFrameLenon = new JFrame("1:1 Lens On");
-            URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-            Toolkit kit = Toolkit.getDefaultToolkit();
-            Image img = kit.createImage(url);
-            magFrameLenon.setIconImage(img);
+            if (!Utils.isMac()) {
+                    magFrameLenon = new JFrame("1:1 Lens On");
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    magFrameLenon.setIconImage(img);
 
-            EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
-            magFrameLenon.getContentPane().add(mag);
-            magFrameLenon.pack();
-            magFrameLenon.setLocation(new Point(505, 420));
-                magFrameLenon.setResizable(false);
-            magFrameLenon.setVisible(true);
-            magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
+                    magFrameLenon.getContentPane().add(mag);
+                    magFrameLenon.pack();
+                    magFrameLenon.setLocation(new Point(505, 420));
+                    magFrameLenon.setResizable(false);
+                    magFrameLenon.setVisible(true);
+                    magFrameLenon.setAlwaysOnTop(true);
+                    magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                } else {
+                    Robot robot;
+                    try {
+                        robot = new Robot();
+                        robot.mouseMove(Constant.LENS_ON_MOUSE_X, Constant.LENS_ON_MOUSE_Y);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    magFrameLenon = new JFrame(labels.getString("btnLensOn"));
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    magFrameLenon.setIconImage(img);
+
+                    EduLensOn11 mag = new EduLensOn11(panelPattern,
+                            new Dimension(Constant.LENS_ON_PANEL_WIDTH, Constant.LENS_ON_PANEL_HEIGHT));
+                    magFrameLenon.getContentPane().add(mag);
+                    magFrameLenon.pack();
+                    magFrameLenon.setLocation(new Point(Constant.LENS_ON_LOCAL_X, Constant.LENS_ON_LOCAL_Y));
+                    magFrameLenon.setResizable(false);
+                    magFrameLenon.setVisible(true);
+                    magFrameLenon.setAlwaysOnTop(true);
+                    magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
             magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                 public void windowClosing(java.awt.event.WindowEvent e) {
                         countLenOn--;

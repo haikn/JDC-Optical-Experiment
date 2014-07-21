@@ -44,6 +44,9 @@ import org.jdesktop.beansbinding.BindingGroup;
 
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
+import com.jasper.utils.Constant;
+import com.jasper.utils.Utils;
+import java.awt.Robot;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import javax.swing.JTextArea;
@@ -181,6 +184,7 @@ public class PhaseRetarderPanel extends OpticsPane{
                 .addContainerGap(190, Short.MAX_VALUE)
                 )
                 )));
+        if (!Utils.isMac()) {
         panelButtonPhaseLayout.setVerticalGroup(
                 panelButtonPhaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonPhaseLayout.createSequentialGroup()
@@ -190,7 +194,17 @@ public class PhaseRetarderPanel extends OpticsPane{
                 .addComponent(button11LensOnPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonGeneralPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 ));
-        
+        } else {
+            panelButtonPhaseLayout.setVerticalGroup(
+                panelButtonPhaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelButtonPhaseLayout.createSequentialGroup()
+                .addGap(147, 147, 147)
+                .addGroup(panelButtonPhaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                .addComponent(buttonSecondPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(button11LensOnPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonGeneralPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                ));
+        }
         javax.swing.GroupLayout layoutExp1 = new javax.swing.GroupLayout(panelPhaseExp1);
         panelPhaseExp1.setLayout(layoutExp1);
         layoutExp1.setHorizontalGroup(
@@ -270,20 +284,45 @@ public class PhaseRetarderPanel extends OpticsPane{
                     }
                 });
             } else {
-                magFrameLenon = new JFrame("1:1 Lens On");
-                URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-                Toolkit kit = Toolkit.getDefaultToolkit();
-                Image img = kit.createImage(url);
-                magFrameLenon.setIconImage(img);
-                
-                EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
-                magFrameLenon.getContentPane().add(mag);
-                magFrameLenon.pack();
-                magFrameLenon.setLocation(new Point(568, 450));
-                magFrameLenon.setResizable(false);
-                magFrameLenon.setVisible(true);
-                magFrameLenon.setAlwaysOnTop(true);
-                magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                if (!Utils.isMac()) {
+                    magFrameLenon = new JFrame("1:1 Lens On");
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    magFrameLenon.setIconImage(img);
+
+                    EduLensOn11 mag = new EduLensOn11(panelPattern, new Dimension(120, 120));
+                    magFrameLenon.getContentPane().add(mag);
+                    magFrameLenon.pack();
+                    magFrameLenon.setLocation(new Point(568, 450));
+                    magFrameLenon.setResizable(false);
+                    magFrameLenon.setVisible(true);
+                    magFrameLenon.setAlwaysOnTop(true);
+                    magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                } else {
+                    Robot robot;
+                    try {
+                        robot = new Robot();
+                        robot.mouseMove(Constant.LENS_ON_MOUSE_X, Constant.LENS_ON_MOUSE_Y);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    magFrameLenon = new JFrame(labels.getString("btnLensOn"));
+                    URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+                    Toolkit kit = Toolkit.getDefaultToolkit();
+                    Image img = kit.createImage(url);
+                    magFrameLenon.setIconImage(img);
+
+                    EduLensOn11 mag = new EduLensOn11(panelPattern,
+                            new Dimension(Constant.LENS_ON_PANEL_WIDTH, Constant.LENS_ON_PANEL_HEIGHT));
+                    magFrameLenon.getContentPane().add(mag);
+                    magFrameLenon.pack();
+                    magFrameLenon.setLocation(new Point(Constant.LENS_ON_LOCAL_X, Constant.LENS_ON_LOCAL_Y));
+                    magFrameLenon.setResizable(false);
+                    magFrameLenon.setVisible(true);
+                    magFrameLenon.setAlwaysOnTop(true);
+                    magFrameLenon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
                 magFrameLenon.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                             countLenOnPhase--;

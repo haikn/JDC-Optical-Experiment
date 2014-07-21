@@ -21,6 +21,7 @@
 package com.jasper.ui;
 
 import com.jasper.core.PatternImage;
+import com.jasper.utils.Utils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
@@ -162,7 +163,11 @@ public class EduPatternShowOn {
         controlFrame = new EduUIMainView();
         controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         controlFrame.setLocation(0, 0);
-        controlFrame.setPreferredSize(new Dimension(1288, 748));
+        if (!Utils.isMac()) {
+            controlFrame.setPreferredSize(new Dimension(1288, 748));
+        } else {
+            controlFrame.setPreferredSize(new Dimension(1280, 803));
+        }
 
         controlFrame.pack();
         controlFrame.setVisible(true);

@@ -183,16 +183,27 @@ public class SignalPhotoPanel extends OpticsPane{
                 .addContainerGap(190, Short.MAX_VALUE)
                 )
                 )));
-        panelButtonCGH8Layout.setVerticalGroup(
+        if (!Utils.isMac()) {
+            panelButtonCGH8Layout.setVerticalGroup(
+                    panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelButtonCGH8Layout.createSequentialGroup()
+                            .addGap(4, 4, 4)
+                            .addGroup(panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                                    .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(buttonGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    ));
+        } else {
+            panelButtonCGH8Layout.setVerticalGroup(
                 panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonCGH8Layout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addGap(11, 11, 11)
                 .addGroup(panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 ));
-        
+        }
         scrollPane = new javax.swing.JScrollPane();
         txtLog = new javax.swing.JTextArea();
         getText = Utils.readFile(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_SIGNAL);
@@ -217,21 +228,39 @@ public class SignalPhotoPanel extends OpticsPane{
                     .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
-        CGH8Layout.setVerticalGroup(
+        if (!Utils.isMac()) {
+            CGH8Layout.setVerticalGroup(
+                    CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(CGH8Layout.createSequentialGroup()
+                            .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(CGH8Layout.createSequentialGroup()
+                                            .addGap(85, 85, 85)
+                                            .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                    .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(lblPleaseSelect)))
+                                    .addGroup(CGH8Layout.createSequentialGroup()
+                                            .addGap(8, 8, 8)
+                                            .addComponent(lblFilePath)
+                                            .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(7, 7, 7))))
+            );
+        } else {
+          CGH8Layout.setVerticalGroup(
             CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CGH8Layout.createSequentialGroup()
                 .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(CGH8Layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
+                        .addGap(95, 95, 95)
                         .addGroup(CGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPleaseSelect)))
                     .addGroup(CGH8Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addComponent(lblFilePath)
-                        .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(7, 7, 7))))
-        );
+        );  
+        }
     }
     
     public JPanel getPanel(){
