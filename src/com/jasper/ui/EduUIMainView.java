@@ -22,6 +22,7 @@ package com.jasper.ui;
 
 import com.jasper.core.OpticsPane;
 import com.jasper.core.PatternImage;
+import com.jasper.ui.widget.NewProjectDialog;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
@@ -59,6 +60,8 @@ public class EduUIMainView extends javax.swing.JFrame {
         jMenuBarMain = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemExit = new javax.swing.JMenuItem();
+        jMenuItemProject = new javax.swing.JMenuItem();
+        jMenuItemNewProject = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItemAbout = new javax.swing.JMenuItem();
         panelOptic =  new EduControllerPattern(locale);
@@ -78,6 +81,25 @@ public class EduUIMainView extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTextAreaLog);
 
         jMenuFile.setText(labels.getString("mnuFile"));
+                
+        jMenuItemProject.setText(labels.getString("mnuProject"));
+        jMenuItemProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                System.exit(0);
+            }
+        });
+        jMenuFile.add(jMenuItemProject);
+        
+        jMenuItemNewProject.setText(labels.getString("mnuNewProject"));
+        jMenuItemNewProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NewProjectDialog dialog = new NewProjectDialog();
+                dialog.setLocationRelativeTo(jTabbedPaneOptics);
+                dialog.setVisible();
+            }
+        });
+        jMenuFile.add(jMenuItemNewProject);
+        
         jMenuItemExit.setText(labels.getString("mnuExit"));
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -194,6 +216,8 @@ public class EduUIMainView extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemExit;
+    private javax.swing.JMenuItem jMenuItemProject;
+    private javax.swing.JMenuItem jMenuItemNewProject;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneApp;
     private javax.swing.JPanel jTabbedPaneOptics;
