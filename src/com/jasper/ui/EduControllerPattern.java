@@ -321,9 +321,9 @@ public class EduControllerPattern extends OpticsPane {
         // BeamShifting tab
         tabbedControl.addTab(labels.getString("tabBeamShifting"), beamShiftingPanel.getPanel());
         // Static tab
-        tabbedControl.addTab(labels.getString("tabStatic"), staticPanel.getPanel());
+        //tabbedControl.addTab(labels.getString("tabStatic"), staticPanel.getPanel());
         // Dynamic tab
-        tabbedControl.addTab(labels.getString("tabDynamic"), dynamicPanel.getPanel());
+        //tabbedControl.addTab(labels.getString("tabDynamic"), dynamicPanel.getPanel());
         // Dynamic tab
         //tabbedControl.addTab(labels.getString("tabImportFormula"), importFormulaPanel.getPanel());
         
@@ -1507,7 +1507,8 @@ public class EduControllerPattern extends OpticsPane {
     }
     
     private void popupMenuLanguage() {
-        JMenuItem item = new JMenuItem("English");
+        ResourceBundle res = ResourceBundle.getBundle("resources/Text", EduUIMainView.supportedLocales[0]);
+        JMenuItem item = new JMenuItem(res.getString("mnuItemLanguageEnglish"));
         item.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -1542,11 +1543,46 @@ public class EduControllerPattern extends OpticsPane {
         });
         menu.add(item);
 
-        item = new JMenuItem("Chinese");
+        item = new JMenuItem(res.getString("mnuItemLanguageChineseSimplified"));
         item.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 ResourceBundle labels = ResourceBundle.getBundle("resources/description", EduUIMainView.supportedLocales[1]);
+
+                desBeamShifting.setText(labels.getString("desBeamShifting"));
+                desImportFormula.setText(labels.getString("desImportFormula"));
+
+                if (tmpSelected == 1) {
+                    desSLM.setText(labels.getString("desSLM"));
+                } else if (tmpSelected == 2) {
+                    desAmplitude.setText(labels.getString("desAmplitude"));
+                } else if (tmpSelected == 3) {
+                    desPhaseModulation.setText(labels.getString("desPhaseModulation"));
+                } else if (tmpSelected == 4) {
+                    desMichelson.setText(labels.getString("desMichelson"));
+                } else if (tmpSelected == 5) {
+                    desDiffaction.setText(labels.getString("desDiffaction"));
+                } else if (tmpSelected == 6) {
+                    desSpectrometer.setText(labels.getString("desSpectrometer"));
+                } else if (tmpSelected == 7) {
+                    desSignalProcessing.setText(labels.getString("desSignalProcessing"));
+                } else if (tmpSelected == 8) {
+                    desPhaseRetarder.setText(labels.getString("desPhaseRetarder"));
+                } else if (tmpSelected == 9) {
+                    desTalbot.setText(labels.getString("desTalbot"));
+                } else if (tmpSelected == 10) {
+                    desWavefront.setText(labels.getString("desWavefront"));
+                }
+
+            }
+        });
+        menu.add(item);
+        
+        item = new JMenuItem(res.getString("mnuItemLanguageChineseTraditional"));
+        item.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                ResourceBundle labels = ResourceBundle.getBundle("resources/description", EduUIMainView.supportedLocales[2]);
 
                 desBeamShifting.setText(labels.getString("desBeamShifting"));
                 desImportFormula.setText(labels.getString("desImportFormula"));

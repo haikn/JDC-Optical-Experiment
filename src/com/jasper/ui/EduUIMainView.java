@@ -209,8 +209,8 @@ public class EduUIMainView extends javax.swing.JFrame {
     
     static Locale[] supportedLocales = {
          Locale.ENGLISH,
-         Locale.CHINA,
-         Locale.TAIWAN
+         Locale.SIMPLIFIED_CHINESE,
+         Locale.TRADITIONAL_CHINESE
       };
     
     int locale = 0;

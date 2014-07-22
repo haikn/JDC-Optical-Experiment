@@ -142,7 +142,7 @@ public class EduPatternShowOn {
         controlFrame.updatePattern(pimage);
         patternPanel.setImage(pimage);
         patternPanel.revalidate();
-
+      
         patternFrame.repaint();
         patternFrame.setVisible(true);
         controlFrame.repaint();
