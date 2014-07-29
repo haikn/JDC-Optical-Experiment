@@ -60,12 +60,13 @@ public class EduUIMainView extends javax.swing.JFrame {
         jMenuBarMain = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuItemExit = new javax.swing.JMenuItem();
-        jMenuItemProject = new javax.swing.JMenuItem();
-        jMenuItemNewProject = new javax.swing.JMenuItem();
+        jMenuItemExperiments = new javax.swing.JMenuItem();
+        jMenuItemProjects = new javax.swing.JMenu();
+        jMenuItemEditProjects = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItemAbout = new javax.swing.JMenuItem();
         panelOptic =  new EduControllerPattern(locale);
-
+        
         // add optics panes to panelist
         panelist = new ArrayList<OpticsPane>();
 
@@ -82,23 +83,34 @@ public class EduUIMainView extends javax.swing.JFrame {
 
         jMenuFile.setText(labels.getString("mnuFile"));
                 
-        jMenuItemProject.setText(labels.getString("mnuProject"));
-        jMenuItemProject.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemExperiments.setText(labels.getString("mnuExperiments"));
+        jMenuItemExperiments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                System.exit(0);
+                panelOptic.showExperiments();
             }
         });
-        jMenuFile.add(jMenuItemProject);
+        jMenuFile.add(jMenuItemExperiments);
         
-        jMenuItemNewProject.setText(labels.getString("mnuNewProject"));
-        jMenuItemNewProject.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemProjects.setText(labels.getString("mnuProjects"));
+        jMenuItemProjects.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                NewProjectDialog dialog = new NewProjectDialog();
+//                dialog.setLocationRelativeTo(jTabbedPaneOptics);
+//                dialog.setVisible();
+                panelOptic.showProjects();
+            }
+        });
+        jMenuFile.add(jMenuItemProjects);
+        
+        jMenuItemEditProjects.setText(labels.getString("mnuEditProject"));
+        jMenuItemEditProjects.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 NewProjectDialog dialog = new NewProjectDialog();
                 dialog.setLocationRelativeTo(jTabbedPaneOptics);
                 dialog.setVisible();
             }
         });
-        jMenuFile.add(jMenuItemNewProject);
+        jMenuItemProjects.add(jMenuItemEditProjects);
         
         jMenuItemExit.setText(labels.getString("mnuExit"));
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
@@ -216,15 +228,16 @@ public class EduUIMainView extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemExit;
-    private javax.swing.JMenuItem jMenuItemProject;
-    private javax.swing.JMenuItem jMenuItemNewProject;
+    private javax.swing.JMenuItem jMenuItemExperiments;
+    private javax.swing.JMenuItem jMenuItemProjects;
+    private javax.swing.JMenuItem jMenuItemEditProjects;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneApp;
     private javax.swing.JPanel jTabbedPaneOptics;
     private javax.swing.JTextArea jTextAreaLog;
     private javax.swing.JTextArea jTextAreaDesc;
     
-    private javax.swing.JPanel panelOptic;
+    private EduControllerPattern panelOptic;
     // End of variables declaration   
     
     final private String eduKitTitle = "JDC Education Kit";

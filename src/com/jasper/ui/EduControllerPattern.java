@@ -52,6 +52,7 @@ import com.jasper.ui.panel.talbot.TalbotPanel;
 import com.jasper.ui.panel.talbot.TalbotPhotoPanel;
 import com.jasper.utils.Utils;
 import com.jasper.ui.widget.DoubleJSlider;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -72,6 +73,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.ResourceBundle;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 /**
@@ -518,7 +520,22 @@ public class EduControllerPattern extends OpticsPane {
         } else {
             tabbedControl.setBounds(578, 0, 678, 442);
         }
-        layoutControl.add(tabbedControl, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        JPanel experimentsPanel = new JPanel();
+        experimentsPanel.add(tabbedControl);
+        experimentsPanel.setBounds(578, 0, 678, 442);
+        
+        JPanel pl = new JPanel();
+        pl.add(new JLabel("Hello"));
+        pl.setBounds(578, 0, 678, 442);
+        
+        //CardLayout cardlayout = new CardLayout();
+        
+        projectPanel.setBounds(578, 0, 678, 442);
+        projectPanel.add(experimentsPanel, labels.getString("mnuExperiments"));
+        projectPanel.add(pl, labels.getString("mnuProjects")); 
+                
+        layoutControl.add(projectPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        //layoutControl.add(tabbedControl, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanelPatternLayout = new javax.swing.GroupLayout(jPanelPattern);
         jPanelPattern.setLayout(jPanelPatternLayout);
@@ -1310,6 +1327,16 @@ public class EduControllerPattern extends OpticsPane {
     }
     // End Action Performed
     
+    public void showExperiments() {
+        CardLayout cardlayout = (CardLayout)(projectPanel.getLayout());
+        cardlayout.show(projectPanel, labels.getString("mnuExperiments"));
+    }
+    
+    public void showProjects() {
+        CardLayout cardlayout = (CardLayout)(projectPanel.getLayout());
+        cardlayout.show(projectPanel, labels.getString("mnuProjects"));
+    }
+    
     // Variables declaration
     public javax.swing.JPanel panelPattern;
     public javax.swing.JPanel panelPatternFullScreen;
@@ -1416,7 +1443,8 @@ public class EduControllerPattern extends OpticsPane {
     //private ImportFormulaPanel importFormulaPanel;
     
     public PatternImage pimg;
-    
+    private JPanel projectPanel = new JPanel(new CardLayout());
+        
     class PopupTriggerListener extends MouseAdapter {
 
         public void mousePressed(MouseEvent ev) {
