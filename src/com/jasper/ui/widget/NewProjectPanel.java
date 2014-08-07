@@ -45,6 +45,9 @@ import org.jdesktop.beansbinding.BindingGroup;
 
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import javax.swing.JLabel;
 import javax.swing.JTextArea;
 /**
  *
@@ -80,6 +83,7 @@ public class NewProjectPanel extends OpticsPane{
     private int countLenOnMichelson = 1;
     private javax.swing.JPanel panelLensMichelson;
     private javax.swing.JPanel panelMichelsonButton;
+    private javax.swing.JPanel panelNewProject;
     
      public NewProjectPanel(ResourceBundle labels, BindingGroup bindingGroup,JPanel panelPattern) {
         this.labels = labels;
@@ -105,6 +109,16 @@ public class NewProjectPanel extends OpticsPane{
         jButtonLensMichelson = new javax.swing.JButton();
         jButton11LensOnMichelson = new javax.swing.JButton();
         jButtonDisplaySecondOnMichelson = new javax.swing.JButton();
+        panelMichelsonButton = new javax.swing.JPanel();
+        
+        panelNewProject = new javax.swing.JPanel(new BorderLayout());
+        
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(new JLabel("Project Name: "), BorderLayout.LINE_START);
+        headerPanel.add(new JLabel("Macro Name: "), BorderLayout.LINE_END);
+        panelNewProject.add(headerPanel, BorderLayout.PAGE_START);
+        panelNewProject.add(panelLensMichelson, BorderLayout.CENTER);
+        panelNewProject.add(panelMichelsonButton, BorderLayout.PAGE_END);
         
         lblFocalLensMichelson.setText("Focal length (mm)");
         Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jSliderFocalLensMichelson, org.jdesktop.beansbinding.ELProperty.create("${value}"), txtFocalLensMichelson, org.jdesktop.beansbinding.BeanProperty.create("text"));
@@ -227,7 +241,6 @@ public class NewProjectPanel extends OpticsPane{
             }
         });
         
-        panelMichelsonButton = new javax.swing.JPanel();
         javax.swing.GroupLayout panelMichelsonLayout = new javax.swing.GroupLayout(panelMichelsonButton);
         panelMichelsonButton.setLayout(panelMichelsonLayout);
         panelMichelsonLayout.setHorizontalGroup(
@@ -303,13 +316,9 @@ public class NewProjectPanel extends OpticsPane{
     }
     
     public JPanel getPanel() {
-        return panelLensMichelson;
+        return panelNewProject;
     }
-    
-    public JPanel getPanelButton() {
-        return panelMichelsonButton;
-    }
-    
+        
     public JTextArea getLogArea() {
         return txtAreaLog;
     }
@@ -440,9 +449,6 @@ public class NewProjectPanel extends OpticsPane{
             ret = true;
             
         } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, warnings);
-            //textXpos.setText(String.valueOf(this.yoff));
-            //textYpos.setText(String.valueOf(this.yoff));
             textFocal.setText(String.valueOf(this.focal));
         }
         return ret;

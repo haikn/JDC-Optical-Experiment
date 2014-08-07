@@ -52,6 +52,7 @@ import com.jasper.ui.panel.talbot.TalbotPanel;
 import com.jasper.ui.panel.talbot.TalbotPhotoPanel;
 import com.jasper.utils.Utils;
 import com.jasper.ui.widget.DoubleJSlider;
+import com.jasper.ui.widget.NewProjectPanel;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -522,19 +523,19 @@ public class EduControllerPattern extends OpticsPane {
         }
         JPanel experimentsPanel = new JPanel();
         experimentsPanel.add(tabbedControl);
-        experimentsPanel.setBounds(578, 0, 678, 442);
+        experimentsPanel.setBounds(580, 0, 665, 370);
         
         JPanel pl = new JPanel();
-        pl.add(new JLabel("Hello"));
-        pl.setBounds(578, 0, 678, 442);
-        
-        //CardLayout cardlayout = new CardLayout();
-        
-        projectPanel.setBounds(578, 0, 678, 442);
+        NewProjectPanel newPrjPanel = new NewProjectPanel(labels, bindingGroup, panelPattern);
+        pl.add(newPrjPanel.getPanel());
+        pl.setBounds(580, 0, 665, 370);
+        newPrjPanel.setBounds(580, 0, 665, 370);
+                
+        projectPanel.setBounds(580, 0, 665, 370);
         projectPanel.add(experimentsPanel, labels.getString("mnuExperiments"));
         projectPanel.add(pl, labels.getString("mnuProjects")); 
                 
-        layoutControl.add(projectPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        layoutControl.add(projectPanel, javax.swing.JLayeredPane.DEFAULT_LAYER); 
         //layoutControl.add(tabbedControl, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanelPatternLayout = new javax.swing.GroupLayout(jPanelPattern);

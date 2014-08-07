@@ -22,6 +22,7 @@ package com.jasper.ui;
 
 import com.jasper.core.OpticsPane;
 import com.jasper.core.PatternImage;
+import com.jasper.ui.widget.EditProjectDialog;
 import com.jasper.ui.widget.NewProjectDialog;
 import java.awt.Component;
 import java.awt.Container;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javax.swing.JMenuItem;
 
 public class EduUIMainView extends javax.swing.JFrame {
 
@@ -105,12 +107,22 @@ public class EduUIMainView extends javax.swing.JFrame {
         jMenuItemEditProjects.setText(labels.getString("mnuEditProject"));
         jMenuItemEditProjects.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NewProjectDialog dialog = new NewProjectDialog();
-                dialog.setLocationRelativeTo(jTabbedPaneOptics);
+                EditProjectDialog dialog = new EditProjectDialog();
                 dialog.setVisible();
             }
         });
         jMenuItemProjects.add(jMenuItemEditProjects);
+        
+        JMenuItem newPrj = new JMenuItem(labels.getString("mnuNewProjects"));
+        newPrj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NewProjectDialog dialog = new NewProjectDialog();
+                dialog.setLocationRelativeTo(jTabbedPaneOptics);
+                dialog.setMacroPanel(panelOptic);
+                dialog.setVisible();
+            }
+        });
+        jMenuItemProjects.add(newPrj);
         
         jMenuItemExit.setText(labels.getString("mnuExit"));
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {

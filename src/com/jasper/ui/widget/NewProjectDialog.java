@@ -20,17 +20,28 @@
  */
 package com.jasper.ui.widget;
 
-import java.awt.BorderLayout;
+import com.jasper.ui.EduControllerPattern;
+import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -40,60 +51,100 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author trancongly
  */
 public class NewProjectDialog extends JDialog implements ActionListener {
+
     private JTextField txtProjectName;
     private JTextField txtDescription;
     private JTextField txtGraphic;
     private JTextField txtMacro;
-    private JButton btnSave, btnCancel, btnHelp, btnLoadDescription, btnLoadGraphic, btnLoadMacro;
+    private JButton btnCreateProject, btnCancel, btnLoadDescription, btnLoadGraphic, btnLoadMacro;
     private JFrame parentFrame = new JFrame();
     private JFileChooser fc;
-    
+    private JTextArea testDesc;
+    private EduControllerPattern macroPanel;
+
     public NewProjectDialog() {
         fc = new JFileChooser();
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(0,3));
-        
+        inputPanel.setLayout(new GridLayout(0, 3, 5, 5));
+
         txtProjectName = new JTextField();
         txtDescription = new JTextField();
         txtGraphic = new JTextField();
         txtMacro = new JTextField();
-        inputPanel.add(new JLabel("Project Name"));
+        inputPanel.add(new JLabel("Project Name:"));
         inputPanel.add(txtProjectName);
         inputPanel.add(new JLabel());
-        inputPanel.add(new JLabel("File Description"));
-        inputPanel.add(txtDescription);
-        btnLoadDescription = new JButton("Browser");
-        btnLoadDescription.addActionListener(this);
-        inputPanel.add(btnLoadDescription);
-        
-        inputPanel.add(new JLabel("File Graphic"));
-        inputPanel.add(txtGraphic);
-        btnLoadGraphic = new JButton("Browser");
-        btnLoadGraphic.addActionListener(this);
-        inputPanel.add(btnLoadGraphic);
-        
-        inputPanel.add(new JLabel("File Macro"));
+        inputPanel.add(new JLabel("Macro File"));
         inputPanel.add(txtMacro);
         btnLoadMacro = new JButton("Browser");
         btnLoadMacro.addActionListener(this);
         inputPanel.add(btnLoadMacro);
-        
+
+        inputPanel.add(new JLabel("Diagram File:"));
+        inputPanel.add(txtGraphic);
+        btnLoadGraphic = new JButton("Browser");
+        btnLoadGraphic.addActionListener(this);
+        inputPanel.add(btnLoadGraphic);
+
+        inputPanel.add(new JLabel("Language of the description:"));
+        String[] language = {"English", "Chinese(Traditional)", "Chinese"};
+        JComboBox cmbLanguage = new JComboBox(language);
+        inputPanel.add(cmbLanguage);
+        inputPanel.add(new JLabel());
+
+        inputPanel.add(new JLabel("Description File:"));
+        inputPanel.add(txtDescription);
+        btnLoadDescription = new JButton("Browser");
+        btnLoadDescription.addActionListener(this);
+        inputPanel.add(btnLoadDescription);
+
+        inputPanel.add(new JLabel("Description"));
+        inputPanel.add(new JLabel(""));
+        inputPanel.add(new JLabel(""));
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
-        btnSave = new JButton("Save");
+        btnCreateProject = new JButton("Create Project");
+        btnCreateProject.addActionListener(this);
         btnCancel = new JButton("Cancel");
-        btnHelp = new JButton("Help");
-        buttonPanel.add(btnSave);
+        btnCancel.addActionListener(this);
+
+        buttonPanel.add(btnCreateProject);
         buttonPanel.add(btnCancel);
-        buttonPanel.add(btnHelp);
-        
+
         parentFrame.setTitle("New Project");
-        parentFrame.add(inputPanel, BorderLayout.CENTER);
-        parentFrame.add(buttonPanel, BorderLayout.SOUTH);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        parentFrame.getContentPane().add(mainPanel);
+
+        inputPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(inputPanel);
+        testDesc = new JTextArea();
+        testDesc.setColumns(20);
+        testDesc.setRows(10);
+        testDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
+        testDesc.setLineWrap(true);
+        testDesc.setWrapStyleWord(true);
+        testDesc.setEditable(false);
+        testDesc.setOpaque(true);
+        testDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(testDesc);
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(buttonPanel);
         parentFrame.setSize(100, 200);
+
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         parentFrame.pack();
     }
     
+    public void setMacroPanel(EduControllerPattern panel) {
+        macroPanel = panel;
+    }
+    
+    public void showMacroPanel() {
+        macroPanel.showProjects();
+    }
+
     public void setVisible() {
         parentFrame.setVisible(true);
     }
@@ -101,18 +152,36 @@ public class NewProjectDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnLoadDescription) {
-            FileFilter filter = new FileNameExtensionFilter("Text file","txt");
+            FileFilter filter = new FileNameExtensionFilter("Text file", "txt");
             fc.setFileFilter(filter);
             int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                //File file = fc.getSelectedFile();
+                File file = fc.getSelectedFile();
                 //This is where a real application would open the file.
                 //log.append("Opening: " + file.getName() + "." + newline);
+                try {
+                    FileReader fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+                    String inputFile = "";
+                    String textFieldReadable;
+
+                    while ((textFieldReadable = bufferedReader.readLine()) != null) {
+                        inputFile += textFieldReadable;
+                    }
+                    
+                    testDesc.setText(inputFile);
+
+                } catch (FileNotFoundException ex) {
+                    System.out.println("no such file exists");
+                } catch (IOException ex) {
+                    System.out.println("unkownerror");
+                }
                 return;
-            } 
+            }
         } else if (e.getSource() == btnLoadGraphic) {
-            FileFilter filter = new FileNameExtensionFilter("Image file","jpg");
+            FileFilter filter = new FileNameExtensionFilter("Image file", "jpg");
             fc.setFileFilter(filter);
             int returnVal = fc.showOpenDialog(this);
 
@@ -121,9 +190,9 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                 //This is where a real application would open the file.
                 //log.append("Opening: " + file.getName() + "." + newline);
                 return;
-            } 
+            }
         } else if (e.getSource() == btnLoadMacro) {
-            FileFilter filter = new FileNameExtensionFilter("Text file","txt");
+            FileFilter filter = new FileNameExtensionFilter("Text file", "txt");
             fc.setFileFilter(filter);
             int returnVal = fc.showOpenDialog(this);
 
@@ -132,13 +201,12 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                 //This is where a real application would open the file.
                 //log.append("Opening: " + file.getName() + "." + newline);
                 return;
-            } 
-        } else if (e.getSource() == btnHelp) {
-            return;
-        } else if (e.getSource() == btnSave) {
-            return; 
+            }
+        } else if (e.getSource() == btnCreateProject) {
+            macroPanel.showProjects();
+            parentFrame.dispose();
         } else if (e.getSource() == btnCancel) {
-            return; 
+            parentFrame.dispose();
         }
     }
 }
