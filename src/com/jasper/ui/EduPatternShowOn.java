@@ -233,7 +233,10 @@ public class EduPatternShowOn {
         // if only one device is detected, then user selection is not required
         if (devices.length == 1) {
             EduPatternShowOn.device = devices[0];
+            System.out.println("Only 1 devices");
             return;
+        } else {
+            System.out.println("there are " + devices.length + " devices");
         }
 
         String shortenedlist[] = new String[devices.length];

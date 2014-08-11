@@ -20,6 +20,8 @@
  */
 package com.jasper.utils;
 
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -98,6 +100,17 @@ public class Utils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public static Font getFont() {
+        Font[] allfonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+	String chinesesample = "\u4e00";
+	for (int j = 0; j < allfonts.length; j++) {
+	    if (allfonts[j].canDisplayUpTo(chinesesample) == -1) { 
+                return new Font(allfonts[j].getFontName(), Font.PLAIN, 16);
+	    }
+	}
+        return new Font("Bitstream Cyberbit", Font.PLAIN, 16);
     }
     
     public static void createDirectoryLogFileCGH() {
