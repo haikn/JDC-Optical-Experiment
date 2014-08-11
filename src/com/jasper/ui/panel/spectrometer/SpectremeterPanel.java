@@ -230,6 +230,7 @@ public class SpectremeterPanel extends OpticsPane{
                 .addComponent(buttonMirrorSpectometerGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 ));
         }
+
         javax.swing.GroupLayout jPanelMirrorSpectometerlLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(jPanelMirrorSpectometerlLayout);
         

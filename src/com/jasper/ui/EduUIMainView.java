@@ -24,9 +24,9 @@ import com.jasper.core.OpticsPane;
 import com.jasper.core.PatternImage;
 import com.jasper.ui.widget.EditProjectDialog;
 import com.jasper.ui.widget.NewProjectDialog;
+import com.jasper.utils.Utils;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Font;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -76,11 +76,11 @@ public class EduUIMainView extends javax.swing.JFrame {
 
         jTextAreaDesc.setColumns(20);
         jTextAreaDesc.setRows(5);
-        jTextAreaDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
+        jTextAreaDesc.setFont(Utils.getFont());
 
         jTextAreaLog.setColumns(20);
         jTextAreaLog.setRows(5);
-        jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
+        jTextAreaLog.setFont(Utils.getFont());
         jScrollPane2.setViewportView(jTextAreaLog);
 
         jMenuFile.setText(labels.getString("mnuFile"));

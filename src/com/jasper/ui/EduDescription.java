@@ -20,9 +20,9 @@
  */
 package com.jasper.ui;
 
+import com.jasper.utils.Utils;
 import java.awt.Font;
 import java.util.ResourceBundle;
-import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 /**
@@ -64,7 +64,7 @@ public class EduDescription {
         desBeamShifting.setText(labels.getString("desBeamShifting"));
         desImportFormula.setText(labels.getString("desImportFormula"));
         
-        Font font = new Font("Verdana", Font.PLAIN, 16);
+        Font font = Utils.getFont();
         desSLM.setFont(font);
         desAmplitude.setFont(font);
         desPhaseModulation.setFont(font);

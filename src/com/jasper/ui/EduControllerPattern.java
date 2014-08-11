@@ -361,7 +361,6 @@ public class EduControllerPattern extends OpticsPane {
                         tabbedDesLog.addTab(labels.getString("tabDescription"), desNoSelect);
                         jTextAreaLog.setColumns(20);
                         jTextAreaLog.setRows(5);
-                        jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
                         jScrollPane2.setViewportView(jTextAreaLog);
                         tabbedDesLog.addTab(labels.getString("tabLog"), jScrollPane2);
                         
@@ -565,7 +564,7 @@ public class EduControllerPattern extends OpticsPane {
         tabbedDesLog.addTab("Description", null);
         jTextAreaLog.setColumns(20);
         jTextAreaLog.setRows(5);
-        jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
+        jTextAreaLog.setFont(Utils.getFont());
         jScrollPane2.setViewportView(jTextAreaLog);
         tabbedDesLog.addTab("Log", jScrollPane2);
         
@@ -815,7 +814,7 @@ public class EduControllerPattern extends OpticsPane {
         tabbedDesLog.addTab("Description", desNoSelect);
         jTextAreaLog.setColumns(20);
         jTextAreaLog.setRows(5);
-        jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
+        jTextAreaLog.setFont(Utils.getFont());
         jScrollPane2.setViewportView(jTextAreaLog);
         tabbedDesLog.addTab("Log", jScrollPane2);
         generateActionPerformedDefault(evt);
@@ -1232,13 +1231,11 @@ public class EduControllerPattern extends OpticsPane {
                         buttonPanel.removeAll();
                         buttonPanel.add(talbotPanel.getPanelButton());
                         // log tab
-                        jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
                         jScrollPane2.setViewportView(talbotPanel.getLogArea());
                     } if (value.equals("Talbot photo")) {
                         buttonPanel.removeAll();
                         buttonPanel.add(talbotPhotoPanel.getPanelButton());
                         // log tab
-                        jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
                         //jScrollPane2.setViewportView(talbotPhotoPanel.getLogArea());
                     }
                 }
@@ -1249,7 +1246,6 @@ public class EduControllerPattern extends OpticsPane {
         jScrollDes.setViewportView(desTalbot);
         tabbedDesLog.addTab("Description", jScrollDes);
         
-        jTextAreaLog.setFont(new Font("Courier New", Font.PLAIN, 12));
         jScrollPane2.setViewportView(talbotPanel.getLogArea());
         tabbedDesLog.addTab("Log", jScrollPane2);
 
