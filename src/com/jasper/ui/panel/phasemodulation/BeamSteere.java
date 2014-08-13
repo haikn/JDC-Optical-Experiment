@@ -211,7 +211,7 @@ public class BeamSteere extends OpticsPane{
                 .addComponent(buttonMirrorDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 )));
         if (!Utils.isMac()) {
-        panelButtonMirrorLayout.setVerticalGroup(
+            panelButtonMirrorLayout.setVerticalGroup(
                 panelButtonMirrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonMirrorLayout.createSequentialGroup()
                 .addGap(121, 121, 121)
@@ -234,7 +234,7 @@ public class BeamSteere extends OpticsPane{
         javax.swing.GroupLayout jPanelMirrorlLayout = new javax.swing.GroupLayout(jPanelMirror);
         jPanelMirror.setLayout(jPanelMirrorlLayout);
         if (!Utils.isMac()) {
-        jPanelMirrorlLayout.setHorizontalGroup(
+            jPanelMirrorlLayout.setHorizontalGroup(
             jPanelMirrorlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMirrorlLayout.createSequentialGroup()
                 .addGap(11, 11, 11)
@@ -293,8 +293,8 @@ public class BeamSteere extends OpticsPane{
                             .addComponent(jSliderThetaMirror, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
                             .addComponent(jSliderPhyMirror, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(0, 0, 0))
-        );
-        jPanelMirrorlLayout.setVerticalGroup(
+            );
+            jPanelMirrorlLayout.setVerticalGroup(
             jPanelMirrorlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMirrorlLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
@@ -313,7 +313,7 @@ public class BeamSteere extends OpticsPane{
                         .addGap(15, 15, 15)
                         .addComponent(jSliderThetaMirror, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(10, 10, 10))
-        );  
+            );  
         }
 
         

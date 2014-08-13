@@ -73,6 +73,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -273,8 +274,8 @@ public class EduControllerPattern extends OpticsPane {
                         .addGap(0, 0, 0)
                         .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 )
-        );
-        panelGeneralLayout.setVerticalGroup(
+            );
+            panelGeneralLayout.setVerticalGroup(
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
@@ -286,7 +287,7 @@ public class EduControllerPattern extends OpticsPane {
                 .addGap(0, 0, 0)
                 .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-        );
+            );
         } else {
             panelGeneralLayout.setHorizontalGroup(
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -514,15 +515,18 @@ public class EduControllerPattern extends OpticsPane {
                 }
             }
         });
-        
+        /*
         if (!Utils.isMac()) {
             tabbedControl.setBounds(580, 0, 665, 370);
         } else {
             tabbedControl.setBounds(578, 0, 678, 442);
         }
+         */
         JPanel experimentsPanel = new JPanel();
         experimentsPanel.add(tabbedControl);
         experimentsPanel.setBounds(580, 0, 665, 370);
+        //experimentsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        //tabbedControl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
         JPanel pl = new JPanel();
         NewProjectPanel newPrjPanel = new NewProjectPanel(labels, bindingGroup, panelPattern);
@@ -533,6 +537,7 @@ public class EduControllerPattern extends OpticsPane {
         projectPanel.setBounds(580, 0, 665, 370);
         projectPanel.add(experimentsPanel, labels.getString("mnuExperiments"));
         projectPanel.add(pl, labels.getString("mnuProjects")); 
+        //projectPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
                 
         layoutControl.add(projectPanel, javax.swing.JLayeredPane.DEFAULT_LAYER); 
         //layoutControl.add(tabbedControl, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -819,20 +824,18 @@ public class EduControllerPattern extends OpticsPane {
         tabbedDesLog.addTab("Log", jScrollPane2);
         generateActionPerformedDefault(evt);
 
-    }//GEN-LAST:event_menuItemNoSelectActionPerformed
+    }
 
-    public void menuItemSLMBasicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSLMBasicActionPerformed
-//        changeLabTitle(labTitleTele);
-        tabbedPaneOptics.show();
-
+    public void menuItemSLMBasicActionPerformed(java.awt.event.ActionEvent evt) {
         tabbedPaneOptics.removeAll();
         layoutDiagram.removeAll();
         diagramLens.removeAll();
         tabbedDesLog.removeAll();
+        tabbedPaneOptics.show();
         
         buttonPanel.removeAll();
         buttonPanel.add(slmBasicPanel.getPanelPhaseButton());
-
+        
         tabbedPaneOptics.addTab("Gray Level", slmBasicPanel.getPanelPhase());
         tabbedPaneOptics.addTab("CGH Pattern Import", cgh1Panel.getPanel());
         tabbedPaneOptics.addChangeListener(new ChangeListener() {
