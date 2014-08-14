@@ -20,7 +20,10 @@
  */
 package com.jasper.utils;
 
+import com.jasper.ui.EduPatternShowOn;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,9 +32,13 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  * Utils class
@@ -100,6 +107,49 @@ public class Utils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public static void setDevice() {
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] devices = env.getScreenDevices();
+        
+        
+        // if only one device is detected, then user selection is not required
+        if (devices.length == 1) {
+            EduPatternShowOn.device = devices[0];
+            JOptionPane.showMessageDialog(null, "Detect 1 screen " + devices[0].toString() + " -- isHeadlessInstance: " + env.isHeadlessInstance() + " -- isHeadless:" + GraphicsEnvironment.isHeadless());
+            return;
+        } 
+        EduPatternShowOn.device = devices[1];
+        /*
+        String shortenedlist[] = new String[devices.length];
+        int cnt = 0;
+        for (GraphicsDevice dev : devices) {
+            JOptionPane.showMessageDialog(null, "Detect screen " + dev.toString() + " -- isHeadlessInstance: " + env.isHeadlessInstance() + " -- isHeadless: " + GraphicsEnvironment.isHeadless());
+            shortenedlist[cnt++] = dev.getIDstring();
+        }
+        int suggested = devices.length - 1;
+        int selected = suggested;
+        URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
+        ImageIcon icon = new ImageIcon(url, "help");
+        ResourceBundle bundle = ResourceBundle.getBundle("resources/Text");
+        String chosen = (String) JOptionPane.showInputDialog(null,
+                bundle.getString("DISPLAY_SELECT_BODY"),
+                bundle.getString("DISPLAY_SELECT_HEAD"),
+                JOptionPane.INFORMATION_MESSAGE, icon, shortenedlist,
+                shortenedlist[suggested]);
+        if (chosen != null) {
+            for (int i = 0; i < shortenedlist.length; i++) {
+                if (shortenedlist[i].equals(chosen)) {
+                    selected = i;
+                    
+                    break;
+                }
+            }
+        }
+        EduPatternShowOn.device = devices[selected];
+           */
+        //JOptionPane.showMessageDialog(null, "Display on: " + EduPatternShowOn.device.toString());
     }
     
     public static Font getFont() {
