@@ -559,6 +559,7 @@ public class EduControllerPattern extends OpticsPane {
         layoutControl.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
               if (evt.getClickCount() == 2) {
+                  Utils.setDevice();
                   patternFrameDoubleClick.show();
               }
             }

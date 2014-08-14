@@ -46,7 +46,7 @@ public class EduPatternShowOn {
 
     static public GraphicsDevice device;
     static PatternImage pimage;
-    static PatternImage pimage2;
+    public static PatternImage pimage2;
     static EduPatternJPanel patternPanel;
     static EduPatternJPanel patternPanel2;
     public static JFrame patternFrame;
@@ -64,7 +64,7 @@ public class EduPatternShowOn {
         Rectangle bounds;
         // create pattern image buffer
         if (EduPatternShowOn.use2ndDisplay) {
-            EduPatternShowOn.setDevice();
+            Utils.setDevice();
             GraphicsConfiguration gc = EduPatternShowOn.device
                     .getDefaultConfiguration();
             bounds = gc.getBounds();
@@ -164,7 +164,7 @@ public class EduPatternShowOn {
         controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         controlFrame.setLocation(0, 0);
         if (!Utils.isMac()) {
-            controlFrame.setPreferredSize(new Dimension(1288, 748));
+            controlFrame.setPreferredSize(new Dimension(1298, 765));
         } else {
             controlFrame.setPreferredSize(new Dimension(1280, 803));
         }
@@ -224,45 +224,6 @@ public class EduPatternShowOn {
             }
         } catch (Exception e) {
         }
-    }
-
-    public static void setDevice() {
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] devices = env.getScreenDevices();
-
-        // if only one device is detected, then user selection is not required
-        if (devices.length == 1) {
-            EduPatternShowOn.device = devices[0];
-            System.out.println("Only 1 devices");
-            return;
-        } else {
-            System.out.println("there are " + devices.length + " devices");
-        }
-
-        String shortenedlist[] = new String[devices.length];
-        int cnt = 0;
-        for (GraphicsDevice dev : devices) {
-            shortenedlist[cnt++] = dev.getIDstring();
-        }
-        int suggested = devices.length - 1;
-        int selected = suggested;
-        URL url = ClassLoader.getSystemResource("resources/jdclogo_48x48.png");
-        ImageIcon icon = new ImageIcon(url, "help");
-        ResourceBundle bundle = ResourceBundle.getBundle("resources/Text");
-        String chosen = (String) JOptionPane.showInputDialog(null,
-                bundle.getString("DISPLAY_SELECT_BODY"),
-                bundle.getString("DISPLAY_SELECT_HEAD"),
-                JOptionPane.INFORMATION_MESSAGE, icon, shortenedlist,
-                shortenedlist[suggested]);
-        if (chosen != null) {
-            for (int i = 0; i < shortenedlist.length; i++) {
-                if (shortenedlist[i].equals(chosen)) {
-                    selected = i;
-                    break;
-                }
-            }
-        }
-        EduPatternShowOn.device = devices[selected];
     }
     
     public static void main(String[] args) {

@@ -148,6 +148,18 @@ public class PatternImage {
     public PatternImage() {
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
     }
+    
+    public void setWidth(int w) {
+        width = w;
+    }
+    
+    public void setHeight(int h) {
+        height = h;
+    }
+    
+    public void setCanvas(int w, int h) {
+        canvas = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+    }
 
     public void init(double lambda) {
         this.lambda = lambda;
