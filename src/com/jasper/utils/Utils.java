@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -49,14 +50,16 @@ import javax.swing.JOptionPane;
  *
  */
 public class Utils {
+
     private static String OS = System.getProperty("os.name").toLowerCase();
+
     public static String dateNow() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        
+
         return dateFormat.format(date).toString();
     }
-    
+
     public static String readFile(String filePath) {
         String rs;
         FileInputStream fos;
@@ -80,7 +83,7 @@ public class Utils {
         }
         return rs;
     }
-    
+
     public static void writeFile(String path, String text, boolean orverWite) {
         try {
             String oldText = "";
@@ -95,7 +98,7 @@ public class Utils {
             e.printStackTrace();
         }
     }
-    
+
     public static void createDirectory(String fileName) {
         File file;
         File fileDirectory;
@@ -108,25 +111,25 @@ public class Utils {
             ex.printStackTrace();
         }
     }
-    
+
     public static void setDevice() {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] devices = env.getScreenDevices();
-        
-        
+
+
         // if only one device is detected, then user selection is not required
         if (devices.length == 1) {
             EduPatternShowOn.device = devices[0];
             JOptionPane.showMessageDialog(null, "Detect 1 screen " + devices[0].toString() + " -- isHeadlessInstance: " + env.isHeadlessInstance() + " -- isHeadless:" + GraphicsEnvironment.isHeadless());
             return;
-        } 
+        }
         EduPatternShowOn.device = devices[1];
         /*
         String shortenedlist[] = new String[devices.length];
         int cnt = 0;
         for (GraphicsDevice dev : devices) {
-            JOptionPane.showMessageDialog(null, "Detect screen " + dev.toString() + " -- isHeadlessInstance: " + env.isHeadlessInstance() + " -- isHeadless: " + GraphicsEnvironment.isHeadless());
-            shortenedlist[cnt++] = dev.getIDstring();
+        JOptionPane.showMessageDialog(null, "Detect screen " + dev.toString() + " -- isHeadlessInstance: " + env.isHeadlessInstance() + " -- isHeadless: " + GraphicsEnvironment.isHeadless());
+        shortenedlist[cnt++] = dev.getIDstring();
         }
         int suggested = devices.length - 1;
         int selected = suggested;
@@ -134,35 +137,35 @@ public class Utils {
         ImageIcon icon = new ImageIcon(url, "help");
         ResourceBundle bundle = ResourceBundle.getBundle("resources/Text");
         String chosen = (String) JOptionPane.showInputDialog(null,
-                bundle.getString("DISPLAY_SELECT_BODY"),
-                bundle.getString("DISPLAY_SELECT_HEAD"),
-                JOptionPane.INFORMATION_MESSAGE, icon, shortenedlist,
-                shortenedlist[suggested]);
+        bundle.getString("DISPLAY_SELECT_BODY"),
+        bundle.getString("DISPLAY_SELECT_HEAD"),
+        JOptionPane.INFORMATION_MESSAGE, icon, shortenedlist,
+        shortenedlist[suggested]);
         if (chosen != null) {
-            for (int i = 0; i < shortenedlist.length; i++) {
-                if (shortenedlist[i].equals(chosen)) {
-                    selected = i;
-                    
-                    break;
-                }
-            }
+        for (int i = 0; i < shortenedlist.length; i++) {
+        if (shortenedlist[i].equals(chosen)) {
+        selected = i;
+        
+        break;
+        }
+        }
         }
         EduPatternShowOn.device = devices[selected];
-           */
+         */
         //JOptionPane.showMessageDialog(null, "Display on: " + EduPatternShowOn.device.toString());
     }
-    
+
     public static Font getFont() {
         Font[] allfonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
-	String chinesesample = "\u4e00";
-	for (int j = 0; j < allfonts.length; j++) {
-	    if (allfonts[j].canDisplayUpTo(chinesesample) == -1) { 
+        String chinesesample = "\u4e00";
+        for (int j = 0; j < allfonts.length; j++) {
+            if (allfonts[j].canDisplayUpTo(chinesesample) == -1) {
                 return new Font(allfonts[j].getFontName(), Font.PLAIN, 16);
-	    }
-	}
+            }
+        }
         return new Font("Bitstream Cyberbit", Font.PLAIN, 16);
     }
-    
+
     public static void createDirectoryLogFileCGH() {
         File fileCGH1;
         File fileCGH3;
@@ -171,74 +174,74 @@ public class Utils {
         File fileCGH6;
         File fileCGH8;
         File fileCGH10;
-        
+
         File fileAmplitude;
         File fileSignal;
         File fileTalbot;
         File fileStatic;
         File fileDynamic;
-        
+
         File fileDirectory;
         try {
             fileDirectory = new File(Constant.FILE_PATH);
             fileDirectory.mkdir();
-            
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH1)) {
+
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH1)) {
                 fileCGH1 = new File(Constant.FILE_PATH, Constant.FILE_NAME_CGH1);
                 fileCGH1.createNewFile();
-            } 
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH3)) {
+            }
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH3)) {
                 fileCGH3 = new File(Constant.FILE_PATH, Constant.FILE_NAME_CGH3);
                 fileCGH3.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH4)) {
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH4)) {
                 fileCGH4 = new File(Constant.FILE_PATH, Constant.FILE_NAME_CGH4);
                 fileCGH4.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH5)) {
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH5)) {
                 fileCGH5 = new File(Constant.FILE_PATH, Constant.FILE_NAME_CGH5);
                 fileCGH5.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH6)) {
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH6)) {
                 fileCGH6 = new File(Constant.FILE_PATH, Constant.FILE_NAME_CGH6);
                 fileCGH6.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH8)) {
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH8)) {
                 fileCGH8 = new File(Constant.FILE_PATH, Constant.FILE_NAME_CGH8);
                 fileCGH8.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH10)) {
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH10)) {
                 fileCGH10 = new File(Constant.FILE_PATH, Constant.FILE_NAME_CGH10);
                 fileCGH10.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_AMPLITUDE)) {
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_AMPLITUDE)) {
                 fileAmplitude = new File(Constant.FILE_PATH, Constant.FILE_NAME_AMPLITUDE);
                 fileAmplitude.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_SIGNAL)) {
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_SIGNAL)) {
                 fileSignal = new File(Constant.FILE_PATH, Constant.FILE_NAME_SIGNAL);
                 fileSignal.createNewFile();
             }
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_TALBOT)) {
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_TALBOT)) {
                 fileTalbot = new File(Constant.FILE_PATH, Constant.FILE_NAME_TALBOT);
                 fileTalbot.createNewFile();
             }
-            
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_STATIC)) {
+
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_STATIC)) {
                 fileStatic = new File(Constant.FILE_PATH, Constant.FILE_NAME_STATIC);
                 fileStatic.createNewFile();
             }
-            
-            if(checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_DYNAMIC)) {
+
+            if (checkFileExists(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_DYNAMIC)) {
                 fileDynamic = new File(Constant.FILE_PATH, Constant.FILE_NAME_DYNAMIC);
                 fileDynamic.createNewFile();
             }
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    
+
     public static boolean checkFileExists(String fileName) {
         boolean rs = false;
         File file;
@@ -252,20 +255,36 @@ public class Utils {
         }
         return rs;
     }
-    
+
     public static boolean isWindows() {
-        return (OS.indexOf("win") >= 0); 
+        return (OS.indexOf("win") >= 0);
     }
-    
+
     public static boolean isMac() {
         return (OS.indexOf("mac") >= 0);
     }
-    
+
     public static boolean isUnix() {
-        return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") >=0);
+        return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") >= 0);
     }
-    
+
     public static boolean isSolaris() {
         return (OS.indexOf("sunos") >= 0);
+    }
+
+    public static String getCurrentLocation() {
+        return EduPatternShowOn.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+    }
+
+    public static File[] getAllProjectFiles() {
+        File classpathRoot = new File(getCurrentLocation());
+        File[] prjFiles = classpathRoot.listFiles(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".prj");
+            }
+        });
+        return prjFiles;
     }
 }

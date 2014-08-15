@@ -171,7 +171,7 @@ public class CGH10Panel extends OpticsPane {
                 .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(190, Short.MAX_VALUE)))));
+                ))));
         if (!Utils.isMac()) {
         panelButtonCGH10Layout.setVerticalGroup(
                 panelButtonCGH10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,21 +202,20 @@ public class CGH10Panel extends OpticsPane {
         lblFilePath.setText(Constant.FILE_PATH + File.separator + Constant.FILE_NAME_CGH10);
         lblFilePath.setForeground(Color.blue);
         lblFilePath.setFont(new Font("Arial", Font.PLAIN, 10));
-
+        
         javax.swing.GroupLayout cGH10Layout = new javax.swing.GroupLayout(panel);
         panel.setLayout(cGH10Layout);
         cGH10Layout.setHorizontalGroup(
-                cGH10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(cGH10Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
+                cGH10Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
                 .addComponent(lblPleaseSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(cGH10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE)));
+                .addGap(20, 20, 20)
+                .addGroup(cGH10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)                
+                .addComponent(lblFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                );
         if (!Utils.isMac()) {
         cGH10Layout.setVerticalGroup(
                 cGH10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,13 +224,13 @@ public class CGH10Panel extends OpticsPane {
                 .addGroup(cGH10Layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addGroup(cGH10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblPleaseSelect)))
-                .addGroup(cGH10Layout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addComponent(lblFilePath)
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)))));
+                    .addComponent(buttonOpenFile, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPleaseSelect)))
+                    .addGroup(cGH10Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(lblFilePath)
+                        .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)))));
         } else {
             cGH10Layout.setVerticalGroup(
                 cGH10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

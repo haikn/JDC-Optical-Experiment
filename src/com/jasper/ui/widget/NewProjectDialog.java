@@ -20,7 +20,9 @@
  */
 package com.jasper.ui.widget;
 
+import com.jasper.model.Project;
 import com.jasper.ui.EduControllerPattern;
+import com.jasper.utils.Utils;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -28,9 +30,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -60,6 +64,7 @@ public class NewProjectDialog extends JDialog implements ActionListener {
     private JFrame parentFrame = new JFrame();
     private JFileChooser fc;
     private JTextArea testDesc;
+    private JComboBox cmbLanguage;
     private EduControllerPattern macroPanel;
 
     public NewProjectDialog() {
@@ -88,7 +93,7 @@ public class NewProjectDialog extends JDialog implements ActionListener {
 
         inputPanel.add(new JLabel("Language of the description:"));
         String[] language = {"English", "Chinese(Traditional)", "Chinese"};
-        JComboBox cmbLanguage = new JComboBox(language);
+        cmbLanguage = new JComboBox(language);
         inputPanel.add(cmbLanguage);
         inputPanel.add(new JLabel());
 
@@ -136,13 +141,13 @@ public class NewProjectDialog extends JDialog implements ActionListener {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         parentFrame.pack();
     }
-    
+
     public void setMacroPanel(EduControllerPattern panel) {
         macroPanel = panel;
     }
-    
+
     public void showMacroPanel() {
-        macroPanel.showProjects();
+        macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText());
     }
 
     public void setVisible() {
@@ -170,7 +175,7 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                     while ((textFieldReadable = bufferedReader.readLine()) != null) {
                         inputFile += textFieldReadable;
                     }
-                    
+
                     testDesc.setText(inputFile);
 
                 } catch (FileNotFoundException ex) {
@@ -203,7 +208,17 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                 return;
             }
         } else if (e.getSource() == btnCreateProject) {
-            macroPanel.showProjects();
+            if (txtProjectName.getText().length() == 0) {
+                txtProjectName.setFocusable(true);
+                return;
+            } else if (txtMacro.getText().length() == 0) {
+                txtMacro.setFocusable(true);
+                return;
+            } else {
+                Project newProject = new Project(txtProjectName.getText(), txtMacro.getText(), txtGraphic.getText(), cmbLanguage.getSelectedItem().toString(), txtDescription.getText());
+                newProject.writeToFile();
+            }
+            macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText());
             parentFrame.dispose();
         } else if (e.getSource() == btnCancel) {
             parentFrame.dispose();

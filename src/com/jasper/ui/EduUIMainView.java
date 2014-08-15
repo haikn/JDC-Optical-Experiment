@@ -99,7 +99,7 @@ public class EduUIMainView extends javax.swing.JFrame {
 //                NewProjectDialog dialog = new NewProjectDialog();
 //                dialog.setLocationRelativeTo(jTabbedPaneOptics);
 //                dialog.setVisible();
-                panelOptic.showProjects();
+                //panelOptic.showProjects();
             }
         });
         jMenuFile.add(jMenuItemProjects);

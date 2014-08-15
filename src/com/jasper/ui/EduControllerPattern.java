@@ -256,7 +256,6 @@ public class EduControllerPattern extends OpticsPane {
         tabbedPaneOptics.hide();
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
-        
         if (!Utils.isMac()) {
             panelGeneralLayout.setHorizontalGroup(
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,8 +304,8 @@ public class EduControllerPattern extends OpticsPane {
                         .addGap(0, 0, 0)
                         .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 )
-        );
-          panelGeneralLayout.setVerticalGroup(
+            );
+            panelGeneralLayout.setVerticalGroup(
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
@@ -318,7 +317,7 @@ public class EduControllerPattern extends OpticsPane {
                 .addGap(0, 0, 0)
                 .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-        );  
+            );  
         }
         // General tab
         tabbedControl.addTab(labels.getString("tabGeneral"), panelGeneral);
@@ -522,17 +521,18 @@ public class EduControllerPattern extends OpticsPane {
             tabbedControl.setBounds(578, 0, 678, 442);
         }
          */
+        
         JPanel experimentsPanel = new JPanel();
         experimentsPanel.add(tabbedControl);
-        experimentsPanel.setBounds(580, 0, 665, 370);
+        //experimentsPanel.setBounds(580, 0, 665, 370);
         //experimentsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         //tabbedControl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
         JPanel pl = new JPanel();
-        NewProjectPanel newPrjPanel = new NewProjectPanel(labels, bindingGroup, panelPattern);
+        newPrjPanel = new NewProjectPanel(labels, bindingGroup, panelPattern);
         pl.add(newPrjPanel.getPanel());
-        pl.setBounds(580, 0, 665, 370);
-        newPrjPanel.setBounds(580, 0, 665, 370);
+        //pl.setBounds(580, 0, 665, 370);
+        //newPrjPanel.setBounds(580, 0, 665, 370);
                 
         projectPanel.setBounds(580, 0, 665, 370);
         projectPanel.add(experimentsPanel, labels.getString("mnuExperiments"));
@@ -744,7 +744,7 @@ public class EduControllerPattern extends OpticsPane {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         if (!Utils.isMac()) {
-        layout.setHorizontalGroup(
+            layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
@@ -757,7 +757,7 @@ public class EduControllerPattern extends OpticsPane {
                 .addGap(11, 11, 11)
                 .addComponent(layoutDiagram, javax.swing.GroupLayout.DEFAULT_SIZE, 665, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5)));
-        layout.setVerticalGroup(
+            layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(5, 5, 5)
@@ -784,7 +784,7 @@ public class EduControllerPattern extends OpticsPane {
                 .addGap(1, 1, 1)
                 .addComponent(layoutDiagram, javax.swing.GroupLayout.DEFAULT_SIZE, 665, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5)));
-        layout.setVerticalGroup(
+            layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(5, 5, 5)
@@ -1333,7 +1333,9 @@ public class EduControllerPattern extends OpticsPane {
         cardlayout.show(projectPanel, labels.getString("mnuExperiments"));
     }
     
-    public void showProjects() {
+    public void showProjects(String projectName, String macroName) {
+        newPrjPanel.setProject(projectName);
+        newPrjPanel.setMacro(macroName);
         CardLayout cardlayout = (CardLayout)(projectPanel.getLayout());
         cardlayout.show(projectPanel, labels.getString("mnuProjects"));
     }
@@ -1445,6 +1447,7 @@ public class EduControllerPattern extends OpticsPane {
     
     public PatternImage pimg;
     private JPanel projectPanel = new JPanel(new CardLayout());
+    private NewProjectPanel newPrjPanel;
         
     class PopupTriggerListener extends MouseAdapter {
 
