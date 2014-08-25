@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import org.apache.commons.math3.complex.Complex;
 
 /**
  * This PatternImage include the algorithms of application
@@ -589,6 +590,46 @@ public class PatternImage {
         }
         buferPattern = compute(canvas);
         tuningFlag = true;
+    }
+    
+    public double[] createXMatrix() {
+        
+        double[] X = new double[height];
+        double x2;        
+        for (int i = 0; i < height; i++) {
+            x2 = (double) (i - height / 2 + 1) * pxsize;
+            X[i] = x2;
+        }
+        return X;
+    }
+    
+    public double[] createYMatrix() {
+        double[] Y = new double[height];
+        double y2;
+             
+        for (int j = 0; j < width; j++) {
+            y2 = (double) (j - width / 2 + 1) * pxsize;
+            Y[j] = y2;
+        }
+        return Y;
+    }
+    
+    public double complex2Double(double real, double imagine) {
+        Complex c = new Complex(real, imagine);
+        return c.abs();
+    }
+    
+    public void draw2Screen(double phase) {        
+        WritableRaster raster = canvas.getRaster();
+        int[] iArray = new int[1];    
+        for (int i = 0; i < height; i++) {    
+            for (int j = 0; j < width; j++) {    
+                iArray[0] = phase2gray(phase);
+                raster.setPixel(j, i, iArray);
+            }
+        }
+        buferPattern = compute(canvas);
+        tuningFlag = true;    
     }
 
     public double[][] compute(File file) {

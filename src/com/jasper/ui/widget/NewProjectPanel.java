@@ -47,6 +47,7 @@ import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
@@ -84,6 +85,8 @@ public class NewProjectPanel extends OpticsPane {
     private javax.swing.JPanel panelMichelsonButton;
     private javax.swing.JPanel panelNewProject;
     private JLabel lblMacro, lblProject;
+    private String desc, diagram;
+    private int panelType = 1;
     
     public NewProjectPanel(ResourceBundle labels, BindingGroup bindingGroup, JPanel panelPattern) {
         this.labels = labels;
@@ -100,6 +103,18 @@ public class NewProjectPanel extends OpticsPane {
     
     public void setMacro(String macro) {
         lblMacro.setText("Macro Name: " + macro);
+    }
+    
+    public void setDescription(String desc) {
+        this.desc = desc;
+    }
+    
+    public void setDiagram(String diagram) {
+        this.diagram = diagram;
+    }
+    
+    public int getPanelType() {
+        return this.panelType;
     }
     
     private void initComponents(BindingGroup bindingGroup) {
@@ -271,9 +286,49 @@ public class NewProjectPanel extends OpticsPane {
         javax.swing.GroupLayout jPanelLensMichelsonLayout = new javax.swing.GroupLayout(panelLensMichelson);
         panelLensMichelson.setLayout(jPanelLensMichelsonLayout);
         jPanelLensMichelsonLayout.setHorizontalGroup(
-                jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanelLensMichelsonLayout.createSequentialGroup().addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanelLensMichelsonLayout.createSequentialGroup().addContainerGap().addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(15, 15, 15).addComponent(lblYLensMichelson).addGroup(jPanelLensMichelsonLayout.createSequentialGroup().addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false).addComponent(lblXLensMichelson, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(lblFocalLensMichelson, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGap(18, 18, 18).addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false).addComponent(txtYPositionLensMichelson).addComponent(txtFocalLensMichelson, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE).addComponent(txtXPositionLensMichelson)))).addGap(5, 5, 5).addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false).addComponent(jSliderFocalLensMichelson, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE).addComponent(jSliderXPositionLensMichelson, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(jSliderYPositionLensMichelson, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))));
+                jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelLensMichelsonLayout.createSequentialGroup()
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelLensMichelsonLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGap(15, 15, 15)
+                    .addComponent(lblYLensMichelson)
+                    .addGroup(jPanelLensMichelsonLayout.createSequentialGroup()
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lblXLensMichelson, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblFocalLensMichelson, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGap(18, 18, 18)
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtYPositionLensMichelson)
+                    .addComponent(txtFocalLensMichelson, GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                    .addComponent(txtXPositionLensMichelson))))
+                    .addGap(5, 5, 5)
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSliderFocalLensMichelson, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                    .addComponent(jSliderXPositionLensMichelson, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSliderYPositionLensMichelson, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))));
         jPanelLensMichelsonLayout.setVerticalGroup(
-                jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanelLensMichelsonLayout.createSequentialGroup().addGap(14, 14, 14).addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false).addComponent(jSliderFocalLensMichelson, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(lblFocalLensMichelson, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(txtFocalLensMichelson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))).addGap(21, 21, 21).addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(lblXLensMichelson).addComponent(txtXPositionLensMichelson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addComponent(jSliderXPositionLensMichelson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addGap(15, 15, 15).addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addGroup(jPanelLensMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(lblYLensMichelson).addComponent(txtYPositionLensMichelson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addComponent(jSliderYPositionLensMichelson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addGap(1, 1, 1)));
+                jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelLensMichelsonLayout.createSequentialGroup()
+                    .addGap(14, 14, 14)
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSliderFocalLensMichelson, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFocalLensMichelson, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtFocalLensMichelson, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                    .addGap(21, 21, 21)
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblXLensMichelson)
+                    .addComponent(txtXPositionLensMichelson, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSliderXPositionLensMichelson, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(15, 15, 15)
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelLensMichelsonLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblYLensMichelson).addComponent(txtYPositionLensMichelson, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSliderYPositionLensMichelson, javax.swing.GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(1, 1, 1)));
     }
     
     public JPanel getPanel() {

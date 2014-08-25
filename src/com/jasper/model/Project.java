@@ -42,17 +42,17 @@ public class Project {
         try {
             br = new BufferedReader(new FileReader(project));
             while ((line = br.readLine()) != null) {
-                String[] lineData = line.split(cvsSplitBy);
-                if (lineData[0].equals(NAME)) {
+                String[] lineData = line.split(cvsSplitBy);                
+                if (lineData[0].trim().equals(NAME)) {                    
                     name = lineData[1];
-                } else if (lineData[0].equals(MACRO)) {
-                    macro = lineData[1];
-                } else if (lineData[0].equals(GRAPHIC)) {
-                    graphic = lineData[1];
-                } else if (lineData[0].equals(LANGUAGE)) {
-                    language = lineData[1];
-                } else if (lineData[0].equals(DESCRIPTION)) {
-                    descritpion = lineData[1];
+                } else if (lineData[0].trim().equals(MACRO)) {                    
+                    macro = lineData[1].trim();
+                } else if (lineData[0].trim().equals(GRAPHIC)) {                    
+                    graphic = lineData[1].trim();
+                } else if (lineData[0].trim().equals(LANGUAGE)) {
+                    language = lineData[1].trim();
+                } else if (lineData[0].trim().equals(DESCRIPTION)) {
+                    descritpion = lineData[1].trim();
                 }
             }
 

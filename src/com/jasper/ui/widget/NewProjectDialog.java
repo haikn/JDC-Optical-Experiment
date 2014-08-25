@@ -20,6 +20,7 @@
  */
 package com.jasper.ui.widget;
 
+import com.jasper.model.Macro;
 import com.jasper.model.Project;
 import com.jasper.ui.EduControllerPattern;
 import com.jasper.utils.Utils;
@@ -147,7 +148,7 @@ public class NewProjectDialog extends JDialog implements ActionListener {
     }
 
     public void showMacroPanel() {
-        macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText());
+        macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
     }
 
     public void setVisible() {
@@ -162,9 +163,10 @@ public class NewProjectDialog extends JDialog implements ActionListener {
             int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
+                File file = fc.getSelectedFile();                
                 //This is where a real application would open the file.
                 //log.append("Opening: " + file.getName() + "." + newline);
+                txtDescription.setText(file.getAbsolutePath());
                 try {
                     FileReader fileReader = new FileReader(file);
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -191,9 +193,8 @@ public class NewProjectDialog extends JDialog implements ActionListener {
             int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                //File file = fc.getSelectedFile();
-                //This is where a real application would open the file.
-                //log.append("Opening: " + file.getName() + "." + newline);
+                File file = fc.getSelectedFile();                
+                txtGraphic.setText(file.getAbsolutePath());
                 return;
             }
         } else if (e.getSource() == btnLoadMacro) {
@@ -202,9 +203,8 @@ public class NewProjectDialog extends JDialog implements ActionListener {
             int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                //File file = fc.getSelectedFile();
-                //This is where a real application would open the file.
-                //log.append("Opening: " + file.getName() + "." + newline);
+                File file = fc.getSelectedFile();                
+                txtMacro.setText(file.getAbsolutePath());
                 return;
             }
         } else if (e.getSource() == btnCreateProject) {
@@ -218,8 +218,11 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                 Project newProject = new Project(txtProjectName.getText(), txtMacro.getText(), txtGraphic.getText(), cmbLanguage.getSelectedItem().toString(), txtDescription.getText());
                 newProject.writeToFile();
             }
-            macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText());
-            parentFrame.dispose();
+            Macro macro = new Macro(txtMacro.getText());
+            if (macro.getParam().size() == 3) {
+                macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
+                parentFrame.dispose();
+            }
         } else if (e.getSource() == btnCancel) {
             parentFrame.dispose();
         }

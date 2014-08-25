@@ -63,6 +63,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -77,6 +82,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -530,6 +536,7 @@ public class EduControllerPattern extends OpticsPane {
         
         JPanel pl = new JPanel();
         newPrjPanel = new NewProjectPanel(labels, bindingGroup, panelPattern);
+        pl.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         pl.add(newPrjPanel.getPanel());
         //pl.setBounds(580, 0, 665, 370);
         //newPrjPanel.setBounds(580, 0, 665, 370);
@@ -1333,11 +1340,50 @@ public class EduControllerPattern extends OpticsPane {
         cardlayout.show(projectPanel, labels.getString("mnuExperiments"));
     }
     
-    public void showProjects(String projectName, String macroName) {
+    public void showProjects(String projectName, String macroName, String desc, String diagram) {
         newPrjPanel.setProject(projectName);
         newPrjPanel.setMacro(macroName);
         CardLayout cardlayout = (CardLayout)(projectPanel.getLayout());
         cardlayout.show(projectPanel, labels.getString("mnuProjects"));
+        
+        layoutDiagram.removeAll();
+        diagramLens.removeAll();
+        tabbedDesLog.removeAll();
+        
+        JTextArea txtDesc = new JTextArea();
+        Font font = Utils.getFont();
+        txtDesc.setFont(font);
+        txtDesc.setLineWrap(true);
+        txtDesc.setWrapStyleWord(true);
+        txtDesc.setEditable(false);
+        txtDesc.setOpaque(false);
+        try {
+            FileReader fileReader = new FileReader(new File(desc));
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            String inputFile = "";
+            String textFieldReadable;
+
+            while ((textFieldReadable = bufferedReader.readLine()) != null) {
+                inputFile += textFieldReadable;
+            }
+
+            txtDesc.setText(inputFile);
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("no such file exists");
+        } catch (IOException ex) {
+            System.out.println("unkownerror");
+        }
+        jScrollDes.setViewportView(txtDesc);
+        tabbedDesLog.addTab("Description", jScrollDes);
+        jScrollPane2.setViewportView(newPrjPanel.getLogArea());
+        tabbedDesLog.addTab("Log", jScrollPane2);
+
+        lblDiagram.setIcon(new ImageIcon(diagram));
+        lblDiagram.setText(null);
+        diagramLens.add(lblDiagram);
+        layoutDiagram.add(diagramLens);
     }
     
     // Variables declaration

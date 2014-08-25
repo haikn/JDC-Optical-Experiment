@@ -22,12 +22,16 @@ package com.jasper.ui;
 
 import com.jasper.core.OpticsPane;
 import com.jasper.core.PatternImage;
+import com.jasper.model.Macro;
+import com.jasper.model.Project;
 import com.jasper.ui.widget.EditProjectDialog;
 import com.jasper.ui.widget.NewProjectDialog;
 import com.jasper.utils.Utils;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,7 +67,7 @@ public class EduUIMainView extends javax.swing.JFrame {
         jMenuFile = new javax.swing.JMenu();
         jMenuItemExit = new javax.swing.JMenuItem();
         jMenuItemExperiments = new javax.swing.JMenuItem();
-        jMenuItemProjects = new javax.swing.JMenu();
+        jMenuProjects = new javax.swing.JMenu();
         jMenuItemEditProjects = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItemAbout = new javax.swing.JMenuItem();
@@ -93,25 +97,8 @@ public class EduUIMainView extends javax.swing.JFrame {
         });
         jMenuFile.add(jMenuItemExperiments);
         
-        jMenuItemProjects.setText(labels.getString("mnuProjects"));
-        jMenuItemProjects.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                NewProjectDialog dialog = new NewProjectDialog();
-//                dialog.setLocationRelativeTo(jTabbedPaneOptics);
-//                dialog.setVisible();
-                //panelOptic.showProjects();
-            }
-        });
-        jMenuFile.add(jMenuItemProjects);
-        
-        jMenuItemEditProjects.setText(labels.getString("mnuEditProject"));
-        jMenuItemEditProjects.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditProjectDialog dialog = new EditProjectDialog();
-                dialog.setVisible();
-            }
-        });
-        jMenuItemProjects.add(jMenuItemEditProjects);
+        jMenuProjects.setText(labels.getString("mnuProjects"));
+        jMenuFile.add(jMenuProjects);          
         
         JMenuItem newPrj = new JMenuItem(labels.getString("mnuNewProjects"));
         newPrj.addActionListener(new java.awt.event.ActionListener() {
@@ -122,8 +109,37 @@ public class EduUIMainView extends javax.swing.JFrame {
                 dialog.setVisible();
             }
         });
-        jMenuItemProjects.add(newPrj);
+        jMenuProjects.add(newPrj);
         
+        jMenuItemEditProjects.setText(labels.getString("mnuEditProject"));
+        jMenuItemEditProjects.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditProjectDialog dialog = new EditProjectDialog();
+                dialog.setMacroPanel(panelOptic);
+                dialog.setVisible();
+            }
+        });
+        jMenuProjects.add(jMenuItemEditProjects);
+        jMenuProjects.addSeparator();
+        
+        File[] prjFiles = Utils.getAllProjectFiles();
+        
+        for (final File prjFile : prjFiles) {
+            JMenuItem prjItem = new JMenuItem();
+            prjItem.setText(prjFile.getName());
+            prjItem.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {                    
+                    Project prj = new Project(Utils.getCurrentLocation() + "/" + prjFile.getName());
+                    Macro macro = new Macro(prj.getMacro());
+                    if (macro.getParam().size() == 3) {
+                        panelOptic.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                    }
+                }
+            });
+            jMenuProjects.add(prjItem);
+        }
+                
         jMenuItemExit.setText(labels.getString("mnuExit"));
         jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -241,7 +257,7 @@ public class EduUIMainView extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemExit;
     private javax.swing.JMenuItem jMenuItemExperiments;
-    private javax.swing.JMenuItem jMenuItemProjects;
+    private javax.swing.JMenu jMenuProjects;
     private javax.swing.JMenuItem jMenuItemEditProjects;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneApp;
