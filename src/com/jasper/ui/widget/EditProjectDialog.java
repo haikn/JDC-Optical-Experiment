@@ -186,11 +186,9 @@ public class EditProjectDialog extends JDialog implements ActionListener {
                     } else if (col == 5) {
                         String prjFileName = table.getModel().getValueAt(row, 1).toString();
                         Project prj = new Project(prjFileName);
-                        Macro macro = new Macro(prj.getMacro());
-                        if (macro.getParam().size() == 3) {
-                            macroPanel.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
-                            parentFrame.dispose();
-                        }
+                        Macro macro = new Macro(prj.getMacro());                        
+                        macroPanel.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                        parentFrame.dispose();                        
                     } else if (col == 6) {
                         int dialogResult = JOptionPane.showConfirmDialog(null,
                             "Do you want to delete this project",

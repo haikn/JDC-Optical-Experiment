@@ -214,7 +214,7 @@ public class BeamSteere extends OpticsPane{
             panelButtonMirrorLayout.setVerticalGroup(
                 panelButtonMirrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonMirrorLayout.createSequentialGroup()
-                .addGap(121, 121, 121)
+                .addGap(101, 101, 101)
                 .addGroup(panelButtonMirrorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonMirrorDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonMirrorLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

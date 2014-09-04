@@ -132,9 +132,7 @@ public class EduUIMainView extends javax.swing.JFrame {
                 public void actionPerformed(ActionEvent e) {                    
                     Project prj = new Project(Utils.getCurrentLocation() + "/" + prjFile.getName());
                     Macro macro = new Macro(prj.getMacro());
-                    if (macro.getParam().size() == 3) {
-                        panelOptic.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
-                    }
+                    panelOptic.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());                    
                 }
             });
             jMenuProjects.add(prjItem);

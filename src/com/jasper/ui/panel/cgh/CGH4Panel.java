@@ -182,7 +182,7 @@ public class CGH4Panel extends OpticsPane{
         panelButtonCGH4Layout.setVerticalGroup(
                 panelButtonCGH4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelButtonCGH4Layout.createSequentialGroup()
-                .addGap(105, 105, 105)
+                .addGap(85, 85, 85)
                 .addGroup(panelButtonCGH4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

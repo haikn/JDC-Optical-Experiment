@@ -52,7 +52,10 @@ import com.jasper.ui.panel.talbot.TalbotPanel;
 import com.jasper.ui.panel.talbot.TalbotPhotoPanel;
 import com.jasper.utils.Utils;
 import com.jasper.ui.widget.DoubleJSlider;
-import com.jasper.ui.widget.NewProjectPanel;
+import com.jasper.ui.widget.FourParamsPanel;
+import com.jasper.ui.widget.OneParamPanel;
+import com.jasper.ui.widget.ThreeParamsPanel;
+import com.jasper.ui.widget.TwoParamsPanel;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -534,18 +537,33 @@ public class EduControllerPattern extends OpticsPane {
         //experimentsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         //tabbedControl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
-        JPanel pl = new JPanel();
-        newPrjPanel = new NewProjectPanel(labels, bindingGroup, panelPattern);
-        pl.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        pl.add(newPrjPanel.getPanel());
-        //pl.setBounds(580, 0, 665, 370);
-        //newPrjPanel.setBounds(580, 0, 665, 370);
-                
+        JPanel oneParam = new JPanel();
+        oneParamPrjPanel = new OneParamPanel(labels, bindingGroup, panelPattern);
+        oneParam.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        oneParam.add(oneParamPrjPanel.getPanel());
+        
+        JPanel twoParam = new JPanel();
+        twoParamPrjPanel = new TwoParamsPanel(labels, bindingGroup, panelPattern);
+        twoParam.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        twoParam.add(twoParamPrjPanel.getPanel());
+        
+        JPanel threeParam = new JPanel();        
+        threeParamPrjPanel = new ThreeParamsPanel(labels, bindingGroup, panelPattern);
+        threeParam.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        threeParam.add(threeParamPrjPanel.getPanel());
+        
+        JPanel fourParam = new JPanel();        
+        fourParamPrjPanel = new FourParamsPanel(labels, bindingGroup, panelPattern);
+        fourParam.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        fourParam.add(fourParamPrjPanel.getPanel());
+                        
         projectPanel.setBounds(580, 0, 665, 370);
         projectPanel.add(experimentsPanel, labels.getString("mnuExperiments"));
-        projectPanel.add(pl, labels.getString("mnuProjects")); 
-        //projectPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                
+        projectPanel.add(oneParam, labels.getString("mnuProjectsOneParam")); 
+        projectPanel.add(twoParam, labels.getString("mnuProjectsTwoParam")); 
+        projectPanel.add(threeParam, labels.getString("mnuProjectsThreeParam")); 
+        projectPanel.add(fourParam, labels.getString("mnuProjectsFourParam")); 
+                        
         layoutControl.add(projectPanel, javax.swing.JLayeredPane.DEFAULT_LAYER); 
         //layoutControl.add(tabbedControl, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -1340,11 +1358,27 @@ public class EduControllerPattern extends OpticsPane {
         cardlayout.show(projectPanel, labels.getString("mnuExperiments"));
     }
     
-    public void showProjects(String projectName, String macroName, String desc, String diagram) {
-        newPrjPanel.setProject(projectName);
-        newPrjPanel.setMacro(macroName);
+    public void showProjects(int num, String projectName, String macroName, String desc, String diagram) {
+        oneParamPrjPanel.setProject(projectName);
+        oneParamPrjPanel.setMacro(macroName);
         CardLayout cardlayout = (CardLayout)(projectPanel.getLayout());
-        cardlayout.show(projectPanel, labels.getString("mnuProjects"));
+        if (num == 1) {
+            oneParamPrjPanel.setProject(projectName);
+            oneParamPrjPanel.setMacro(macroName);
+            cardlayout.show(projectPanel, labels.getString("mnuProjectsOneParam"));
+        } else if (num == 2) {
+            twoParamPrjPanel.setProject(projectName);
+            twoParamPrjPanel.setMacro(macroName);
+            cardlayout.show(projectPanel, labels.getString("mnuProjectsTwoParam"));
+        } else if (num == 3) {
+            threeParamPrjPanel.setProject(projectName);
+            threeParamPrjPanel.setMacro(macroName);
+            cardlayout.show(projectPanel, labels.getString("mnuProjectsThreeParam"));
+        } else if (num == 4) {
+            fourParamPrjPanel.setProject(projectName);
+            fourParamPrjPanel.setMacro(macroName);
+            cardlayout.show(projectPanel, labels.getString("mnuProjectsFourParam"));
+        }
         
         layoutDiagram.removeAll();
         diagramLens.removeAll();
@@ -1377,7 +1411,7 @@ public class EduControllerPattern extends OpticsPane {
         }
         jScrollDes.setViewportView(txtDesc);
         tabbedDesLog.addTab("Description", jScrollDes);
-        jScrollPane2.setViewportView(newPrjPanel.getLogArea());
+        jScrollPane2.setViewportView(oneParamPrjPanel.getLogArea());
         tabbedDesLog.addTab("Log", jScrollPane2);
 
         lblDiagram.setIcon(new ImageIcon(diagram));
@@ -1493,7 +1527,10 @@ public class EduControllerPattern extends OpticsPane {
     
     public PatternImage pimg;
     private JPanel projectPanel = new JPanel(new CardLayout());
-    private NewProjectPanel newPrjPanel;
+    private OneParamPanel oneParamPrjPanel;
+    private ThreeParamsPanel threeParamPrjPanel;
+    private TwoParamsPanel twoParamPrjPanel;
+    private FourParamsPanel fourParamPrjPanel;
         
     class PopupTriggerListener extends MouseAdapter {
 

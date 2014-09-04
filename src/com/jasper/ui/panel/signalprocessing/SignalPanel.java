@@ -376,8 +376,7 @@ public class SignalPanel extends OpticsPane{
                 )));
             panelButtonSignalLayout.setVerticalGroup(
                 panelButtonSignalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelButtonSignalLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addGroup(panelButtonSignalLayout.createSequentialGroup()                
                 .addGroup(panelButtonSignalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                 .addComponent(buttonSecondDisplayProcessing, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(button11LensOnProcessing, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

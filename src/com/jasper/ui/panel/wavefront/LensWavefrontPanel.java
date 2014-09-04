@@ -251,7 +251,7 @@ public class LensWavefrontPanel extends OpticsPane{
             panelMichelsonLayout.setVerticalGroup(
                     panelMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMichelsonLayout.createSequentialGroup()
-                            .addGap(105, 105, 105)
+                            .addGap(85, 85, 85)
                             .addGroup(panelMichelsonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                                     .addComponent(jButtonDisplaySecondOnMichelson, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jButton11LensOnMichelson, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

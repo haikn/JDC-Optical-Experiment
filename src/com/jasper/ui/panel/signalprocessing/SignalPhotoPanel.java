@@ -185,8 +185,7 @@ public class SignalPhotoPanel extends OpticsPane{
         if (!Utils.isMac()) {
             panelButtonCGH8Layout.setVerticalGroup(
                     panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelButtonCGH8Layout.createSequentialGroup()
-                            .addGap(4, 4, 4)
+                    .addGroup(panelButtonCGH8Layout.createSequentialGroup()                            
                             .addGroup(panelButtonCGH8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                                     .addComponent(buttonDisplaySecondOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(buttonLensOn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)

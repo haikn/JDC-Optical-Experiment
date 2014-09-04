@@ -146,11 +146,7 @@ public class NewProjectDialog extends JDialog implements ActionListener {
     public void setMacroPanel(EduControllerPattern panel) {
         macroPanel = panel;
     }
-
-    public void showMacroPanel() {
-        macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
-    }
-
+    
     public void setVisible() {
         parentFrame.setVisible(true);
     }
@@ -218,11 +214,9 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                 Project newProject = new Project(txtProjectName.getText(), txtMacro.getText(), txtGraphic.getText(), cmbLanguage.getSelectedItem().toString(), txtDescription.getText());
                 newProject.writeToFile();
             }
-            Macro macro = new Macro(txtMacro.getText());
-            if (macro.getParam().size() == 3) {
-                macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
-                parentFrame.dispose();
-            }
+            Macro macro = new Macro(txtMacro.getText());            
+            macroPanel.showProjects(macro.getParam().size(), txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
+            parentFrame.dispose();            
         } else if (e.getSource() == btnCancel) {
             parentFrame.dispose();
         }

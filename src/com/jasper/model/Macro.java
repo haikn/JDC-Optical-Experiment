@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class Macro {
 
     private double fixValue;
-    private ArrayList params = new ArrayList();
+    private ArrayList<Param> params = new ArrayList<Param>();
     private double zoom;
     private double rotate;
     private String phase;
@@ -81,7 +81,7 @@ public class Macro {
                     while (m.find()) {
                         String paramStr = m.group(1);
                         String[] subParam = paramStr.split(commaSplit);
-                        param.setSubName(subParam[0]);
+                        param.setSubName(subParam[0].replace("\"", ""));
                         param.setMax(Double.parseDouble(subParam[1]));
                         param.setMin(Double.parseDouble(subParam[2]));
                         param.setStep(Double.parseDouble(subParam[3]));                        
@@ -129,11 +129,11 @@ public class Macro {
         return this.fixValue;
     }
 
-    public void setParam(ArrayList param) {
+    public void setParam(ArrayList<Param> param) {
         this.params = param;
     }
 
-    public ArrayList getParam() {
+    public ArrayList<Param> getParam() {
         return this.params;
     }
     
