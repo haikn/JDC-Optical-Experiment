@@ -124,18 +124,21 @@ public class EduUIMainView extends javax.swing.JFrame {
         
         File[] prjFiles = Utils.getAllProjectFiles();
         
-        for (final File prjFile : prjFiles) {
-            JMenuItem prjItem = new JMenuItem();
-            prjItem.setText(prjFile.getName());
-            prjItem.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {                    
-                    Project prj = new Project(Utils.getCurrentLocation() + "/" + prjFile.getName());
-                    Macro macro = new Macro(prj.getMacro());
-                    panelOptic.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());                    
-                }
-            });
-            jMenuProjects.add(prjItem);
+        if (prjFiles != null) {
+            for (final File prjFile : prjFiles) {
+                JMenuItem prjItem = new JMenuItem();
+                prjItem.setText(prjFile.getName());
+                prjItem.addActionListener(new java.awt.event.ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Project prj = new Project(Utils.getCurrentLocation() + prjFile.getName());
+                        Macro macro = new Macro(prj.getMacro());
+                        panelOptic.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                    }
+                });
+                jMenuProjects.add(prjItem);
+            }
         }
                 
         jMenuItemExit.setText(labels.getString("mnuExit"));

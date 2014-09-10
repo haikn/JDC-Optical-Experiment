@@ -33,12 +33,9 @@ import java.io.FilenameFilter;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.ResourceBundle;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -120,7 +117,7 @@ public class Utils {
         // if only one device is detected, then user selection is not required
         if (devices.length == 1) {
             EduPatternShowOn.device = devices[0];
-            JOptionPane.showMessageDialog(null, "Detect 1 screen " + devices[0].toString() + " -- isHeadlessInstance: " + env.isHeadlessInstance() + " -- isHeadless:" + GraphicsEnvironment.isHeadless());
+            //JOptionPane.showMessageDialog(null, "Detect 1 screen " + devices[0].toString() + " -- isHeadlessInstance: " + env.isHeadlessInstance() + " -- isHeadless:" + GraphicsEnvironment.isHeadless());
             return;
         }
         EduPatternShowOn.device = devices[1];
@@ -273,7 +270,10 @@ public class Utils {
     }
 
     public static String getCurrentLocation() {
-        return EduPatternShowOn.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        //return EduPatternShowOn.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        if (isWindows())
+            return System.getProperty("user.dir") + "\\";
+        else return System.getProperty("user.dir") + "/";
     }
 
     public static File[] getAllProjectFiles() {

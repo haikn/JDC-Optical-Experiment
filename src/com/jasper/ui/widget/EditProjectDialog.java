@@ -145,7 +145,7 @@ public class EditProjectDialog extends JDialog implements ActionListener {
                                 editFile(prjFileName, prj.getName(), newPrjName);
                                 File oldF = new File(prjFileName);
                                 String newN = newPrjName.replaceAll("\\s+","") + ".prj";
-                                File newF = new File(Utils.getCurrentLocation() + "/" + newN);
+                                File newF = new File(Utils.getCurrentLocation() + newN);
                                 oldF.renameTo(newF);
                                 model.setValueAt(newN, row, 0);
                             }

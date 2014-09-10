@@ -37,7 +37,7 @@ public class Project {
     public Project(String project) {
         BufferedReader br = null;
         String line = "";
-        String cvsSplitBy = ":";
+        String cvsSplitBy = "=";
 
         try {
             br = new BufferedReader(new FileReader(project));
@@ -92,14 +92,14 @@ public class Project {
         BufferedWriter writer = null;
         try {
             //create a temporary file
-            String fName = Utils.getCurrentLocation() + "/" + name + ".prj";
+            String fName = Utils.getCurrentLocation() + name + ".prj";
             File prjFile = new File(fName);
             writer = new BufferedWriter(new FileWriter(prjFile));
-            writer.write(NAME + " : " + name + "\n");
-            writer.write(MACRO + " : " + macro + "\n");
-            writer.write(GRAPHIC + " : " + graphic + "\n");
-            writer.write(LANGUAGE + " : " + language + "\n");
-            writer.write(DESCRIPTION + " : " + descritpion + "\n");
+            writer.write(NAME + " = " + name + "\n");
+            writer.write(MACRO + " = " + macro + "\n");
+            writer.write(GRAPHIC + " = " + graphic + "\n");
+            writer.write(LANGUAGE + " = " + language + "\n");
+            writer.write(DESCRIPTION + " = " + descritpion + "\n");
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
