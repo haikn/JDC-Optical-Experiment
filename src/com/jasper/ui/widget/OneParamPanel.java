@@ -21,7 +21,6 @@
 package com.jasper.ui.widget;
 
 import com.jasper.core.OpticsPane;
-import java.text.DecimalFormat;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
@@ -50,7 +49,6 @@ import org.jdesktop.beansbinding.BindingGroup;
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -67,7 +65,7 @@ public class OneParamPanel extends OpticsPane {
     private javax.swing.JTextField textFocal;
     private JPanel panelPattern;
     private JFrame magFrameLenon;
-    private double xoff = 0.0, yoff = 0.0, focal = 0.0;
+
     private javax.swing.JLabel lblParam1;    
     private javax.swing.JSlider jSliderParam1;    
     private javax.swing.JTextField txtParam1;
@@ -76,8 +74,8 @@ public class OneParamPanel extends OpticsPane {
     private javax.swing.JButton btnSecondDisplay;
     private javax.swing.JButton btnGenerate;
     private javax.swing.JTextArea txtAreaLog;
-    static String logmessageNewProject = "New Project: Focal length=%s X Position=%s Y Position=%s";
-    private double xoffMichelson = 0.0, yoffMichelson = 0.0, focalMichelson = 0.0;
+    static String logmessageNewProject = "New Project: first param=%s";
+    private double dParam1 = 0.0;
     private int countSecondDisplayMichelson = 1;
     private int countLenOnMichelson = 1;
     private javax.swing.JPanel panelParam;
@@ -86,6 +84,7 @@ public class OneParamPanel extends OpticsPane {
     private JLabel lblMacro, lblProject;
     private String prjName, desc, diagram;
     private int panelType = 1;
+    private Macro macro;
     
     public OneParamPanel(ResourceBundle labels, BindingGroup bindingGroup, JPanel panelPattern) {
         this.labels = labels;
@@ -120,9 +119,13 @@ public class OneParamPanel extends OpticsPane {
     
     public void initParams() {
         Project prj = new Project(Utils.getCurrentLocation() + prjName.trim() + ".prj");
-        Macro macro = new Macro(prj.getMacro());
+        macro = new Macro(prj.getMacro());
         
         lblParam1.setText(((Param)macro.getParam().get(0)).getSubName());        
+        //jSliderParam1.setMaximum((int)((Param)macro.getParam().get(0)).getMin());
+        //jSliderParam1.setMinimum((int)((Param)macro.getParam().get(0)).getMax());
+        jSliderParam1.setMaximum((int)(((Param)macro.getParam().get(0)).getMax() / ((Param)macro.getParam().get(0)).getStep()));
+        jSliderParam1.setMinimum((int)(((Param)macro.getParam().get(0)).getMin() / ((Param)macro.getParam().get(0)).getStep()));
     }
     
     private void initComponents(BindingGroup bindingGroup) {
@@ -196,21 +199,13 @@ public class OneParamPanel extends OpticsPane {
                 }
             }
         });        
-                
-        jSliderParam1.setMaximum(1000);
-        jSliderParam1.setMinimum(-1000);
+                        
         jSliderParam1.setValue(0);
         jSliderParam1.addChangeListener(new javax.swing.event.ChangeListener() {
 
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 sliderGenerateActionPerformed(evt);
-                String tmp = txtParam1.getText();
-                int value = Integer.parseInt(tmp);
-                if (value >= -30 && value <= 30) {
-                    lblParam1.setForeground(Color.red);
-                } else {
-                    lblParam1.setForeground(Color.BLACK);
-                }
+                
             }
         });
         
@@ -261,24 +256,14 @@ public class OneParamPanel extends OpticsPane {
             btnLensOn.setEnabled(true);
             btnSecondDisplay.setEnabled(true);
             
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-            image.paintLensMichelson();
-            EduPatternShowOn.updatePattern(image, genLog());
-            setLog(genLog());
-            imageGenerated = true;
+            callFunction(1);
         }
         
     }
     
     private void button11LensOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button11LensOnMichelsonActionPerformed
         if (parseArguments()) {
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-            image.paintLensMichelson();
-            EduPatternShowOn.updatePattern(image, genLog());
-            setLog(genLog());
-            imageGenerated = true;
+            callFunction(1);
             
             if (countLenOnMichelson % 2 == 0) {
                 magFrameLenon.dispose();
@@ -324,12 +309,7 @@ public class OneParamPanel extends OpticsPane {
                 countSecondDisplayMichelson--;
                 JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-                image.paintLensMichelson();
-                EduPatternShowOn.updatePatternSecondDisplay(image, genLog());
-                setLog(genLog());
-                imageGenerated = true;
+                callFunction(2);
                 if (countSecondDisplayMichelson % 2 == 0) {
                     patternFrameDoubleClick.dispose();
                     patternFrame.dispose();
@@ -343,12 +323,7 @@ public class OneParamPanel extends OpticsPane {
             btnLensOn.setEnabled(true);
             btnSecondDisplay.setEnabled(true);
             
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-            image.paintLensMichelson();
-            EduPatternShowOn.updatePattern(image, genLog());
-            setLog(genLog());
-            imageGenerated = true;
+            callFunction(1);
         }
     }
     
@@ -357,28 +332,36 @@ public class OneParamPanel extends OpticsPane {
             btnLensOn.setEnabled(true);
             btnSecondDisplay.setEnabled(true);
             
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-            image.paintLensMichelson();
-            EduPatternShowOn.updatePattern(image, genLog());
-            setLog(genLog());
-            imageGenerated = true;
+            callFunction(1);
         }
     }
     
+    private void callFunction(int displayNumber) {
+        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+        if (macro.getFunctionName().equals("PhaseRetarder")) {
+            image.updatePhaseRetarderParameter(dParam1);
+            image.paintPhaseRetarder();
+        } 
+        
+        if (displayNumber == 1)
+            EduPatternShowOn.updatePattern(image, genLog());
+        else EduPatternShowOn.updatePatternSecondDisplay(image, genLog());
+        setLog(genLog());
+        imageGenerated = true;
+    }
+    
     private String genLog() {
-        return String.format(logmessageNewProject, Double.toString(focalMichelson), Double.toString(xoffMichelson), Double.toString(yoffMichelson));
+        return String.format(logmessageNewProject, Double.toString(dParam1));
     }
     
     private boolean parseArguments() {
         boolean ret = false;
         try {                                 
             double focalMi = Double.valueOf(txtParam1.getText());        
-            this.focalMichelson = focalMi / 1000;
+            this.dParam1 = focalMi / ((Param)macro.getParam().get(0)).getStep();
             ret = true;
             
-        } catch (Exception e) {
-            textFocal.setText(String.valueOf(this.focal));
+        } catch (Exception e) {            
         }
         return ret;
     }

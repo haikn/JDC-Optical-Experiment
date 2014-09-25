@@ -53,7 +53,11 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
+import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import org.jdesktop.beansbinding.AutoBinding;
+import org.jdesktop.beansbinding.Bindings;
+import org.jdesktop.beansbinding.ELProperty;
 
 /**
  *
@@ -72,8 +76,8 @@ public class ThreeParamsPanel extends OpticsPane {
     private javax.swing.JLabel lblParam2;
     private javax.swing.JLabel lblParam3;
     private javax.swing.JSlider jSliderParam1;
-    private DoubleJSlider jSliderParam2;
-    private DoubleJSlider jSliderParam3;
+    private JSlider jSliderParam2;
+    private JSlider jSliderParam3;
     private javax.swing.JTextField txtParam1;
     private javax.swing.JTextField txtParam2;
     private javax.swing.JTextField txtParam3;
@@ -81,8 +85,8 @@ public class ThreeParamsPanel extends OpticsPane {
     private javax.swing.JButton btnSecondDisplay;
     private javax.swing.JButton btnGenerate;
     private javax.swing.JTextArea txtAreaLog;
-    static String logmessageNewProject = "New Project: Focal length=%s X Position=%s Y Position=%s";
-    private double xoffMichelson = 0.0, yoffMichelson = 0.0, focalMichelson = 0.0;
+    static String logmessageNewProject = "New Project: First param=%s Second param=%s third params=%s";
+    private double dParam1 = 0.0, dParam2 = 0.0, dParam3 = 0.0;
     private int countSecondDisplayMichelson = 1;
     private int countLenOnMichelson = 1;
     private javax.swing.JPanel panelLensMichelson;
@@ -91,6 +95,7 @@ public class ThreeParamsPanel extends OpticsPane {
     private JLabel lblMacro, lblProject;
     private String prjName, desc, diagram;
     private int panelType = 1;
+    private Macro macro;
     
     public ThreeParamsPanel(ResourceBundle labels, BindingGroup bindingGroup, JPanel panelPattern) {
         this.labels = labels;
@@ -125,11 +130,26 @@ public class ThreeParamsPanel extends OpticsPane {
     
     public void initParams() {
         Project prj = new Project(Utils.getCurrentLocation() + prjName.trim() + ".prj");
-        Macro macro = new Macro(prj.getMacro());
+        macro = new Macro(prj.getMacro());
         
         lblParam1.setText(((Param)macro.getParam().get(0)).getSubName());
         lblParam2.setText(((Param)macro.getParam().get(1)).getSubName());        
         lblParam3.setText(((Param)macro.getParam().get(2)).getSubName());
+        
+        double max = (((Param)macro.getParam().get(0)).getMax() * ((Param)macro.getParam().get(0)).getStep());
+        double min = (((Param)macro.getParam().get(0)).getMin() * ((Param)macro.getParam().get(0)).getStep());
+        jSliderParam1.setMaximum((int)max);
+        jSliderParam1.setMinimum((int)min);
+        
+        double max1 = (((Param)macro.getParam().get(1)).getMax() * ((Param)macro.getParam().get(1)).getStep());
+        double min1 = (((Param)macro.getParam().get(1)).getMin() * ((Param)macro.getParam().get(1)).getStep());
+        jSliderParam2.setMaximum((int)max1);
+        jSliderParam2.setMinimum((int)min1);
+        
+        double max2 = (((Param)macro.getParam().get(2)).getMax() * ((Param)macro.getParam().get(2)).getStep());
+        double min2 = (((Param)macro.getParam().get(2)).getMin() * ((Param)macro.getParam().get(2)).getStep());
+        jSliderParam3.setMaximum((int)max2);
+        jSliderParam3.setMinimum((int)min2);
     }
     
     private void initComponents(BindingGroup bindingGroup) {
@@ -207,46 +227,42 @@ public class ThreeParamsPanel extends OpticsPane {
             }
         });
         
-        jSliderParam2 = new DoubleJSlider(-60, 60, 1, 10);
+        jSliderParam2 = new JSlider();
         jSliderParam2.setValue(0);
+        Binding binding2 = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, jSliderParam2, ELProperty.create("${value}"), txtParam2, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding2);
         txtParam2.setText(String.valueOf(jSliderParam2.getValue()));
         
         jSliderParam2.addChangeListener(new javax.swing.event.ChangeListener() {
 
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 sliderGenerateActionPerformedLens(evt);
-                DecimalFormat df = new DecimalFormat("0.####");
-                txtParam2.setText(df.format(jSliderParam2.getScaledValue()));
+//                DecimalFormat df = new DecimalFormat("0.####");
+//                txtParam2.setText(df.format(jSliderParam2.getScaledValue()));
             }
         });
         
-        jSliderParam3 = new DoubleJSlider(-30, 30, 1, 10);
+        jSliderParam3 = new JSlider();
         jSliderParam3.setValue(0);
+        Binding binding3 = Bindings.createAutoBinding(AutoBinding.UpdateStrategy.READ_WRITE, jSliderParam3, ELProperty.create("${value}"), txtParam3, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding3);
         txtParam3.setText(String.valueOf(jSliderParam3.getValue()));
         
         jSliderParam3.addChangeListener(new javax.swing.event.ChangeListener() {
 
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 sliderGenerateActionPerformedLens(evt);
-                DecimalFormat df = new DecimalFormat("0.####");
-                txtParam3.setText(df.format(jSliderParam3.getScaledValue()));
+//                DecimalFormat df = new DecimalFormat("0.####");
+//                txtParam3.setText(df.format(jSliderParam3.getScaledValue()));
             }
         });
-        
-        jSliderParam1.setMaximum(1000);
-        jSliderParam1.setMinimum(-1000);
+                
         jSliderParam1.setValue(0);
         jSliderParam1.addChangeListener(new javax.swing.event.ChangeListener() {
 
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 sliderGenerateActionPerformedLens(evt);
-                String tmp = txtParam1.getText();
-                int value = Integer.parseInt(tmp);
-                if (value >= -30 && value <= 30) {
-                    lblParam1.setForeground(Color.red);
-                } else {
-                    lblParam1.setForeground(Color.BLACK);
-                }
+                
             }
         });
         
@@ -354,24 +370,14 @@ public class ThreeParamsPanel extends OpticsPane {
             btnLensOn.setEnabled(true);
             btnSecondDisplay.setEnabled(true);
             
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-            image.paintLensMichelson();
-            EduPatternShowOn.updatePattern(image, genLog());
-            setLog(genLog());
-            imageGenerated = true;
+            callFunction(1);
         }
         
     }
     
     private void button11LensOnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button11LensOnMichelsonActionPerformed
         if (parseArguments()) {
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-            image.paintLensMichelson();
-            EduPatternShowOn.updatePattern(image, genLog());
-            setLog(genLog());
-            imageGenerated = true;
+            callFunction(1);
             
             if (countLenOnMichelson % 2 == 0) {
                 magFrameLenon.dispose();
@@ -417,12 +423,7 @@ public class ThreeParamsPanel extends OpticsPane {
                 countSecondDisplayMichelson--;
                 JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-                image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-                image.paintLensMichelson();
-                EduPatternShowOn.updatePatternSecondDisplay(image, genLog());
-                setLog(genLog());
-                imageGenerated = true;
+                callFunction(2);
                 if (countSecondDisplayMichelson % 2 == 0) {
                     patternFrameDoubleClick.dispose();
                     patternFrame.dispose();
@@ -436,12 +437,7 @@ public class ThreeParamsPanel extends OpticsPane {
             btnLensOn.setEnabled(true);
             btnSecondDisplay.setEnabled(true);
             
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-            image.paintLensMichelson();
-            EduPatternShowOn.updatePattern(image, genLog());
-            setLog(genLog());
-            imageGenerated = true;
+            callFunction(1);
         }
     }
     
@@ -450,17 +446,47 @@ public class ThreeParamsPanel extends OpticsPane {
             btnLensOn.setEnabled(true);
             btnSecondDisplay.setEnabled(true);
             
-            PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-            image.updateLensMichelsonParameter(xoffMichelson, yoffMichelson, focalMichelson);
-            image.paintLensMichelson();
-            EduPatternShowOn.updatePattern(image, genLog());
-            setLog(genLog());
-            imageGenerated = true;
+            callFunction(1);
         }
     }
     
+    private void callFunction(int displayNumber) {
+        PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
+        if (macro.getFunctionName().equals("LensMichelson")) {
+            image.updateLensMichelsonParameter(dParam1, dParam2, dParam3);
+            image.paintLensMichelson();
+        } else if (macro.getFunctionName().equals("CyllindricalMichelson")) {            
+            image.updateCyllindricalParameter(dParam1, dParam2, dParam3);
+            image.paintCylindrical();            
+        } else if (macro.getFunctionName().equals("MirrorMichelson")) {
+            image.updateMirrorParameter(dParam1, dParam2);
+            image.paintMirror();
+        } else if (macro.getFunctionName().equals("PhaseRetarder")) {
+            image.updatePhaseRetarderParameter(dParam1);
+            image.paintPhaseRetarder();
+        } else if (macro.getFunctionName().equals("Spectrometer")) {
+            image.updateMirrorSpectometerParameter(dParam1, dParam2);
+            image.paintMirrorSpectrometer();
+        } else if (macro.getFunctionName().equals("CyllindricalWavefront")) {
+            image.updateCyllindricalParameter(dParam1, dParam2, dParam3);
+            image.paintCylindrical();
+        } else if (macro.getFunctionName().equals("LensWavefront")) {
+            image.updateLensMichelsonParameter(dParam1, dParam2, dParam3);
+            image.paintLensMichelson();
+        } else if (macro.getFunctionName().equals("MirrorWavefront")) {
+            image.updateMirrorParameter(dParam1, dParam2);
+            image.paintMirror();
+        }
+        
+        if (displayNumber == 1)
+            EduPatternShowOn.updatePattern(image, genLog());
+        else EduPatternShowOn.updatePatternSecondDisplay(image, genLog());
+        setLog(genLog());
+        imageGenerated = true;
+    }
+    
     private String genLog() {
-        return String.format(logmessageNewProject, Double.toString(focalMichelson), Double.toString(xoffMichelson), Double.toString(yoffMichelson));
+        return String.format(logmessageNewProject, Double.toString(dParam1), Double.toString(dParam2), Double.toString(dParam3));
     }
     
     private boolean parseArguments() {
@@ -470,9 +496,9 @@ public class ThreeParamsPanel extends OpticsPane {
             double xoffMi = Double.valueOf(txtParam2.getText());
             double yoffMi = Double.valueOf(txtParam3.getText());
             double focalMi = Double.valueOf(txtParam1.getText());
-            this.xoffMichelson = xoffMi / 1000;
-            this.yoffMichelson = yoffMi / 1000;
-            this.focalMichelson = focalMi / 1000;
+            this.dParam1 = xoffMi / ((Param)macro.getParam().get(0)).getStep();
+            this.dParam2 = yoffMi / ((Param)macro.getParam().get(1)).getStep();
+            this.dParam3 = focalMi / ((Param)macro.getParam().get(2)).getStep();
             ret = true;
             
         } catch (Exception e) {

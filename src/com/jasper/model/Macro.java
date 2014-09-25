@@ -25,6 +25,7 @@ public class Macro {
     private String phase;
     private String xOff;
     private String yOff;
+    private String functionName;
     private static String CONSTANT = "%constant";
     private static String PARAM = "%param";
     private static String MATRIX = "%matrix";
@@ -82,8 +83,8 @@ public class Macro {
                         String paramStr = m.group(1);
                         String[] subParam = paramStr.split(commaSplit);
                         param.setSubName(subParam[0].replace("\"", ""));
-                        param.setMax(Double.parseDouble(subParam[1]));
-                        param.setMin(Double.parseDouble(subParam[2]));
+                        param.setMin(Double.parseDouble(subParam[1]));
+                        param.setMax(Double.parseDouble(subParam[2]));
                         param.setStep(Double.parseDouble(subParam[3]));                        
                     }
                     params.add(param);
@@ -102,7 +103,7 @@ public class Macro {
                         yOff = line;
                     }
                 } else if (type == 3) {
-                    phase = line;
+                    functionName = line;
                 }
             }
 
@@ -159,5 +160,13 @@ public class Macro {
 
     public String getPhase() {
         return this.phase;
+    }
+    
+    public void setFunctionName(String functionName) {
+        this.functionName = functionName;
+    }
+
+    public String getFunctionName() {
+        return this.functionName;
     }
 }
