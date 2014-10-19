@@ -1045,7 +1045,7 @@ public class PatternImage {
         WritableRaster raster = canvas.getRaster();
         int[] phaseArray = new int[1];
         double zoom, rot;
-        double x, y, xt, yt, phase;
+        double x, y, x1, y1, xt, yt, xt1, yt1, phase;
         double px = 0;
         double py = 0;
         
@@ -1096,15 +1096,16 @@ public class PatternImage {
                 }
             }
         }
+        
         //Meshgrid manipulate
         for (int i = 0; i < width; i++) {
-            x = (double) (i - width / 2 + 1) * pxsize*zoom;
+            x = (double) (i - width / 2) * pxsize*zoom;
             
             //Shifting x
             x -= px;
                 
             for (int j = 0; j < height; j++) {
-                y = (double) (j - height / 2 + 1) * pxsize*zoom;
+                y = (double) (j - height / 2) * pxsize*zoom;
                 //Shifting y
                 y -= py;
                 

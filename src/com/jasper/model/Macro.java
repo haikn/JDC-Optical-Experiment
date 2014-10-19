@@ -336,6 +336,10 @@ public class Macro {
         return this.variables;
     }
     
+    public double getVariable(String variableKey) {
+        return this.variables.get(variableKey);
+    }
+    
     public void setParam(ArrayList<Param> param) {
         this.params = param;
     }
