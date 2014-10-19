@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 
 public class EduUIMainView extends javax.swing.JFrame {
@@ -132,9 +134,14 @@ public class EduUIMainView extends javax.swing.JFrame {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        Project prj = new Project(Utils.getCurrentLocation() + prjFile.getName());
-                        Macro macro = new Macro(prj.getMacro());
-                        panelOptic.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                        try {
+                            Project prj = new Project(Utils.getCurrentLocation() + prjFile.getName());
+                            Macro macro = new Macro(prj.getMacro());
+                            //panelOptic.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                            panelOptic.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                        } catch (IOException ex) {
+                            Logger.getLogger(EduUIMainView.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 });
                 jMenuProjects.add(prjItem);

@@ -102,7 +102,7 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
         textDesc.setEditable(true);
         textDesc.setOpaque(true);
         textDesc.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JScrollPane sp = new JScrollPane(textDesc);
+        JScrollPane sp = new JScrollPane(textDesc, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         mainPanel.add(sp);
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(buttonPanel);

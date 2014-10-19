@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -116,7 +118,11 @@ public class EditProjectDialog extends JDialog implements ActionListener {
         table = new JTable(model) {
 
             public Class getColumnClass(int column) {
-                return getValueAt(0, column).getClass();
+                if(getValueAt(0, column) != null) {
+                    return getValueAt(0, column).getClass();
+                } else {
+                    return getValueAt(0, 1).getClass();
+                }
             }
         };
 
@@ -184,11 +190,16 @@ public class EditProjectDialog extends JDialog implements ActionListener {
                         EditDescriptionDialog editDialog = new EditDescriptionDialog(table.getModel().getValueAt(row, 0).toString(), prj.getDescription());
                         editDialog.setVisible();
                     } else if (col == 5) {
-                        String prjFileName = table.getModel().getValueAt(row, 1).toString();
-                        Project prj = new Project(prjFileName);
-                        Macro macro = new Macro(prj.getMacro());                        
-                        macroPanel.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
-                        parentFrame.dispose();                        
+                        try {
+                            String prjFileName = table.getModel().getValueAt(row, 1).toString();
+                            Project prj = new Project(prjFileName);
+                            Macro macro = new Macro(prj.getMacro());
+                            //macroPanel.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());                        
+                            macroPanel.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                            parentFrame.dispose();
+                        } catch (IOException ex) {
+                            Logger.getLogger(EditProjectDialog.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } else if (col == 6) {
                         int dialogResult = JOptionPane.showConfirmDialog(null,
                             "Do you want to delete this project",

@@ -37,6 +37,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -204,19 +206,25 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                 return;
             }
         } else if (e.getSource() == btnCreateProject) {
-            if (txtProjectName.getText().length() == 0) {
-                txtProjectName.setFocusable(true);
-                return;
-            } else if (txtMacro.getText().length() == 0) {
-                txtMacro.setFocusable(true);
-                return;
-            } else {
-                Project newProject = new Project(txtProjectName.getText(), txtMacro.getText(), txtGraphic.getText(), cmbLanguage.getSelectedItem().toString(), txtDescription.getText());
-                newProject.writeToFile();
+            try {
+                if (txtProjectName.getText().length() == 0) {
+                    txtProjectName.setFocusable(true);
+                    return;
+                } else if (txtMacro.getText().length() == 0) {
+                    txtMacro.setFocusable(true);
+                    return;
+                } else {
+                    Project newProject = new Project(txtProjectName.getText(), txtMacro.getText(), txtGraphic.getText(), cmbLanguage.getSelectedItem().toString(), txtDescription.getText());
+                    newProject.writeToFile();
+                }
+                Macro macro = new Macro(txtMacro.getText());
+                System.out.println("Project name + " + txtProjectName.getText());
+                //macroPanel.showProjects(macro.getParam().size(), txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
+                macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
+                parentFrame.dispose();
+            } catch (IOException ex) {
+                Logger.getLogger(NewProjectDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Macro macro = new Macro(txtMacro.getText());            
-            macroPanel.showProjects(macro.getParam().size(), txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
-            parentFrame.dispose();            
         } else if (e.getSource() == btnCancel) {
             parentFrame.dispose();
         }

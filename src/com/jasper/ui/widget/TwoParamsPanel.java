@@ -51,6 +51,7 @@ import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.io.IOException;
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
@@ -104,7 +105,7 @@ public class TwoParamsPanel extends OpticsPane {
         initComponents(bindingGroup);
     }
         
-    public void setProject(String project) {
+    public void setProject(String project) throws IOException {
         prjName = project;        
         lblProject.setText("Project Name: " + project);        
         initParams();
@@ -126,7 +127,8 @@ public class TwoParamsPanel extends OpticsPane {
         return this.panelType;
     }
     
-    public void initParams() {
+    public void initParams() throws IOException {
+        System.out.println("2 params");
         Project prj = new Project(Utils.getCurrentLocation() + prjName.trim() + ".prj");
         macro = new Macro(prj.getMacro());
         

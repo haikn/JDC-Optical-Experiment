@@ -52,10 +52,7 @@ import com.jasper.ui.panel.talbot.TalbotPanel;
 import com.jasper.ui.panel.talbot.TalbotPhotoPanel;
 import com.jasper.utils.Utils;
 import com.jasper.ui.widget.DoubleJSlider;
-import com.jasper.ui.widget.FourParamsPanel;
-import com.jasper.ui.widget.OneParamPanel;
-import com.jasper.ui.widget.ThreeParamsPanel;
-import com.jasper.ui.widget.TwoParamsPanel;
+import com.jasper.ui.widget.paramsPanel;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -81,11 +78,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.ResourceBundle;
-import javax.swing.BorderFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -100,6 +99,116 @@ public class EduControllerPattern extends OpticsPane {
     
     PatternImage image1 = new PatternImage();
     ResourceBundle labels;
+    
+     // Variables declaration
+    public javax.swing.JPanel panelPattern;
+    public javax.swing.JPanel panelPatternFullScreen;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
+    private javax.swing.JComboBox comboBoxExperiments;
+    private javax.swing.JTabbedPane jTabbedControler;
+    private javax.swing.JLayeredPane layoutControl;
+    private javax.swing.JPanel panelGeneral;
+    
+    private javax.swing.JTabbedPane tabbedControl;
+    private javax.swing.JPanel jPanelPattern;
+    private javax.swing.JLabel lblSelectExperiment;
+    private javax.swing.JTabbedPane tabbedPaneOptics;
+    private javax.swing.JPanel layoutDiagram;
+    private javax.swing.JPanel layoutDiagramFull;
+    private byte layoutDiagramFullOpen = 0;
+    private byte layoutDescriptionFullOpen = 0;
+    
+    DoubleJSlider slider;
+    //
+    private javax.swing.JTabbedPane tabbedDesLog;
+    private javax.swing.JPanel tabbedDiagram;
+    private javax.swing.JTextArea jTextAreaLog;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollDes;
+    private javax.swing.JPanel diagramLens;
+    private javax.swing.JPanel diagramLensFull;
+    private javax.swing.JLabel lblDiagram;
+    private javax.swing.JLabel lblDiagramFull;
+    private JFrame magFrameLenon;
+    private JFrame diagramFullScreen;
+    private JFrame descriptionFullScreen;
+    // Description
+    private javax.swing.JTextArea desFullScreen;
+    private javax.swing.JLabel desNoSelect = new JLabel("");
+    private javax.swing.JTextArea desSLM = EduDescription.desSLM;
+    private javax.swing.JTextArea desAmplitude = EduDescription.desAmplitude;
+    private javax.swing.JTextArea desPhaseModulation = EduDescription.desPhaseModulation;
+    private javax.swing.JTextArea desMichelson = EduDescription.desMichelson;
+    private javax.swing.JTextArea desDiffaction = EduDescription.desDiffaction;
+    private javax.swing.JTextArea desSpectrometer = EduDescription.desSpectrometer;
+    private javax.swing.JTextArea desSignalProcessing = EduDescription.desSignalProcessing;
+    private javax.swing.JTextArea desPhaseRetarder = EduDescription.desPhaseRetarder;
+    private javax.swing.JTextArea desTalbot = EduDescription.desTalbot;
+    private javax.swing.JTextArea desWavefront = EduDescription.desWavefront;
+    private javax.swing.JTextArea desBeamShifting = EduDescription.desBeamShifting;
+    private javax.swing.JTextArea  desImportFormula = EduDescription.desImportFormula;
+    JPopupMenu menu = new JPopupMenu("Popup");
+    
+    // Temp
+    private byte tmpSelected = 0;
+    
+    private javax.swing.JPanel buttonPanel;
+    
+    // Experiment 1
+    private SLMBasicPanel slmBasicPanel;
+    // Experiment 1
+    private AmplitudePanel amplitudePanel;
+    // Experiment 3
+    private BeamSteere beamSteerePanel;
+    // Experiment 4
+    private MirrorMichelsonPanel mirrorMichelsonPanel;
+    private LensMichelsonPanel lensMichelsonPanel;
+    private CyllindricalMichelsonPanel cyllindricalMichelsonPanel;
+    // Experiment 5
+    private SingleSlitPanel singleSlitPanel;
+    private DoubleSlitPanel doubleSlitPanel;
+    // Experiment 6
+    private SpectremeterPanel spectremeterPanel;
+    // Experiment 7
+    private SignalPhotoPanel signalPhotoPanel;
+    private SignalPanel signalPanel;
+    // Experiment 8
+    private PhaseRetarderPanel phaseRetarderPanel;
+    // Experiment 9
+    private TalbotPanel talbotPanel;
+    private TalbotPhotoPanel talbotPhotoPanel;
+    // Experiment 10
+    private MirrorWavefrontPanel mirrorWavefrontPanel;
+    private LensWavefrontPanel lensWavefrontPanel;
+    private CyllindricalWavefrontPanel cyllindricalWavefrontPanel;
+    // CGH 1
+    private CGH1Panel cgh1Panel;
+    // CGH 3
+    private CGH3Panel cgh3Panel;
+    // CGH 4
+    private CGH4Panel cgh4Panel;
+    // CGH 5
+    private CGH5Panel cgh5Panel;
+    // CGH 6
+    private CGH6Panel cgh6Panel;
+    // CGH 8
+    private CGH8Panel cgh8Panel;
+    // CGH 10
+    private CGH10Panel cgh10Panel;
+    
+    // Beam Shifting tab
+    private BeamShiftingPanel beamShiftingPanel;
+    // Dynamic tab
+    private DynamicPanel dynamicPanel;
+    // Dynamic tab
+    private StaticPanel staticPanel;
+    // Import formula
+    //private ImportFormulaPanel importFormulaPanel;
+    
+    public PatternImage pimg;
+    private JPanel projectPanel = new JPanel(new CardLayout());
+    
+    private paramsPanel paramsPrjPanel;
 
     public EduControllerPattern(int locale) {
         labels = ResourceBundle.getBundle("resources/Text", EduUIMainView.supportedLocales[locale]);
@@ -328,6 +437,8 @@ public class EduControllerPattern extends OpticsPane {
                 .addContainerGap())
             );  
         }
+        
+        tabbedControl.setPreferredSize(new Dimension(655,600));
         // General tab
         tabbedControl.addTab(labels.getString("tabGeneral"), panelGeneral);
         // BeamShifting tab
@@ -523,49 +634,29 @@ public class EduControllerPattern extends OpticsPane {
                 }
             }
         });
-        /*
+        
         if (!Utils.isMac()) {
             tabbedControl.setBounds(580, 0, 665, 370);
         } else {
             tabbedControl.setBounds(578, 0, 678, 442);
         }
-         */
+        
         
         JPanel experimentsPanel = new JPanel();
+        //experimentsPanel.setPreferredSize(new Dimension(655, 455));
         experimentsPanel.add(tabbedControl);
-        //experimentsPanel.setBounds(580, 0, 665, 370);
+        JScrollPane jsp = new JScrollPane(tabbedControl);
+        jsp.setPreferredSize(new Dimension(655, 665));
+        experimentsPanel.add(jsp);
+        experimentsPanel.setBounds(580, 0, 665, 370);
         //experimentsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         //tabbedControl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
-        JPanel oneParam = new JPanel();
-        oneParamPrjPanel = new OneParamPanel(labels, bindingGroup, panelPattern);
-        oneParam.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        oneParam.add(oneParamPrjPanel.getPanel());
-        
-        JPanel twoParam = new JPanel();
-        twoParamPrjPanel = new TwoParamsPanel(labels, bindingGroup, panelPattern);
-        twoParam.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        twoParam.add(twoParamPrjPanel.getPanel());
-        
-        JPanel threeParam = new JPanel();        
-        threeParamPrjPanel = new ThreeParamsPanel(labels, bindingGroup, panelPattern);
-        threeParam.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        threeParam.add(threeParamPrjPanel.getPanel());
-        
-        JPanel fourParam = new JPanel();        
-        fourParamPrjPanel = new FourParamsPanel(labels, bindingGroup, panelPattern);
-        fourParam.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        fourParam.add(fourParamPrjPanel.getPanel());
-                        
         projectPanel.setBounds(580, 0, 665, 370);
         projectPanel.add(experimentsPanel, labels.getString("mnuExperiments"));
-        projectPanel.add(oneParam, labels.getString("mnuProjectsOneParam")); 
-        projectPanel.add(twoParam, labels.getString("mnuProjectsTwoParam")); 
-        projectPanel.add(threeParam, labels.getString("mnuProjectsThreeParam")); 
-        projectPanel.add(fourParam, labels.getString("mnuProjectsFourParam")); 
+        
                         
         layoutControl.add(projectPanel, javax.swing.JLayeredPane.DEFAULT_LAYER); 
-        //layoutControl.add(tabbedControl, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanelPatternLayout = new javax.swing.GroupLayout(jPanelPattern);
         jPanelPattern.setLayout(jPanelPatternLayout);
@@ -825,8 +916,7 @@ public class EduControllerPattern extends OpticsPane {
         }
 
         bindingGroup.bind();
-    }// </editor-fold>//GEN-END:initComponents
-
+    }
     // BEGIN Action Performed
     public void menuItemNoSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNoSelectActionPerformed
         tabbedPaneOptics.removeAll();
@@ -1358,7 +1448,72 @@ public class EduControllerPattern extends OpticsPane {
         cardlayout.show(projectPanel, labels.getString("mnuExperiments"));
     }
     
-    public void showProjects(int num, String projectName, String macroName, String desc, String diagram) {
+    public void showProjects(String projectName, String macroName, String desc, String diagram) throws IOException {
+        
+        CardLayout cardlayout = (CardLayout) (projectPanel.getLayout());
+        JPanel params = new JPanel();
+        
+        paramsPrjPanel = new paramsPanel(labels, bindingGroup, panelPattern);
+        
+        paramsPrjPanel.setProject(projectName);
+        
+        paramsPrjPanel.initComponents(labels, bindingGroup, panelPattern);
+        paramsPrjPanel.initParams();
+        paramsPrjPanel.setProjectName(projectName);
+        paramsPrjPanel.setMacroName(macroName);
+        
+        
+        params.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        params.add(paramsPrjPanel.getPanel());
+        
+        projectPanel.setBounds(580, 0, 665, 370);
+        projectPanel.add(params, labels.getString("mnuProjectsParams")); 
+        
+        cardlayout.show(projectPanel, labels.getString("mnuProjectsParams"));
+        layoutDiagram.removeAll();
+        diagramLens.removeAll();
+        tabbedDesLog.removeAll();
+        
+        
+        JTextArea txtDesc = new JTextArea();
+        Font font = Utils.getFont();
+        txtDesc.setFont(font);
+        txtDesc.setLineWrap(true);
+        txtDesc.setWrapStyleWord(true);
+        txtDesc.setEditable(false);
+        txtDesc.setOpaque(false);
+        
+        try {
+            FileReader fileReader = new FileReader(new File(desc));
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            String inputFile = "";
+            String textFieldReadable;
+
+            while ((textFieldReadable = bufferedReader.readLine()) != null) {
+                inputFile += textFieldReadable;
+            }
+
+            txtDesc.setText(inputFile);
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("no such file exists");
+        } catch (IOException ex) {
+            System.out.println("unkownerror");
+        }
+        jScrollDes.setViewportView(txtDesc);
+        tabbedDesLog.addTab("Description", jScrollDes);
+        jScrollPane2.setViewportView(paramsPrjPanel.getLogArea());
+        tabbedDesLog.addTab("Log", jScrollPane2);
+
+        lblDiagram.setIcon(new ImageIcon(diagram));
+        lblDiagram.setText(null);
+        diagramLens.add(lblDiagram);
+        layoutDiagram.add(diagramLens);
+    }
+    
+    /*
+    public void showProjects_bak(int num, String projectName, String macroName, String desc, String diagram) throws IOException {
         oneParamPrjPanel.setProject(projectName);
         oneParamPrjPanel.setMacro(macroName);
         CardLayout cardlayout = (CardLayout)(projectPanel.getLayout());
@@ -1419,118 +1574,7 @@ public class EduControllerPattern extends OpticsPane {
         diagramLens.add(lblDiagram);
         layoutDiagram.add(diagramLens);
     }
-    
-    // Variables declaration
-    public javax.swing.JPanel panelPattern;
-    public javax.swing.JPanel panelPatternFullScreen;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
-    private javax.swing.JComboBox comboBoxExperiments;
-    private javax.swing.JTabbedPane jTabbedControler;
-    private javax.swing.JLayeredPane layoutControl;
-    private javax.swing.JPanel panelGeneral;
-    
-    private javax.swing.JTabbedPane tabbedControl;
-    private javax.swing.JPanel jPanelPattern;
-    private javax.swing.JLabel lblSelectExperiment;
-    private javax.swing.JTabbedPane tabbedPaneOptics;
-    private javax.swing.JPanel layoutDiagram;
-    private javax.swing.JPanel layoutDiagramFull;
-    private byte layoutDiagramFullOpen = 0;
-    private byte layoutDescriptionFullOpen = 0;
-    
-    DoubleJSlider slider;
-    //
-    private javax.swing.JTabbedPane tabbedDesLog;
-    private javax.swing.JPanel tabbedDiagram;
-    private javax.swing.JTextArea jTextAreaLog;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollDes;
-    private javax.swing.JPanel diagramLens;
-    private javax.swing.JPanel diagramLensFull;
-    private javax.swing.JLabel lblDiagram;
-    private javax.swing.JLabel lblDiagramFull;
-    private JFrame magFrameLenon;
-    private JFrame diagramFullScreen;
-    private JFrame descriptionFullScreen;
-    // Description
-    private javax.swing.JTextArea desFullScreen;
-    private javax.swing.JLabel desNoSelect = new JLabel("");
-    private javax.swing.JTextArea desSLM = EduDescription.desSLM;
-    private javax.swing.JTextArea desAmplitude = EduDescription.desAmplitude;
-    private javax.swing.JTextArea desPhaseModulation = EduDescription.desPhaseModulation;
-    private javax.swing.JTextArea desMichelson = EduDescription.desMichelson;
-    private javax.swing.JTextArea desDiffaction = EduDescription.desDiffaction;
-    private javax.swing.JTextArea desSpectrometer = EduDescription.desSpectrometer;
-    private javax.swing.JTextArea desSignalProcessing = EduDescription.desSignalProcessing;
-    private javax.swing.JTextArea desPhaseRetarder = EduDescription.desPhaseRetarder;
-    private javax.swing.JTextArea desTalbot = EduDescription.desTalbot;
-    private javax.swing.JTextArea desWavefront = EduDescription.desWavefront;
-    private javax.swing.JTextArea desBeamShifting = EduDescription.desBeamShifting;
-    private javax.swing.JTextArea  desImportFormula = EduDescription.desImportFormula;
-    JPopupMenu menu = new JPopupMenu("Popup");
-    
-    // Temp
-    private byte tmpSelected = 0;
-    
-    private javax.swing.JPanel buttonPanel;
-    
-    // Experiment 1
-    private SLMBasicPanel slmBasicPanel;
-    // Experiment 1
-    private AmplitudePanel amplitudePanel;
-    // Experiment 3
-    private BeamSteere beamSteerePanel;
-    // Experiment 4
-    private MirrorMichelsonPanel mirrorMichelsonPanel;
-    private LensMichelsonPanel lensMichelsonPanel;
-    private CyllindricalMichelsonPanel cyllindricalMichelsonPanel;
-    // Experiment 5
-    private SingleSlitPanel singleSlitPanel;
-    private DoubleSlitPanel doubleSlitPanel;
-    // Experiment 6
-    private SpectremeterPanel spectremeterPanel;
-    // Experiment 7
-    private SignalPhotoPanel signalPhotoPanel;
-    private SignalPanel signalPanel;
-    // Experiment 8
-    private PhaseRetarderPanel phaseRetarderPanel;
-    // Experiment 9
-    private TalbotPanel talbotPanel;
-    private TalbotPhotoPanel talbotPhotoPanel;
-    // Experiment 10
-    private MirrorWavefrontPanel mirrorWavefrontPanel;
-    private LensWavefrontPanel lensWavefrontPanel;
-    private CyllindricalWavefrontPanel cyllindricalWavefrontPanel;
-    // CGH 1
-    private CGH1Panel cgh1Panel;
-    // CGH 3
-    private CGH3Panel cgh3Panel;
-    // CGH 4
-    private CGH4Panel cgh4Panel;
-    // CGH 5
-    private CGH5Panel cgh5Panel;
-    // CGH 6
-    private CGH6Panel cgh6Panel;
-    // CGH 8
-    private CGH8Panel cgh8Panel;
-    // CGH 10
-    private CGH10Panel cgh10Panel;
-    
-    // Beam Shifting tab
-    private BeamShiftingPanel beamShiftingPanel;
-    // Dynamic tab
-    private DynamicPanel dynamicPanel;
-    // Dynamic tab
-    private StaticPanel staticPanel;
-    // Import formula
-    //private ImportFormulaPanel importFormulaPanel;
-    
-    public PatternImage pimg;
-    private JPanel projectPanel = new JPanel(new CardLayout());
-    private OneParamPanel oneParamPrjPanel;
-    private ThreeParamsPanel threeParamPrjPanel;
-    private TwoParamsPanel twoParamPrjPanel;
-    private FourParamsPanel fourParamPrjPanel;
+    */
         
     class PopupTriggerListener extends MouseAdapter {
 

@@ -49,6 +49,7 @@ import org.jdesktop.beansbinding.BindingGroup;
 import static com.jasper.ui.EduPatternShowOn.patternFrameDoubleClick;
 import static com.jasper.ui.EduPatternShowOn.patternFrame;
 import java.awt.BorderLayout;
+import java.io.IOException;
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -95,7 +96,7 @@ public class OneParamPanel extends OpticsPane {
         initComponents(bindingGroup);
     }
         
-    public void setProject(String project) {
+    public void setProject(String project) throws IOException {
         prjName = project;        
         lblProject.setText("Project Name: " + project);        
         initParams();
@@ -117,7 +118,7 @@ public class OneParamPanel extends OpticsPane {
         return this.panelType;
     }
     
-    public void initParams() {
+    public void initParams() throws IOException {
         Project prj = new Project(Utils.getCurrentLocation() + prjName.trim() + ".prj");
         macro = new Macro(prj.getMacro());
         

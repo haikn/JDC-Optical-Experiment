@@ -33,12 +33,19 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.math3.complex.Complex;
+import org.mbertoli.jfep.Parser;
 
 /**
  * This PatternImage include the algorithms of application
@@ -366,6 +373,7 @@ public class PatternImage {
         // wave=exp(1i*pi/wl*xt.^2);
         int[] iArray = new int[1];
         double x1, y1, x2, phase;
+        //double fixpart = Math.PI / lambda / (focalCyllin);
         double fixpart = Math.PI / lambda / (focalCyllin);
 
         double costheta = Math.cos(Math.toRadians((yoffCyllin)));
@@ -1025,7 +1033,106 @@ public class PatternImage {
         buferPattern = compute(canvas);
         tuningFlag = true;
     }
+    
+    /**
+     *
+     * @param variables
+     * @param meshgrid
+     * @param matrix
+     * @param wavefront
+     */
+    public void paintManualMacro(Map<String, Double> variables, ArrayList<String> meshgrid, Map<String,String> matrix, String wavefront) {
+        WritableRaster raster = canvas.getRaster();
+        int[] phaseArray = new int[1];
+        double zoom, rot;
+        double x, y, xt, yt, phase;
+        double px = 0;
+        double py = 0;
+        
+        if(variables.containsKey(meshgrid.get(1))) {
+            rot = variables.get(meshgrid.get(1));
+        } else {
+            rot = 0;
+        }
+        
+        if(variables.containsKey(meshgrid.get(0))) {
+            zoom = variables.get(meshgrid.get(0));
+        } else {
+            zoom = Double.parseDouble(meshgrid.get(0));
+        }
+        
+        double costheta = Math.cos(Math.toRadians(rot));
+        double sintheta = Math.sin(Math.toRadians(rot));
+        
+        //Fill parameters in wavefront
+        Parser wavefrontParser = new Parser(wavefront);
+        Set<String> wavefrontVariables = new HashSet<>();
+        wavefrontVariables = wavefrontParser.getParsedVariables();
+        if(wavefrontVariables.size() > 0) {
+            for(String wavefrontVariable:wavefrontVariables) {
+                if(variables.containsKey(wavefrontVariable)) {
+                    wavefront = wavefront.replace(wavefrontVariable, ""+variables.get(wavefrontVariable));
+                }
+            }
+        }
+        
+        //Get latest variable of wavefront
+        Parser phaseParser = new Parser(wavefront);
+        
+        if(variables.containsKey(matrix.get("xt"))) {
+            px = variables.get(matrix.get("xt"))/1000;
+        } else {
+            if(matrix.get("xt").matches("-?\\d+(\\.\\d+)?")) {
+                px = Double.parseDouble(matrix.get("xt"))/1000;
+            }
+        }
+        
+        if(matrix.get("yt") != null) {
+            if(variables.containsKey(matrix.get("yt"))) {
+                py = variables.get(matrix.get("yt"))/1000;
+            } else {
+                if(matrix.get("yt").matches("-?\\d+(\\.\\d+)?")) {
+                    py = Double.parseDouble(matrix.get("yt"))/1000;
+                }
+            }
+        }
+        //Meshgrid manipulate
+        for (int i = 0; i < width; i++) {
+            x = (double) (i - width / 2 + 1) * pxsize*zoom;
+            
+            //Shifting x
+            x -= px;
+                
+            for (int j = 0; j < height; j++) {
+                y = (double) (j - height / 2 + 1) * pxsize*zoom;
+                //Shifting y
+                y -= py;
+                
+                //Rotation
+                xt = x * costheta + y * sintheta;
+                yt = -x * sintheta + y * costheta;
+                
+                //Apply to the formula
+                phaseParser.setVariable("xt", xt);
+                phaseParser.setVariable("yt", yt);
+                
+                phase = phaseParser.getValue();
 
+                phaseArray[0] = phase2gray(phase);
+                raster.setPixel(i, j, phaseArray);
+            }
+        }
+        
+        buferPattern = compute(canvas);
+        tuningFlag = true;
+        //double
+    }
+
+    public void updateManualMacro(double grayLevel) {
+        this.d_grayLevel = grayLevel;
+        title = "Manual macro " + grayLevel;
+    }
+    
     /**
      * scale image
      *
