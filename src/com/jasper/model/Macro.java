@@ -31,6 +31,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +44,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.mbertoli.jfep.ParseError;
 import org.mbertoli.jfep.Parser;
 
@@ -53,29 +55,47 @@ import org.mbertoli.jfep.Parser;
 public class Macro {
 
     private double fixValue;
-    private ArrayList<Param> params = new ArrayList<Param>();
+    private ArrayList<Param> params = new ArrayList<>();
     private double zoom = 0;
     private double rotate = 0;
     private String phase;
     private String functionName;
     
+    private ArrayList<String> mathConstant = new ArrayList<>();
     private Map<String, Double> variables = new HashMap<>();
     //private String meshgrid;
     //private ArrayList<Double> meshgridParam = new ArrayList<>();
     private ArrayList<String> meshgridParam = new ArrayList<>();
     //private Map<String, Double> matrix = new HashMap<>();
     private Map<String, String> matrix = new HashMap<>();
+    private Map<String, String> shifting = new HashMap<>();
+    private Map<String, String> meshgridKeys = new HashMap<>();
+    private Map<String, Double> spacingX = new HashMap<>();
+    private Map<String, Double> spacingY = new HashMap<>();
+    private ArrayList<String> X = new ArrayList<>();
+    private ArrayList<String> Y = new ArrayList<>();
+    private ArrayList<String> XY = new ArrayList<>();
+    
     private String wavefront;
+    private String slitpattern;
     private static String CONSTANT = "%constant";
     private static String PARAM = "%param";
     private static String MESHGRID = "%meshgrid";
     private static String MATRIX = "%matrix";
     private static String FUNCTION = "%function";
-    private static String REGEXPARAM = "(^[A-Za-z0-9\\+]+)\\(([^)]+)\\,([^)]+)\\,([^)]+)\\,([^)]+)\\,([^)]+)\\)";
-    private static String REGEXMESHGRID = "(^[A-Za-z0-9\\+]+)\\(([^)]+)\\,([^)]+)\\)";
-    private static String REGEXWAVEFRONT = "(^[A-Za-z0-9\\+]+)\\((.+?)\\)$";
+    private static String REGEXPARAM = "(^[A-Za-z0-9\\+]+)\\(([^)]+)\\,([^)]+)\\,([^)]+)\\,([^)]+)\\,([^)]+)\\)$";
+    private static String REGEXMESHGRID = "(^[A-Za-z0-9\\+]+)\\(([^)]+)\\)";//"(^[A-Za-z0-9\\+]+)\\(([^)]+)\\,([^)]+)(,([^)]))?\\)";
+    private static String REGEXWAVEFRONT = "(exp)\\((.+?)\\)$";
+    private static String REGEXPATTERN = "((rect)\\((.+?)\\))";
+    private static String REGEXMESHGRIDKEY = "^\\[([A-Za-z0-9_]+),([A-Za-z0-9_]+)\\]$";
+    private static String REGEXPOWER = "(([A-Za-z0-9]+)\\^([0-9]+))";
+    private static final Pattern DOUBLE_PATTERN = Pattern.compile(
+    "[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)" +
+    "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|" +
+    "(((0[xX](\\p{XDigit}+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))" +
+    "[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*");
     private static String MESHGRIDKEY = "meshgrid";
-    private static String EXP = "exp";
+    
 
     public Macro() {
     }
@@ -83,12 +103,26 @@ public class Macro {
     public Macro(String fileName) throws FileNotFoundException, IOException {
         BufferedReader br = null;
         String line = "";
-        String rotateVariable = "";
-        String zoomVariable = "";
         String meshgridVariable = "";
+        String meshgridParams = "";
+        String wavefrontDraft = "";
+        String[] meshgridParamsList = null;
+        ArrayList<String> leftParams = new ArrayList<>();
+        ArrayList<String> rightParams = new ArrayList<>();
         int type = 0;
         Properties props = new Properties();
-        Map<String, String> preMatrix = new HashMap<>();
+        
+        mathConstant.add("pi");
+        mathConstant.add("j");
+        mathConstant.add("i");
+        mathConstant.add("e");
+        
+        
+        //Add more fixed variables
+        variables.put("pi", Math.PI);
+        variables.put("j", (double)1);
+        variables.put("i", (double)1);
+        variables.put("e", Math.E);
         
         //Read macro file
         try {
@@ -97,6 +131,7 @@ public class Macro {
             JOptionPane.showMessageDialog(new JFrame(), "Macro file is not available.");
             e.printStackTrace();
         }
+        
         try {
             while ((line = br.readLine()) != null) {
                 //Analyse macro file
@@ -136,6 +171,7 @@ public class Macro {
                         }
                         //constants.put(constantKey, constantValue);
                         variables.put(constantKey, constantValue);
+                        leftParams.add(constantKey.replaceAll("\\s", ""));
                     }
                 } else if (type == 1) {
                     //Parameter processing
@@ -155,18 +191,23 @@ public class Macro {
                         Pattern paramsPattern = Pattern.compile(REGEXPARAM);
                         Matcher paramsMatcher = paramsPattern.matcher(paramValue);
                         if(paramsMatcher.find()) {
-                            param.setSubName(stringCapitalize(paramsMatcher.group(2).replaceAll("\"", "")));
-                            param.setMin(Double.parseDouble(paramsMatcher.group(3).replaceAll("\\s", "")));
-                            param.setMax(Double.parseDouble(paramsMatcher.group(4).replaceAll("\\s", "")));
-                            param.setStep(Double.parseDouble(paramsMatcher.group(5)));
-                            param.setCurrentValue(Double.parseDouble(paramsMatcher.group(6).replaceAll("\\s", "")));
-                            
-                            variables.put(paramKey, Double.parseDouble(paramsMatcher.group(6)));
+                            try {
+                                param.setSubName(stringCapitalize(paramsMatcher.group(2).replaceAll("\"", "")));
+                                param.setMin(Double.parseDouble(paramsMatcher.group(3).replaceAll("\\s", "")));
+                                param.setMax(Double.parseDouble(paramsMatcher.group(4).replaceAll("\\s", "")));
+                                param.setStep(Double.parseDouble(paramsMatcher.group(5)));
+                                param.setCurrentValue(Double.parseDouble(paramsMatcher.group(6).replaceAll("\\s", "")));
+                                variables.put(paramKey, Double.parseDouble(paramsMatcher.group(6)));
+                            } catch (Exception exc) {
+                                JOptionPane.showMessageDialog(new JFrame(), "One of paramters is incorrect. Please check!");
+                                throw new IllegalArgumentException(exc);
+                            }
                         } else {
                             JOptionPane.showMessageDialog(new JFrame(), "One of paramters is incorrect. Please check!");
                             throw new IllegalArgumentException();
                         }
                         params.add(param);
+                        leftParams.add(paramKey.replaceAll("\\s", ""));
                     } //End while
                     
                 } else if (type == 2) {
@@ -176,25 +217,44 @@ public class Macro {
                     Enumeration<?> enumer = props.propertyNames();
                     while (enumer.hasMoreElements()) {
                         String meshgridKey = (String) enumer.nextElement();
+                        //Add meshgrid key in leftVariable
+                        Pattern meshgridKeyPattern = Pattern.compile(REGEXMESHGRIDKEY);
+                        Matcher meshgridKeyMatcher = meshgridKeyPattern.matcher(meshgridKey);
+                        if(meshgridKeyMatcher.find()) {
+                            leftParams.add(meshgridKeyMatcher.group(1).replaceAll("\\s", ""));
+                            leftParams.add(meshgridKeyMatcher.group(2).replaceAll("\\s", ""));
+                            meshgridKeys.put("x", meshgridKeyMatcher.group(1).replaceAll("\\s", ""));
+                            meshgridKeys.put("y", meshgridKeyMatcher.group(2).replaceAll("\\s", ""));
+                            //variables.put(meshgridKeyMatcher.group(1).replaceAll("\\s", ""), 0.0);
+                            //variables.put(meshgridKeyMatcher.group(2).replaceAll("\\s", ""), 0.0);
+                            //meshgridKeys.add(meshgridKeyMatcher.group(1).replaceAll("\\s", ""));
+                            //meshgridKeys.add(meshgridKeyMatcher.group(2).replaceAll("\\s", ""));
+                        } else {
+                            JOptionPane.showMessageDialog(new JFrame(), "Meshgrid is incorrect. Please check!");
+                            throw new IllegalArgumentException();
+                        }
+                        
                         //remove ; at the end of the line if need
                         meshgridVariable = props.getProperty(meshgridKey);
                         meshgridVariable = meshgridVariable.replaceAll(";", "");
                         Pattern meshgridPattern = Pattern.compile(REGEXMESHGRID);
                         Matcher meshgridMatcher = meshgridPattern.matcher(meshgridVariable);
+                        
                         if(meshgridMatcher.find()) {
                             if(!meshgridMatcher.group(1).trim().equals(MESHGRIDKEY)) {
                                 JOptionPane.showMessageDialog(new JFrame(), "Meshgrid is incorrect. Please check!");
                                 throw new IllegalArgumentException();
                             }
-                            zoomVariable = meshgridMatcher.group(2);
-                            rotateVariable = meshgridMatcher.group(3);
-                            meshgridParam.add(zoomVariable);
-                            meshgridParam.add(rotateVariable);
+                            
+                            meshgridParams = meshgridMatcher.group(2);
+                            meshgridParamsList = meshgridParams.split(",");
+
                         } else {
                             JOptionPane.showMessageDialog(new JFrame(), "Meshgrid is incorrect. Please check!");
                             throw new IllegalArgumentException();
                         }
-                    }
+                        
+                    }//End while
                     
                 } else if (type == 3) {
                     //Matrix processing
@@ -204,13 +264,12 @@ public class Macro {
                     while (enumer.hasMoreElements()) {
                         String matrixKey = (String) enumer.nextElement();
                         String matrixValue = props.getProperty(matrixKey);
-                        matrixValue = matrixValue.replaceAll(";", "");
-                        String[] parts = matrixValue.split("-");
-                        if(parts[1] != null) {
-                            //preMatrix.put(matrixKey, parts[1]);
-                            matrix.put(matrixKey, parts[1]);
-                        }
-                        //matrix.put(matrixKey, matrixValue);
+                        Parser matrixParser = new Parser(matrixValue);
+                        HashSet parsedVariables = matrixParser.getParsedVariables();
+                        rightParams.addAll(parsedVariables);
+
+                        leftParams.add(matrixKey.replaceAll("\\s", ""));
+                        matrix.put(matrixKey, matrixValue.replace(";", ""));
                     }
                     
                 } else if (type == 4) {
@@ -220,88 +279,117 @@ public class Macro {
                     Enumeration<?> enumer = props.propertyNames();
                     while (enumer.hasMoreElements()) {
                         String wavefrontKey = (String) enumer.nextElement();
-                        wavefront = props.getProperty(wavefrontKey);
-                        //wavefront = wavefront.replaceAll(";", "");
+                        wavefrontDraft = props.getProperty(wavefrontKey);
+                        wavefrontDraft = wavefrontDraft.replaceAll(";", "");
                     }
                 }
             } //End while read line
+            
             
             if(params.size() > 10) {
                 JOptionPane.showMessageDialog(new JFrame(), "The application just supports less than 10 paramerters");
                 throw new IllegalArgumentException();
             }
             
-            //Add more fixed variables
-            variables.put("pi", Math.PI);
-            variables.put("j", (double)1);
-            variables.put("i", (double)1);
-            variables.put("e", Math.E);
-            
-            
-            //Check if rotation is defined
-            if(variables.containsKey(rotateVariable)) {
-                rotate = (double)variables.get(rotateVariable);
-            } else {
-                JOptionPane.showMessageDialog(new JFrame(), "One variable is undefined!");
-                throw new IllegalArgumentException();
-            }
-            
-            //Check if zoom is defined or constant
-            if(zoomVariable.matches("-?\\d+(\\.\\d+)?")) {
-                zoom = Double.parseDouble(zoomVariable);
-            } else {
-                if(variables.containsKey(zoomVariable)) {
-                    zoom = variables.get(zoomVariable);
-                } else {
-                    JOptionPane.showMessageDialog(new JFrame(), "One variable is undefined!");
-                    throw new IllegalArgumentException();
+            //Meshgrid analyze
+            for(int i = 0; i < meshgridParamsList.length; i++) {
+                if(!DOUBLE_PATTERN.matcher(meshgridParamsList[i]).matches()) {
+                    rightParams.add(meshgridParamsList[i].replaceAll("\\s", ""));
                 }
+                meshgridParam.add(meshgridParamsList[i].replaceAll("\\s", ""));
             }
             
-            //Check if shifting is defined
-            /*
-            for(String matrixVal: preMatrix.keySet()) {
-                if(variables.containsKey(preMatrix.get(matrixVal))) {
-                    matrix.put(matrixVal, variables.get(preMatrix.get(matrixVal)));
-                } else {
-                    matrix.put(matrixVal, 0.0);
+            //Matrix analyze
+            if(matrix.size() > 0) {
+                for(Entry entry: matrix.entrySet()) {
+                    Parser matrixParser = new Parser(entry.getValue().toString());
+                    HashSet<String> matrixParsedVariables = matrixParser.getParsedVariables();
+                    if(matrixParsedVariables.contains(meshgridKeys.get("x"))) {
+                        //shifting.put("px", matrixShiftingResult);
+                        matrixParsedVariables.remove(meshgridKeys.get("x"));
+                        shifting.put("x", entry.getKey().toString());
+                        matrixParser.setVariable("x", 0);
+                        for(String entryX: matrixParsedVariables) {
+                            if(variables.keySet().contains(entryX)) {
+                                if(entryX.equalsIgnoreCase("px")) {
+                                    shifting.put("px", entryX);
+                                    matrixParser.setVariable("px", 0);
+                                } else {
+                                    shifting.put("spacingx", entryX);
+                                    matrixParser.setVariable("spacingx", variables.get("spacingx"));
+                                }
+                            }
+                        }
+                        spacingX.put(entry.getKey().toString(), matrixParser.getValue());
+                        //XY[] = "x";
+                        X.add(entry.getKey().toString());
+                        
+                    } else if (matrixParsedVariables.contains(meshgridKeys.get("y"))){
+                        shifting.put("y", entry.getKey().toString());
+                        matrixParser.setVariable("y", 0);
+                        for(String entryY: matrixParsedVariables) {
+                            if(variables.keySet().contains(entryY)) {
+                                if(entryY.equalsIgnoreCase("py")) {
+                                    shifting.put("py", entryY);
+                                    matrixParser.setVariable("py", 0);
+                                } else {
+                                    shifting.put("spacingy", entryY);
+                                    matrixParser.setVariable("spacingy", variables.get("spacingy"));
+                                }
+                            }
+                        }
+                        spacingY.put(entry.getKey().toString(), matrixParser.getValue());
+                        Y.add(entry.getKey().toString());
+                    }
                 }
-            }
-                    */
+            }            
             
             //Wave front analyze
-            Parser wavefrontParser = new Parser(wavefront);
-            //Get the real formula of wavefront
-            if(wavefrontParser == null) {
-                JOptionPane.showMessageDialog(new JFrame(), "No wavefront found!");
+            String wavefrontFunctionString = "";
+            Set<String> wavefrontVariableName = new HashSet<>();
+            Pattern wavefrontPattern = Pattern.compile(REGEXWAVEFRONT);
+            Pattern patternPattern = Pattern.compile(REGEXPATTERN);
+            Matcher wavefrontMatcher = wavefrontPattern.matcher(wavefrontDraft);
+            Matcher patternMatcher = patternPattern.matcher(wavefrontDraft);
+
+            if(wavefrontMatcher.find()) {
+                //For wavefront
+                functionName = wavefrontMatcher.group(1);
+                wavefrontFunctionString = wavefrontMatcher.group(2);
+                Parser wavefrontParser;
+                try {
+                    wavefrontParser = new Parser(wavefrontFunctionString);
+                } catch (Exception exc) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Function not found!");
+                    throw new IllegalArgumentException();
+                }
+
+                //Check wavefront function variables
+
+                try {
+                    wavefrontVariableName = wavefrontParser.getParsedVariables();
+                    rightParams.addAll(wavefrontVariableName);
+                } catch(ParseError exc) {
+                    JOptionPane.showMessageDialog(new JFrame(), exc.getMessage());
+                    throw new IllegalArgumentException();
+                }
+
+                //Real wavefront formula
+                /*
+                wavefront = wavefrontFunctionString.replaceAll(REGEXPOWER, "pow($2,$3)");
+                for(Entry entry: matrix.entrySet()) {
+                    wavefront = wavefront.replace(entry.getKey().toString(), entry.getValue().toString());
+                }
+                */
+                wavefront = wavefrontFunctionString;
+                
+            } else if(patternMatcher.find()){
+                functionName = patternMatcher.group(2);
+                slitpattern = wavefrontDraft;
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "Function is incorrect");
                 throw new IllegalArgumentException();
             }
-            
-            //Check wavefront function name
-            Set<String> wavefrontFunctionName = new HashSet<>();
-            try {
-                wavefrontFunctionName = wavefrontParser.getParsedFunctions();
-            } catch(ParseError exc) {
-                JOptionPane.showMessageDialog(new JFrame(), exc.getMessage());
-                throw new IllegalArgumentException();
-            }
-            
-            if(!wavefrontFunctionName.contains(EXP)) {
-                JOptionPane.showMessageDialog(new JFrame(), "Wavefront function name is incorrect!");
-                throw new IllegalArgumentException();
-            }
-            
-            //String wavefrontFormula = "";
-            String wavefrontFormula;
-            
-            try {
-                wavefrontFormula = wavefrontParser.getTree().getChildrenNodes()[0].toString();
-            } catch (ParseError exc) {
-                JOptionPane.showMessageDialog(new JFrame(), exc.getMessage());
-                throw new IllegalArgumentException();
-            }
-            //Real wavefront formula
-            wavefront = wavefrontFormula;
                                     
         } catch (IOException e) {
             JOptionPane.showMessageDialog(new JFrame(), "Error in reading macro file.");
@@ -315,6 +403,34 @@ public class Macro {
                 }
             }
         }
+        
+        leftParams.addAll(Arrays.asList("pi","e","j","i","pixel","mm","m","um"));
+        
+        if(!leftParams.containsAll(rightParams)) {
+            JOptionPane.showMessageDialog(new JFrame(), "Undefined variable");
+            throw new IllegalArgumentException();
+        }
+        
+        //Refine slit pattern
+        //Assign values from variables to slit
+        /*
+        if(slitpattern != null) {
+            for(Entry variable: variables.entrySet()) {
+                if(!mathConstant.contains(variable.getKey().toString())) {
+                    slitpattern = slitpattern.replace(variable.getKey().toString(), variable.getValue().toString());
+                }
+            }
+        }
+        */
+        
+    }
+    
+    public void setSlitPattern(String slitpattern) {
+        this.slitpattern = slitpattern;
+    }
+    
+    public String getSlitPattern() {
+        return this.slitpattern;
     }
 
     public void setFixValue(double fixValue) {
@@ -362,6 +478,54 @@ public class Macro {
     
     public Map<String, String> getMatrix() {
         return this.matrix;
+    }
+    
+    public void setShifting(Map<String, String> shifting) {
+        this.shifting = shifting;
+    }
+    
+    public Map<String, String> getShifting() {
+        return this.shifting;
+    }
+    
+    public void setSpacingX(Map<String, Double> spacing) {
+        this.spacingX = spacing;
+    }
+    
+    public Map<String, Double> getSpacingX() {
+        return this.spacingX;
+    }
+    
+    public void setSpacingY(Map<String, Double> spacing) {
+        this.spacingY = spacing;
+    }
+    
+    public Map<String, Double> getSpacingY() {
+        return this.spacingY;
+    }
+    
+    public void setXY(ArrayList<String> xy) {
+        this.XY = xy;
+    }
+    
+    public ArrayList<String> getXY() {
+        return this.XY;
+    }
+    
+    public void setX(ArrayList<String> x) {
+        this.X = x;
+    }
+    
+    public ArrayList<String> getX() {
+        return this.X;
+    }
+    
+    public void setY(ArrayList<String> y) {
+        this.Y = y;
+    }
+    
+    public ArrayList<String> getY() {
+        return this.Y;
     }
     
     public void setWavefront(String wavefront) {

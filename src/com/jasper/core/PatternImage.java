@@ -35,15 +35,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import net.objecthunter.exp4j.function.Function;
 import org.apache.commons.math3.complex.Complex;
 import org.mbertoli.jfep.Parser;
 
@@ -134,6 +139,8 @@ public class PatternImage {
     private double grayLevel_ImportFormula;
     // title string
     public String title;
+    
+    private double spacing = 0;
 
     public PatternImage(int w, int h) {
         width = w;
@@ -319,6 +326,13 @@ public class PatternImage {
         }
     }
 
+    private int phase2binarygray(double phase) {
+        if(phase > 0) return gray2phase[gray2phase.length-1];
+        else return gray2phase[0];
+        //int scale = gray2phase.length - 1;
+        //return gray2phase[(int)phase*scale];
+    }
+    
     private int phase2gray(double phase) {
         int scale = gray2phase.length;
         phase = phase / 2.0d / Math.PI;
@@ -1034,18 +1048,146 @@ public class PatternImage {
         tuningFlag = true;
     }
     
+    public void  paintManualSlit(Map<String, Double> variables, ArrayList<String> meshgrid, Map<String,String> matrix, Map<String, String> shifting, Map<String, Double> spacingX, Map<String, Double> spacingY ,String slitpattern, ArrayList<String> X, ArrayList<String> Y) {
+        WritableRaster raster = canvas.getRaster();
+        //Define java math constant
+        int[] phaseArray = new int[1];
+        double zoom, rot;
+        double x, y, xt, yt;
+        double phase = 0;
+        double px = 0;
+        double py = 0;
+        double slitsize = 50;
+        double spacingx = 0;
+        double spacingy = 0;
+        boolean slitXPlus = false;
+        boolean slitXMinus = false;
+        boolean slitYPlus = false;
+        boolean slitYMinus = false;
+        
+        ArrayList<String> patternList = new ArrayList<String>();
+        
+        Pattern slitPatternParser = Pattern.compile("((rect)\\((.+?),(.+?)\\))");
+        Matcher slitMatcher = slitPatternParser.matcher(slitpattern);
+        while(slitMatcher.find()) {
+            slitsize = variables.get(slitMatcher.group(4));
+            patternList.add(slitMatcher.group(3));
+        }
+        
+        if(variables.containsKey(meshgrid.get(1))) {
+            rot = variables.get(meshgrid.get(1));
+        } else {
+            rot = 0;
+        }
+        
+        if(variables.containsKey(meshgrid.get(0))) {
+            zoom = variables.get(meshgrid.get(0));
+        } else {
+            zoom = Double.parseDouble(meshgrid.get(0));
+        }
+        
+        double costheta = Math.cos(Math.toRadians(rot));
+        double sintheta = Math.sin(Math.toRadians(rot));
+        
+        if(shifting.get("px") != null) {
+            px = (double)variables.get(shifting.get("px"));
+        }
+        if(shifting.get("py") != null) {
+            py = (double)variables.get(shifting.get("py"));
+        }
+        if(shifting.get("spacingx") != null) {
+            spacingx = (double)variables.get(shifting.get("spacingx"));
+        }
+        if(shifting.get("spacingy") != null) {
+            spacingy = (double)variables.get(shifting.get("spacingy"));
+        }
+        
+        
+        for(int k = 0; k < patternList.size(); k++) {
+            if(X.contains(patternList.get(k))) {
+                if(spacingX.get(patternList.get(k)) > 0) {
+                    slitXPlus = true;
+                } else {
+                    slitXMinus = true;
+                }
+            } else if(Y.contains(patternList.get(k))) {
+                if(spacingY.get(patternList.get(k)) > 0) {
+                    slitYPlus = true;
+                } else {
+                    slitYMinus = true;
+                }
+            }
+        }
+   
+        //Meshgrid manipulate
+        for (int i = 0; i < width; i++) {
+            x = (double) (i - width / 2) *zoom;
+            
+            //Shifting x
+            x -= px;
+            
+            for (int j = 0; j < height; j++) {
+                y = (double) (j - height / 2) *zoom;
+                //Shifting y
+                y -= py;
+                
+                //Rotation
+                
+                xt = x * costheta + y * sintheta;
+                yt = -x * sintheta + y * costheta;
+                
+                if(slitXPlus == true) {
+                    phase += heaviside(slitsize/2 + (xt + spacingx/2))*heaviside(slitsize/2 - (xt + spacingx/2));
+                }
+                if(slitXMinus == true) {
+                    phase += heaviside(slitsize/2 + (xt - spacingx/2))*heaviside(slitsize/2 - (xt - spacingx/2));
+                }
+                if(slitYPlus == true) {
+                    phase += heaviside(slitsize/2 + (yt + spacingy/2))*heaviside(slitsize/2 - (yt + spacingy/2));
+                }
+                if(slitYMinus == true) {
+                    phase += heaviside(slitsize/2 + (yt - spacingy/2))*heaviside(slitsize/2 - (yt - spacingy/2));
+                }
+                /*
+                slit1 = heaviside(yt + slitsize/2 + spacingy/2)*heaviside(-yt + slitsize/2 - spacingy/2);
+                slit2 = heaviside(yt + slitsize/2 - spacingy/2)*heaviside(-yt + slitsize/2 + spacingy/2);
+                slit3 = heaviside(xt + slitsize/2 + spacingx/2)*heaviside(-xt + slitsize/2 - spacingx/2);
+                slit4 = heaviside(xt + slitsize/2 - spacingx/2)*heaviside(-xt + slitsize/2 + spacingx/2);
+                */
+                //phase = slitXPlus + slitXMinus + slitYPlus + slitYMinus;
+
+                phaseArray[0] = phase2binarygray(phase);
+                //Reset phase
+                phase = 0;
+                raster.setPixel(i, j, phaseArray);
+                
+            }
+            
+        }
+        
+        buferPattern = compute(canvas);
+        tuningFlag = true;
+    }
+    
+    private double heaviside(double input) {
+        if(input > 0)
+            return 1;
+        else if(input == 0)
+            return 1/2;
+        else return 0;
+    }
     /**
      *
      * @param variables
      * @param meshgrid
-     * @param matrix
+     * @param shifting
      * @param wavefront
      */
-    public void paintManualMacro(Map<String, Double> variables, ArrayList<String> meshgrid, Map<String,String> matrix, String wavefront) {
+    public void paintManualMacro(Map<String, Double> variables, ArrayList<String> meshgrid, Map<String,String> shifting, String wavefront) {
         WritableRaster raster = canvas.getRaster();
         int[] phaseArray = new int[1];
         double zoom, rot;
-        double x, y, x1, y1, xt, yt, xt1, yt1, phase;
+        double x, y, xt, yt, phase;
         double px = 0;
         double py = 0;
         
@@ -1065,6 +1207,7 @@ public class PatternImage {
         double sintheta = Math.sin(Math.toRadians(rot));
         
         //Fill parameters in wavefront
+        
         Parser wavefrontParser = new Parser(wavefront);
         Set<String> wavefrontVariables = new HashSet<>();
         wavefrontVariables = wavefrontParser.getParsedVariables();
@@ -1079,24 +1222,26 @@ public class PatternImage {
         //Get latest variable of wavefront
         Parser phaseParser = new Parser(wavefront);
         
-        if(variables.containsKey(matrix.get("xt"))) {
-            px = variables.get(matrix.get("xt"))/1000;
-        } else {
-            if(matrix.get("xt").matches("-?\\d+(\\.\\d+)?")) {
-                px = Double.parseDouble(matrix.get("xt"))/1000;
-            }
+        
+        /*
+        for(Entry entry : variables.entrySet()) {
+            System.out.println("Variables = " + entry.getKey() + "= " + entry.getValue());
         }
         
-        if(matrix.get("yt") != null) {
-            if(variables.containsKey(matrix.get("yt"))) {
-                py = variables.get(matrix.get("yt"))/1000;
-            } else {
-                if(matrix.get("yt").matches("-?\\d+(\\.\\d+)?")) {
-                    py = Double.parseDouble(matrix.get("yt"))/1000;
-                }
-            }
+        */
+        
+        if(shifting.get("px") != null) {
+            px = (double)variables.get(shifting.get("px"))/1000;
+        }
+        if(shifting.get("py") != null) {
+            py = (double)variables.get(shifting.get("py"))/1000;
         }
         
+        /*
+        ExpressionBuilder result = new ExpressionBuilder(wavefront);
+        Expression result1 = result.variables(variables.keySet()).build().setVariables(variables);
+        */
+                
         //Meshgrid manipulate
         for (int i = 0; i < width; i++) {
             x = (double) (i - width / 2) * pxsize*zoom;
@@ -1114,11 +1259,12 @@ public class PatternImage {
                 yt = -x * sintheta + y * costheta;
                 
                 //Apply to the formula
-                phaseParser.setVariable("xt", xt);
-                phaseParser.setVariable("yt", yt);
+                phaseParser.setVariable(shifting.get("x"), xt);
+                phaseParser.setVariable(shifting.get("y"), yt);
                 
                 phase = phaseParser.getValue();
-
+                //phase = Math.exp(phase);
+                //phase = (double)1*Math.PI/lambda/focal*(Math.pow(xt,2) + Math.pow(yt,2));
                 phaseArray[0] = phase2gray(phase);
                 raster.setPixel(i, j, phaseArray);
             }

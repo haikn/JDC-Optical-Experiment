@@ -82,8 +82,8 @@ public class paramsPanel extends OpticsPane {
     private javax.swing.JButton btnGenerate;
     private javax.swing.JTextArea txtAreaLog;
     static String logmessageNewProject = "New Project: ";
-    private int countSecondDisplayMichelson = 1;
-    private int countLenOnMichelson = 1;
+    private int countSecondDisplayManual = 1;
+    private int countLenOnManual = 1;
     private javax.swing.JPanel panelParam;
     private javax.swing.JPanel panelButton;
     private javax.swing.JPanel panelNewProject;
@@ -199,7 +199,7 @@ public class paramsPanel extends OpticsPane {
         panelNewProject = new javax.swing.JPanel(new BorderLayout(30, 30));
                 
         JPanel headerPanel = new JPanel(new BorderLayout(30, 30));
-        lblMacro = new JLabel("Macro Name: ");
+        lblMacro = new JLabel("Macro Path: ");
         lblProject = new JLabel("Project Name: ");
         headerPanel.add(lblProject, BorderLayout.LINE_START);
         headerPanel.add(lblMacro, BorderLayout.LINE_END);
@@ -223,8 +223,8 @@ public class paramsPanel extends OpticsPane {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button11LensOnActionPerformed(evt);
-                countLenOnMichelson++;
-                if (countLenOnMichelson % 2 == 0) {
+                countLenOnManual++;
+                if (countLenOnManual % 2 == 0) {
                     btnLensOn.setText(initLabel.getString("btnLensOff"));
                     initPanelPattern.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -246,8 +246,8 @@ public class paramsPanel extends OpticsPane {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSecondGenerateActionPerformed(evt);
-                countSecondDisplayMichelson++;
-                if (countSecondDisplayMichelson % 2 == 0) {
+                countSecondDisplayManual++;
+                if (countSecondDisplayManual % 2 == 0) {
                     btnSecondDisplay.setText(initLabel.getString("btnSecondDisplayOff"));
                 } else {
                     btnSecondDisplay.setText(initLabel.getString("btnSecondDisplayOn"));
@@ -362,7 +362,7 @@ public class paramsPanel extends OpticsPane {
         if (parseArguments()) {
             callFunction(1);
             
-            if (countLenOnMichelson % 2 == 0) {
+            if (countLenOnManual % 2 == 0) {
                 magFrameLenon.dispose();
                 panelPattern.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -389,7 +389,7 @@ public class paramsPanel extends OpticsPane {
 
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
-                        countLenOnMichelson--;
+                        countLenOnManual--;
                         btnLensOn.setText(labels.getString("btnLensOn"));
                         magFrameLenon.dispose();
                     }
@@ -405,11 +405,11 @@ public class paramsPanel extends OpticsPane {
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice[] devices = env.getScreenDevices();
             if (devices.length == 1) {
-                countSecondDisplayMichelson--;
+                countSecondDisplayManual--;
                 JOptionPane.showMessageDialog(null, "No second display is found", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 callFunction(2);
-                if (countSecondDisplayMichelson % 2 == 0) {
+                if (countSecondDisplayManual % 2 == 0) {
                     patternFrameDoubleClick.dispose();
                     patternFrame.dispose();
                 }
@@ -446,8 +446,11 @@ public class paramsPanel extends OpticsPane {
     
     private void callFunction(int displayNumber) {
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
-        image.paintManualMacro(macro.getVariables(), macro.getMeshgrid(), macro.getMatrix(), macro.getWavefront());
-                
+        if(macro.getFunctionName().equalsIgnoreCase("exp")) {
+            image.paintManualMacro(macro.getVariables(), macro.getMeshgrid(), macro.getShifting(), macro.getWavefront());
+        } else {
+            image.paintManualSlit(macro.getVariables(), macro.getMeshgrid(), macro.getMatrix(), macro.getShifting(), macro.getSpacingX(), macro.getSpacingY(), macro.getSlitPattern(), macro.getX(), macro.getY());
+        }    
         if (displayNumber == 1)
             EduPatternShowOn.updatePattern(image, genLog());
         else EduPatternShowOn.updatePatternSecondDisplay(image, genLog());
