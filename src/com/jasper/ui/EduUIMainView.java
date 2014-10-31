@@ -136,9 +136,9 @@ public class EduUIMainView extends javax.swing.JFrame {
                     public void actionPerformed(ActionEvent e) {
                         try {
                             Project prj = new Project(Utils.getCurrentLocation() + prjFile.getName());
-                            Macro macro = new Macro(prj.getMacro());
+                            //Macro macro = new Macro(prj.getMacro());
                             //panelOptic.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
-                            panelOptic.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                            panelOptic.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getDiagram());
                         } catch (IOException ex) {
                             Logger.getLogger(EduUIMainView.class.getName()).log(Level.SEVERE, null, ex);
                         }

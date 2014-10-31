@@ -20,6 +20,7 @@
  */
 package com.jasper.core;
 
+import com.jasper.expr.SyntaxException;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -141,6 +142,8 @@ public class PatternImage {
     public String title;
     
     private double spacing = 0;
+    
+    private Map<String, Double> pixelSize = new HashMap<>();
 
     public PatternImage(int w, int h) {
         width = w;
@@ -183,6 +186,10 @@ public class PatternImage {
         this.pxsize = 6.4e-6;
         this.focal = 1.0;
         gray2phase = new int[256];
+        pixelSize.put("pixel", 1.0);
+        pixelSize.put("m", 6.4e-6);
+        pixelSize.put("mm", 6.4e-3);
+        pixelSize.put("um", 6.4);
         initGray2phase();
     }
 
@@ -1064,6 +1071,7 @@ public class PatternImage {
         boolean slitXMinus = false;
         boolean slitYPlus = false;
         boolean slitYMinus = false;
+        double pSize;
         
         ArrayList<String> patternList = new ArrayList<String>();
         
@@ -1072,6 +1080,16 @@ public class PatternImage {
         while(slitMatcher.find()) {
             slitsize = variables.get(slitMatcher.group(4));
             patternList.add(slitMatcher.group(3));
+        }
+        
+        if(meshgrid.size() >= 3) {
+            if(pixelSize.containsKey(meshgrid.get(2))) {
+                pSize = pixelSize.get(meshgrid.get(2));
+            } else {
+                pSize = pixelSize.get("m");
+            }
+        } else {
+            pSize = pixelSize.get("m");
         }
         
         if(variables.containsKey(meshgrid.get(1))) {
@@ -1121,13 +1139,13 @@ public class PatternImage {
    
         //Meshgrid manipulate
         for (int i = 0; i < width; i++) {
-            x = (double) (i - width / 2) *zoom;
+            x = (double) (i - width / 2) *pSize*zoom;
             
             //Shifting x
             x -= px;
             
             for (int j = 0; j < height; j++) {
-                y = (double) (j - height / 2) *zoom;
+                y = (double) (j - height / 2) *pSize*zoom;
                 //Shifting y
                 y -= py;
                 
@@ -1182,14 +1200,26 @@ public class PatternImage {
      * @param meshgrid
      * @param shifting
      * @param wavefront
+     * @param wavefrontVariables
      */
-    public void paintManualMacro(Map<String, Double> variables, ArrayList<String> meshgrid, Map<String,String> shifting, String wavefront) {
+    public void paintManualMacro(Map<String, Double> variables, ArrayList<String> meshgrid, Map<String,String> shifting, String wavefront, ArrayList<String> wavefrontVariables) {
         WritableRaster raster = canvas.getRaster();
         int[] phaseArray = new int[1];
         double zoom, rot;
         double x, y, xt, yt, phase;
         double px = 0;
         double py = 0;
+        double pSize;
+        
+        if(meshgrid.size() >= 3) {
+            if(pixelSize.containsKey(meshgrid.get(2))) {
+                pSize = pixelSize.get(meshgrid.get(2));
+            } else {
+                pSize = pixelSize.get("m");
+            }
+        } else {
+            pSize = pixelSize.get("m");
+        }
         
         if(variables.containsKey(meshgrid.get(1))) {
             rot = variables.get(meshgrid.get(1));
@@ -1207,50 +1237,40 @@ public class PatternImage {
         double sintheta = Math.sin(Math.toRadians(rot));
         
         //Fill parameters in wavefront
+        com.jasper.expr.Expr wavefrontParser = null;
+        try {
+            wavefrontParser = com.jasper.expr.Parser.parse(wavefront);
+        } catch (SyntaxException ex) {
+            Logger.getLogger(PatternImage.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        Parser wavefrontParser = new Parser(wavefront);
-        Set<String> wavefrontVariables = new HashSet<>();
-        wavefrontVariables = wavefrontParser.getParsedVariables();
         if(wavefrontVariables.size() > 0) {
-            for(String wavefrontVariable:wavefrontVariables) {
-                if(variables.containsKey(wavefrontVariable)) {
-                    wavefront = wavefront.replace(wavefrontVariable, ""+variables.get(wavefrontVariable));
+            for(int i = 0; i < wavefrontVariables.size(); i++) {
+                String wavefrontVariable = wavefrontVariables.get(i);
+                if(variables.get(wavefrontVariable) != null) {
+                    com.jasper.expr.Variable wavefrontVar = com.jasper.expr.Variable.make(wavefrontVariable);
+                    wavefrontVar.setValue(variables.get(wavefrontVariable));
                 }
             }
         }
         
-        //Get latest variable of wavefront
-        Parser phaseParser = new Parser(wavefront);
-        
-        
-        /*
-        for(Entry entry : variables.entrySet()) {
-            System.out.println("Variables = " + entry.getKey() + "= " + entry.getValue());
-        }
-        
-        */
-        
         if(shifting.get("px") != null) {
-            px = (double)variables.get(shifting.get("px"))/1000;
+            px = (double)variables.get(shifting.get("px"));
         }
         if(shifting.get("py") != null) {
-            py = (double)variables.get(shifting.get("py"))/1000;
+            py = (double)variables.get(shifting.get("py"));
         }
         
-        /*
-        ExpressionBuilder result = new ExpressionBuilder(wavefront);
-        Expression result1 = result.variables(variables.keySet()).build().setVariables(variables);
-        */
                 
         //Meshgrid manipulate
         for (int i = 0; i < width; i++) {
-            x = (double) (i - width / 2) * pxsize*zoom;
+            x = (double) (i - width / 2) * pSize*zoom;
             
             //Shifting x
             x -= px;
                 
             for (int j = 0; j < height; j++) {
-                y = (double) (j - height / 2) * pxsize*zoom;
+                y = (double) (j - height / 2) * pSize*zoom;
                 //Shifting y
                 y -= py;
                 
@@ -1259,12 +1279,12 @@ public class PatternImage {
                 yt = -x * sintheta + y * costheta;
                 
                 //Apply to the formula
-                phaseParser.setVariable(shifting.get("x"), xt);
-                phaseParser.setVariable(shifting.get("y"), yt);
-                
-                phase = phaseParser.getValue();
-                //phase = Math.exp(phase);
-                //phase = (double)1*Math.PI/lambda/focal*(Math.pow(xt,2) + Math.pow(yt,2));
+                com.jasper.expr.Variable xtVar = com.jasper.expr.Variable.make("xt");
+                com.jasper.expr.Variable ytVar = com.jasper.expr.Variable.make("yt");
+                xtVar.setValue(xt);
+                ytVar.setValue(yt);
+                phase = wavefrontParser.value();
+                //phase = 0;
                 phaseArray[0] = phase2gray(phase);
                 raster.setPixel(i, j, phaseArray);
             }

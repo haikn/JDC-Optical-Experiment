@@ -73,7 +73,7 @@ public class paramsPanel extends OpticsPane {
     private JFrame magFrameLenon;
     
     private Map<String, JLabel> lblParametersArray = new HashMap<String, JLabel>();
-    private Map<String, JSlider> sliderParametersArray = new HashMap<String, JSlider>();
+    private Map<String, DoubleJSlider> sliderParametersArray = new HashMap<String, DoubleJSlider>();
     private Map<String, JTextField> txtParametersArray = new HashMap<String, JTextField>();
     private Map<String, Binding> bindParametersArray = new HashMap<String, Binding>();
     
@@ -147,15 +147,17 @@ public class paramsPanel extends OpticsPane {
     
     public void initParams() throws IOException {
         
-        Project prj = new Project(Utils.getCurrentLocation() + this.prjName.trim() + ".prj");
-        macro = new Macro(prj.getMacro());
+        //Project prj = new Project(Utils.getCurrentLocation() + this.prjName.trim() + ".prj");
+        //macro = new Macro(prj.getMacro());
         
         
         ArrayList<Param> listParams = macro.getParam();
         for(int i = 0; i < listParams.size(); i++) {
             lblParametersArray.get("lblParameter"+i).setText((listParams.get(i)).getSubName());
-            sliderParametersArray.get("sliderParameter"+i).setMaximum((int)((listParams.get(i)).getMax() * (listParams.get(i)).getStep()));
-            sliderParametersArray.get("sliderParameter"+i).setMinimum((int)((listParams.get(i)).getMin() * (listParams.get(i)).getStep()));
+            //sliderParametersArray.get("sliderParameter"+i).setMaximum((int)((listParams.get(i)).getMax() / (listParams.get(i)).getStep()));
+            //sliderParametersArray.get("sliderParameter"+i).setMinimum((int)((listParams.get(i)).getMin() / (listParams.get(i)).getStep()));
+            //sliderParametersArray.get("sliderParameter"+i).scale((int)listParams.get(i).getStep());
+            //sliderParametersArray.get("sliderParameter"+i).
         }
     }
     
@@ -172,8 +174,13 @@ public class paramsPanel extends OpticsPane {
         
         //Init component first
         for(int k = 0; k < listParams.size(); k++) {
+            double sliderMax = listParams.get(k).getMax();
+            double sliderMin = listParams.get(k).getMin();
+            double sliderScale = listParams.get(k).getStep();
+            double sliderValue = listParams.get(k).getCurrentValue();
             lblParametersArray.put("lblParameter"+k, new JLabel());
-            sliderParametersArray.put("sliderParameter"+k, new JSlider());
+            //sliderParametersArray.put("sliderParameter"+k, new DoubleJSlider((int)((listParams.get(k)).getMin()/ (listParams.get(k)).getStep()), (int)((listParams.get(k)).getMax() / (listParams.get(k)).getStep()), (int)(listParams.get(k)).getCurrentValue(), 10));
+            sliderParametersArray.put("sliderParameter"+k, new DoubleJSlider((int)(sliderMin/sliderScale),(int)(sliderMax/sliderScale),(int)sliderValue,(int)(1/sliderScale)));
             txtParametersArray.put("txtParameter"+k, new JTextField());
         }
         
@@ -275,7 +282,7 @@ public class paramsPanel extends OpticsPane {
         for(int i = 0; i < listParams.size(); i++) {
             final JTextField currentTxtParameter = txtParametersArray.get("txtParameter"+i);
             final JLabel currentLblParameter = lblParametersArray.get("lblParameter"+i);
-            final JSlider currentSliderParameter = sliderParametersArray.get("sliderParameter"+i);
+            final DoubleJSlider currentSliderParameter = sliderParametersArray.get("sliderParameter"+i);
 
             currentSliderParameter.setName(""+listParams.get(i).getName());
             //Set default value for each slider
@@ -300,9 +307,11 @@ public class paramsPanel extends OpticsPane {
             currentSliderParameter.addChangeListener(new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent ce) {
-                    JSlider source = (JSlider)ce.getSource();
+                    //JSlider source = (JSlider)ce.getSource();
+                    DoubleJSlider source = (DoubleJSlider)ce.getSource();
                     if(source.getValueIsAdjusting()) {
-                        currentTxtParameter.setText(""+source.getValue());
+                        currentTxtParameter.setText(""+source.getScaledValue());
+                        //currentTxtParameter.setText(""+source.getValue());
                         sliderGenerateActionPerformed(source);
                     }
                 }
@@ -417,8 +426,8 @@ public class paramsPanel extends OpticsPane {
         }
     }
     
-    private void sliderGenerateActionPerformed(JSlider source) {
-        double currentSliderValue = source.getValue();
+    private void sliderGenerateActionPerformed(DoubleJSlider source) {
+        double currentSliderValue = source.getScaledValue();
         macro.setVariable(source.getName(), currentSliderValue);
         btnLensOn.setEnabled(true);
         btnSecondDisplay.setEnabled(true);
@@ -447,7 +456,7 @@ public class paramsPanel extends OpticsPane {
     private void callFunction(int displayNumber) {
         PatternImage image = ((EduPatternJPanel) panelPattern).pimage;
         if(macro.getFunctionName().equalsIgnoreCase("exp")) {
-            image.paintManualMacro(macro.getVariables(), macro.getMeshgrid(), macro.getShifting(), macro.getWavefront());
+            image.paintManualMacro(macro.getVariables(), macro.getMeshgrid(), macro.getShifting(), macro.getWavefront(), macro.getWaveFrontVariables());
         } else {
             image.paintManualSlit(macro.getVariables(), macro.getMeshgrid(), macro.getMatrix(), macro.getShifting(), macro.getSpacingX(), macro.getSpacingY(), macro.getSlitPattern(), macro.getX(), macro.getY());
         }    

@@ -16,12 +16,17 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.InvalidPropertiesFormatException;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +54,11 @@ public class EditProjectDialog extends JDialog implements ActionListener {
     private JScrollPane scrollPane;
     private EduControllerPattern macroPanel;
     private JFileChooser fc;
+    private static final String NAME = "Project";
+    private static final String MACRO = "Macro";
+    private static final String GRAPHIC = "Graphic";
+    private static final String LANGUAGE = "Language";
+    private static final String DESCRIPTION = "Description";
 
     public EditProjectDialog() {
         fc = new JFileChooser();
@@ -86,9 +96,11 @@ public class EditProjectDialog extends JDialog implements ActionListener {
             row.add(macroIcon);
             row.add(diagramIcon);
             
-            Project prj = new Project(prjFile.getPath());                           
+            Project prj = new Project(prjFile.getPath());
+            String prjDescriptionFile = prj.getDescription();
+            if(prjDescriptionFile != null) {
                 try {
-                    FileReader fileReader = new FileReader(new File(prj.getDescription()));
+                    FileReader fileReader = new FileReader(new File(prjDescriptionFile));
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
 
                     String inputFile = "";
@@ -101,9 +113,13 @@ public class EditProjectDialog extends JDialog implements ActionListener {
 
                 } catch (FileNotFoundException ex) {
                     System.out.println("no such file exists");
+                    row.add("");
                 } catch (IOException ex) {
                     System.out.println("unkownerror");
                 }
+            } else {
+                row.add("Add description");
+            }
             
             //row.add("");
             row.add(runIcon);
@@ -111,20 +127,17 @@ public class EditProjectDialog extends JDialog implements ActionListener {
             prjValues.add(row);
         }
 
-       
         //DefaultTableModel model = new DefaultTableModel(dataValues, columnNames);
         final DefaultTableModel model = new DefaultTableModel(prjValues, columns);
         // Create a new table instance
         table = new JTable(model) {
 
+            @Override
             public Class getColumnClass(int column) {
-                if(getValueAt(0, column) != null) {
-                    return getValueAt(0, column).getClass();
-                } else {
-                    return getValueAt(0, 1).getClass();
-                }
+                return getValueAt(0, column).getClass();
             }
         };
+        table.setRowHeight(30);
 
         // Add the table to a scrolling pane
         scrollPane = new JScrollPane(table);
@@ -145,29 +158,32 @@ public class EditProjectDialog extends JDialog implements ActionListener {
                                     null,
                                     null,
                                     null);
-                        String prjFileName = table.getModel().getValueAt(row, 1).toString();
-                        Project prj = new Project(prjFileName);                            
+                        if(newPrjName == null || newPrjName.trim().equals("")) {
+                        } else {
+                            String prjFileName = table.getModel().getValueAt(row, 1).toString();
+                            Project prj = new Project(prjFileName);                            
                             if (!prj.getName().equals(newPrjName)) {
-                                editFile(prjFileName, prj.getName(), newPrjName);
+                                editFile(prjFileName, prj.getProjectAttribute(), newPrjName);
                                 File oldF = new File(prjFileName);
                                 String newN = newPrjName.replaceAll("\\s+","") + ".prj";
                                 File newF = new File(Utils.getCurrentLocation() + newN);
                                 oldF.renameTo(newF);
                                 model.setValueAt(newN, row, 0);
                             }
+                        }
                     } else if (col == 1) {                        
-                        int returnVal = fc.showOpenDialog(topPanel);
+                        //int returnVal = fc.showOpenDialog(topPanel);
 
-                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        //if (returnVal == JFileChooser.APPROVE_OPTION) {
                             //File file = fc.getSelectedFile();                
                             //txtMacro.setText(file.getName());
-                            return;
-                        }
+                            //return;
+                        //}
                     } else if (col == 2) {
                         String prjFileName = table.getModel().getValueAt(row, 1).toString();
                         Project prj = new Project(prjFileName);
-                        EditMacroDialog editDialog = new EditMacroDialog(table.getModel().getValueAt(row, 0).toString(), prj.getMacro());
-                        editDialog.setVisible();
+                        EditMacroDialog editMacroDialog = new EditMacroDialog(table.getModel().getValueAt(row, 0).toString(), prj.getMacro());
+                        editMacroDialog.setVisible();
                     } else if (col == 3) {
                         FileFilter filter = new FileNameExtensionFilter("Image file", "jpg");
                         fc.setFileFilter(filter);
@@ -176,9 +192,12 @@ public class EditProjectDialog extends JDialog implements ActionListener {
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
                             File file = fc.getSelectedFile();
                             String prjFileName = table.getModel().getValueAt(row, 1).toString();
-                            Project prj = new Project(prjFileName);                            
-                            if (!prj.getGraphic().equals(file.getAbsolutePath())) {
-                                editFile(prjFileName, prj.getGraphic(), file.getAbsolutePath());
+                            Project prj = new Project(prjFileName);
+                            if (!prj.getDiagram().equals(file.getAbsolutePath())) {
+                                System.out.println("prjFileName = " + prjFileName);
+                                System.out.println("prj.getDiagramAttribute() = " + prj.getDiagramAttribute());
+                                System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
+                                editFile(prjFileName, prj.getDiagramAttribute(), file.getAbsolutePath());
                                 //model.setValueAt(file.getName(), row, 3);
                             }
                             
@@ -187,15 +206,15 @@ public class EditProjectDialog extends JDialog implements ActionListener {
                     } else if (col == 4) {
                         String prjFileName = table.getModel().getValueAt(row, 1).toString();
                         Project prj = new Project(prjFileName);
-                        EditDescriptionDialog editDialog = new EditDescriptionDialog(table.getModel().getValueAt(row, 0).toString(), prj.getDescription());
-                        editDialog.setVisible();
+                        EditDescriptionDialog editDescriptionDialog = new EditDescriptionDialog(table.getModel().getValueAt(row, 0).toString(), prjFileName, prj.getDescription());
+                        editDescriptionDialog.setVisible();
                     } else if (col == 5) {
                         try {
                             String prjFileName = table.getModel().getValueAt(row, 1).toString();
                             Project prj = new Project(prjFileName);
-                            Macro macro = new Macro(prj.getMacro());
+                            //Macro macro = new Macro(prj.getMacro());
                             //macroPanel.showProjects(macro.getParam().size(), prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());                        
-                            macroPanel.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getGraphic());
+                            macroPanel.showProjects(prj.getName(), prj.getMacro(), prj.getDescription(), prj.getDiagram());
                             parentFrame.dispose();
                         } catch (IOException ex) {
                             Logger.getLogger(EditProjectDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -207,7 +226,7 @@ public class EditProjectDialog extends JDialog implements ActionListener {
                             JOptionPane.YES_NO_OPTION);
                         if(dialogResult == JOptionPane.YES_OPTION) {
                             String prjFileName = table.getModel().getValueAt(row, 1).toString();
-                            Project delPrj = new Project(prjFileName);
+                            //Project delPrj = new Project(prjFileName);
                             File prjFile = new File(prjFileName);
                             prjFile.delete();
                         
@@ -236,35 +255,26 @@ public class EditProjectDialog extends JDialog implements ActionListener {
         macroPanel = panel;
     }
     
-    private void editFile(String filename, String oldValue, String newValue) {
-         try
-        {
-            ArrayList<String> lines = new ArrayList<String>();
-            String line = null;
-            File f1 = new File(filename);
-            FileReader fr = new FileReader(f1);
-            BufferedReader br = new BufferedReader(fr);
-            while ((line = br.readLine()) != null)
-            {
-                if (line.contains(oldValue))
-                    line = line.replace(oldValue, newValue);
-                lines.add(line);                
+    private void editFile(String filename, String attribute, String newValue) {
+        Properties prop = new Properties();
+        try {
+            FileInputStream fileInputStream = new FileInputStream(filename);
+            prop.load(fileInputStream);
+            FileOutputStream fileOutputStream = new FileOutputStream(filename);
+            for(Entry entry: prop.entrySet()) {
+                if(entry.getKey().toString().equals(attribute)) {
+                    prop.setProperty(attribute, newValue);
+                } else {
+                    prop.setProperty(entry.getKey().toString(), entry.getValue().toString());
+                }
             }
-            fr.close();
-            br.close();
-
-            FileWriter fw = new FileWriter(f1);
-            BufferedWriter out = new BufferedWriter(fw);
-            for(String s : lines) {
-                out.write(s);      
-                out.newLine();
-            }
-            out.flush();
-            out.close();
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
+            prop.store(fileOutputStream, filename);
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvalidPropertiesFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

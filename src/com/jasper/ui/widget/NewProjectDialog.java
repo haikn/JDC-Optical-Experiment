@@ -130,7 +130,7 @@ public class NewProjectDialog extends JDialog implements ActionListener {
         testDesc = new JTextArea();
         testDesc.setColumns(20);
         testDesc.setRows(10);
-        testDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
+        //testDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
         testDesc.setLineWrap(true);
         testDesc.setWrapStyleWord(true);
         testDesc.setEditable(false);
@@ -217,8 +217,7 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                     Project newProject = new Project(txtProjectName.getText(), txtMacro.getText(), txtGraphic.getText(), cmbLanguage.getSelectedItem().toString(), txtDescription.getText());
                     newProject.writeToFile();
                 }
-                Macro macro = new Macro(txtMacro.getText());
-                System.out.println("Project name + " + txtProjectName.getText());
+                //Macro macro = new Macro(txtMacro.getText());
                 //macroPanel.showProjects(macro.getParam().size(), txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
                 macroPanel.showProjects(txtProjectName.getText(), txtMacro.getText(), txtDescription.getText(), txtGraphic.getText());
                 parentFrame.dispose();

@@ -24,6 +24,8 @@
  */
 package com.jasper.model;
 
+import com.jasper.expr.Expr;
+import com.jasper.expr.SyntaxException;
 import java.awt.List;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -35,11 +37,14 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
@@ -62,6 +67,7 @@ public class Macro {
     private String functionName;
     
     private ArrayList<String> mathConstant = new ArrayList<>();
+    private ArrayList<String> wavefrontVariables = new ArrayList<>();
     private Map<String, Double> variables = new HashMap<>();
     //private String meshgrid;
     //private ArrayList<Double> meshgridParam = new ArrayList<>();
@@ -112,6 +118,9 @@ public class Macro {
         int type = 0;
         Properties props = new Properties();
         
+        com.jasper.expr.Variable wavefrontVariablesSet;
+        wavefrontVariablesSet = new com.jasper.expr.Variable(null);
+        
         mathConstant.add("pi");
         mathConstant.add("j");
         mathConstant.add("i");
@@ -123,6 +132,11 @@ public class Macro {
         variables.put("j", (double)1);
         variables.put("i", (double)1);
         variables.put("e", Math.E);
+        
+        //leftParams.clear();
+        
+        //rightParams.clear();
+        //wavefrontVariables.clear();
         
         //Read macro file
         try {
@@ -152,9 +166,13 @@ public class Macro {
                     type = 4;
                     continue;
                 }
+                if(line.trim().length() > 0 && line.trim().substring(0, 1).equals("%")) {
+                    continue;
+                }
 
                 if (type == 0) {
                     //Constant processing
+                    
                     props.clear();
                     props.load(new StringReader(line));
                     Enumeration<?> enumer = props.propertyNames();
@@ -175,6 +193,7 @@ public class Macro {
                     }
                 } else if (type == 1) {
                     //Parameter processing
+                   
                     props.clear();
                     props.load(new StringReader(line));
                     Enumeration<?> enumer = props.propertyNames();
@@ -211,6 +230,7 @@ public class Macro {
                     } //End while
                     
                 } else if (type == 2) {
+                    
                     //Meshgrid processing 
                     props.clear();
                     props.load(new StringReader(line));
@@ -257,6 +277,7 @@ public class Macro {
                     }//End while
                     
                 } else if (type == 3) {
+                    
                     //Matrix processing
                     props.clear();
                     props.load(new StringReader(line));
@@ -346,7 +367,7 @@ public class Macro {
             
             //Wave front analyze
             String wavefrontFunctionString = "";
-            Set<String> wavefrontVariableName = new HashSet<>();
+            //Set<String> wavefrontVariableName = new HashSet<>();
             Pattern wavefrontPattern = Pattern.compile(REGEXWAVEFRONT);
             Pattern patternPattern = Pattern.compile(REGEXPATTERN);
             Matcher wavefrontMatcher = wavefrontPattern.matcher(wavefrontDraft);
@@ -355,33 +376,22 @@ public class Macro {
             if(wavefrontMatcher.find()) {
                 //For wavefront
                 functionName = wavefrontMatcher.group(1);
-                wavefrontFunctionString = wavefrontMatcher.group(2);
-                Parser wavefrontParser;
+                wavefront = wavefrontMatcher.group(2);
+                System.out.println("This is wavefront = " + wavefront);
+                //Expr wavefrontParser;
+               
                 try {
-                    wavefrontParser = new Parser(wavefrontFunctionString);
-                } catch (Exception exc) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Function not found!");
+                    wavefrontVariablesSet.resetVariables();
+                    Expr wavefrontParser = com.jasper.expr.Parser.parse(wavefront);
+                } catch (SyntaxException ex) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Wrong format!");
+                    Logger.getLogger(Macro.class.getName()).log(Level.SEVERE, null, ex);
                     throw new IllegalArgumentException();
                 }
-
-                //Check wavefront function variables
-
-                try {
-                    wavefrontVariableName = wavefrontParser.getParsedVariables();
-                    rightParams.addAll(wavefrontVariableName);
-                } catch(ParseError exc) {
-                    JOptionPane.showMessageDialog(new JFrame(), exc.getMessage());
-                    throw new IllegalArgumentException();
-                }
-
-                //Real wavefront formula
-                /*
-                wavefront = wavefrontFunctionString.replaceAll(REGEXPOWER, "pow($2,$3)");
-                for(Entry entry: matrix.entrySet()) {
-                    wavefront = wavefront.replace(entry.getKey().toString(), entry.getValue().toString());
-                }
-                */
-                wavefront = wavefrontFunctionString;
+                
+                Hashtable<String, String> wavefrontVariablesHash = wavefrontVariablesSet.getVariables();
+                wavefrontVariables.addAll(wavefrontVariablesHash.keySet());
+                rightParams.addAll(wavefrontVariablesHash.keySet());
                 
             } else if(patternMatcher.find()){
                 functionName = patternMatcher.group(2);
@@ -410,6 +420,7 @@ public class Macro {
             JOptionPane.showMessageDialog(new JFrame(), "Undefined variable");
             throw new IllegalArgumentException();
         }
+        
         
         //Refine slit pattern
         //Assign values from variables to slit
@@ -566,6 +577,10 @@ public class Macro {
 
     public String getFunctionName() {
         return this.functionName;
+    }
+    
+    public ArrayList<String> getWaveFrontVariables() {
+        return this.wavefrontVariables;
     }
     
     private String stringCapitalize(String string) {

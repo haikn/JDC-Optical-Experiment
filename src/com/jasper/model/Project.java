@@ -28,10 +28,15 @@ import com.jasper.utils.Utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.InvalidPropertiesFormatException;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  *
@@ -42,91 +47,73 @@ public class Project {
     private String name;
     private String location;
     private String macro;
-    private String graphic;
+    private String diagram;
     private String language;
-    private String descritpion;
-    private static String NAME = "Project";
-    private static String MACRO = "Macro";
-    private static String GRAPHIC = "Graphic";
-    private static String LANGUAGE = "Language";
-    private static String DESCRIPTION = "Description";
+    private String description;
+    private final String PROJECT = "Project";
+    private final String MACRO = "Macro";
+    private final String DIAGRAM = "Diagram";
+    private final String LANGUAGE = "Language";
+    private final String DESCRIPTION = "Description";
 
     public Project() {
     }
 
     public Project(String project) {
-        BufferedReader br = null;
-        String line = "";
-        String cvsSplitBy = "=";
 
+        Properties prop = new Properties();
         try {
-            br = new BufferedReader(new FileReader(project));
-            while ((line = br.readLine()) != null) {
-                String[] lineData = line.split(cvsSplitBy);                
-                if (lineData[0].trim().equals(NAME)) {                    
-                    name = lineData[1];
-                } else if (lineData[0].trim().equals(MACRO)) {                    
-                    macro = lineData[1].trim();
-                } else if (lineData[0].trim().equals(GRAPHIC)) {                    
-                    graphic = lineData[1].trim();
-                } else if (lineData[0].trim().equals(LANGUAGE)) {
-                    language = lineData[1].trim();
-                } else if (lineData[0].trim().equals(DESCRIPTION)) {
-                    descritpion = lineData[1].trim();
-                }
-            }
-
-        } catch (FileNotFoundException e) {
+            FileInputStream fileInputStream = new FileInputStream(project);
+            prop.load(fileInputStream);
+            //prop.list(System.out);
+            name = prop.getProperty(PROJECT);
+            macro = prop.getProperty(MACRO);
+            diagram = prop.getProperty(DIAGRAM);
+            description = prop.getProperty(DESCRIPTION);
+            language = prop.getProperty(LANGUAGE);
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvalidPropertiesFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
+        
     }
 
-    public Project(String name, String location, String macro, String graphic, String language, String description) {
+    public Project(String name, String location, String macro, String diagram, String language, String description) {
         this.name = name;
         this.location = location;
         this.macro = macro;
-        this.graphic = graphic;
+        this.diagram = diagram;
         this.language = language;
-        this.descritpion = description;
+        this.description = description;
     }
     
-    public Project(String name, String macro, String graphic, String language, String description) {
+    public Project(String name, String macro, String diagram, String language, String description) {
         this.name = name;
         this.macro = macro;
-        this.graphic = graphic;
+        this.diagram = diagram;
         this.language = language;
-        this.descritpion = description;
+        this.description = description;
     }
 
     public void writeToFile() {
-        BufferedWriter writer = null;
+        Properties prop = new Properties();
         try {
-            //create a temporary file
             String fName = Utils.getCurrentLocation() + name + ".prj";
-            File prjFile = new File(fName);
-            writer = new BufferedWriter(new FileWriter(prjFile));
-            writer.write(NAME + " = " + name + "\n");
-            writer.write(MACRO + " = " + macro + "\n");
-            writer.write(GRAPHIC + " = " + graphic + "\n");
-            writer.write(LANGUAGE + " = " + language + "\n");
-            writer.write(DESCRIPTION + " = " + descritpion + "\n");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-            }
+            //FileInputStream fileInputStream = new FileInputStream(fName);
+            FileOutputStream fileOutputStream = new FileOutputStream(fName);
+            prop.setProperty(PROJECT, name);
+            prop.setProperty(MACRO, macro);
+            prop.setProperty(DIAGRAM, diagram);
+            prop.setProperty(LANGUAGE, language);
+            prop.setProperty(DESCRIPTION, description);
+            prop.store(fileOutputStream, fName);
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -154,16 +141,16 @@ public class Project {
         return this.macro;
     }
 
-    public void setGraphic(String graphic) {
-        this.graphic = graphic;
+    public void setDiagram(String diagram) {
+        this.diagram = diagram;
     }
 
-    public String getGraphic() {
-        return this.graphic;
+    public String getDiagram() {
+        return this.diagram;
     }
 
     public void setDescription(String description) {
-        this.descritpion = description;
+        this.description = description;
     }
 
     public void setLanguage(String language) {
@@ -175,6 +162,26 @@ public class Project {
     }
 
     public String getDescription() {
-        return this.descritpion;
+        return this.description;
+    }
+    
+    public String getProjectAttribute() {
+        return this.PROJECT;
+    }
+    
+    public String getMacroAttribute() {
+        return this.MACRO;
+    }
+    
+    public String getDiagramAttribute() {
+        return this.DIAGRAM;
+    }
+    
+    public String getDescriptionAttribute() {
+        return this.DESCRIPTION;
+    }
+    
+    public String getLanguageAttribute() {
+        return this.LANGUAGE;
     }
 }

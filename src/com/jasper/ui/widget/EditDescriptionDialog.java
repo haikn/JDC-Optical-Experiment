@@ -4,6 +4,7 @@
  */
 package com.jasper.ui.widget;
 
+import com.jasper.model.Project;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -13,11 +14,16 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InvalidPropertiesFormatException;
+import java.util.Map;
+import java.util.Properties;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -46,11 +52,14 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
     private JTextArea textDesc;
     private JComboBox cmbLanguage;
     private String projectName;
+    private String projectPath;
     private String descFile;
 
-    public EditDescriptionDialog(String projectName, String descFile) {
+    public EditDescriptionDialog(String projectName, String projectPath, String descFile) {
         this.projectName = projectName;
         this.descFile = descFile;
+        this.projectPath = projectPath;
+        
         fc = new JFileChooser();
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(0, 3, 5, 5));
@@ -96,7 +105,7 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
         textDesc = new JTextArea();
         textDesc.setColumns(20);
         textDesc.setRows(10);        
-        textDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
+        //textDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
         textDesc.setLineWrap(true);
         textDesc.setWrapStyleWord(true);
         textDesc.setEditable(true);
@@ -111,7 +120,9 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         parentFrame.pack();
 
+        System.out.println("This is my file: " + descFile);
         txtDescription.setText(descFile);
+        
         try {
             FileReader fileReader = new FileReader(new File(descFile));
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -139,6 +150,14 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
     public void setVisible() {
         parentFrame.setVisible(true);
     }
+    
+    public void setDescriptionFile(String descriptionFile) {
+        this.descFile = descriptionFile;
+    }
+    
+    public String getDescriptionFile() {
+        return this.descFile;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -146,9 +165,13 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
             FileFilter filter = new FileNameExtensionFilter("Text file", "txt");
             fc.setFileFilter(filter);
             int returnVal = fc.showOpenDialog(this);
-
+            
             if (returnVal == JFileChooser.APPROVE_OPTION) {
+                
                 File file = fc.getSelectedFile();
+                if(descFile == null || descFile.trim().equals("")) {
+                    descFile = file.toString();
+                }
                 //This is where a real application would open the file.
                 //log.append("Opening: " + file.getName() + "." + newline);
                 txtDescription.setText(file.getAbsolutePath());
@@ -175,7 +198,9 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
         } else if (e.getSource() == btnCancel) {
             parentFrame.dispose();
         } else if (e.getSource() == btnSave) {
+            Project prj = new Project(projectPath);
             editFile(descFile);
+            updateProjectFile(projectPath, prj.getDescriptionAttribute(), descFile);
             parentFrame.dispose();
         }
     }
@@ -190,6 +215,29 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
             out.close();
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+    
+    private void updateProjectFile(String filename, String attribute, String newValue) {
+        Properties prop = new Properties();
+        try {
+            FileInputStream fileInputStream = new FileInputStream(filename);
+            prop.load(fileInputStream);
+            FileOutputStream fileOutputStream = new FileOutputStream(filename);
+            for(Map.Entry entry: prop.entrySet()) {
+                if(entry.getKey().toString().equals(attribute)) {
+                    prop.setProperty(attribute, newValue);
+                } else {
+                    prop.setProperty(entry.getKey().toString(), entry.getValue().toString());
+                }
+            }
+            prop.store(fileOutputStream, filename);
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvalidPropertiesFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
