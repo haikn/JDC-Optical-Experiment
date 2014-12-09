@@ -5,9 +5,11 @@
 package com.jasper.ui.widget;
 
 import com.jasper.model.Project;
+import com.jasper.utils.Utils;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,10 +22,16 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -104,8 +112,10 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
         mainPanel.add(inputPanel);
         textDesc = new JTextArea();
         textDesc.setColumns(20);
-        textDesc.setRows(10);        
-        //textDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
+        textDesc.setRows(10);      
+        Font font = Utils.getFont();
+        textDesc.setFont(font);
+        textDesc.setLocale(new Locale("zh","TW"));
         textDesc.setLineWrap(true);
         textDesc.setWrapStyleWord(true);
         textDesc.setEditable(true);
@@ -119,19 +129,16 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
 
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         parentFrame.pack();
-
-        System.out.println("This is my file: " + descFile);
         txtDescription.setText(descFile);
         
         try {
-            FileReader fileReader = new FileReader(new File(descFile));
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(descFile), "UTF-8"));
 
             String inputFile = "";
             String textFieldReadable;
 
             while ((textFieldReadable = bufferedReader.readLine()) != null) {
-                inputFile += textFieldReadable;
+                inputFile += textFieldReadable.replaceAll("\\p{C}", "") + "\n";
             }
 
             textDesc.setText(inputFile);
@@ -141,6 +148,7 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
         } catch (IOException ex) {
             System.out.println("unkownerror");
         }
+        
     }
 
     public void setProjectName(String projectName) {
@@ -176,14 +184,15 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
                 //log.append("Opening: " + file.getName() + "." + newline);
                 txtDescription.setText(file.getAbsolutePath());
                 try {
-                    FileReader fileReader = new FileReader(file);
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    //FileReader fileReader = new FileReader(file);
+                    //BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
                     String inputFile = "";
                     String textFieldReadable;
 
                     while ((textFieldReadable = bufferedReader.readLine()) != null) {
-                        inputFile += textFieldReadable;
+                        inputFile += textFieldReadable.replaceAll("\\p{C}", "") + "\n";
                     }
 
                     textDesc.setText(inputFile);
@@ -208,8 +217,10 @@ public class EditDescriptionDialog extends JDialog implements ActionListener {
     private void editFile(String filename) {
         try {
             File f1 = new File(filename);
-            FileWriter fw = new FileWriter(f1);
-            BufferedWriter out = new BufferedWriter(fw);
+            //FileWriter fw = new FileWriter(f1);
+            Writer out = new BufferedWriter(new OutputStreamWriter(
+			new FileOutputStream(f1), "UTF8"));
+            //BufferedWriter out = new BufferedWriter(fw,);
             out.write(textDesc.getText());
             out.flush();
             out.close();

@@ -65,10 +65,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -1478,20 +1481,23 @@ public class EduControllerPattern extends OpticsPane {
         JTextArea txtDesc = new JTextArea();
         Font font = Utils.getFont();
         txtDesc.setFont(font);
+        //txtDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
+        txtDesc.setLocale(new Locale("zh","TW"));
         txtDesc.setLineWrap(true);
         txtDesc.setWrapStyleWord(true);
         txtDesc.setEditable(false);
         txtDesc.setOpaque(false);
         
         try {
-            FileReader fileReader = new FileReader(new File(desc));
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            //FileReader fileReader = new FileReader(new File(desc));
+            //BufferedReader bufferedReader = new BufferedReader(fileReader);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(desc), "UTF-8"));
 
             String inputFile = "";
             String textFieldReadable;
 
             while ((textFieldReadable = bufferedReader.readLine()) != null) {
-                inputFile += textFieldReadable;
+                inputFile += textFieldReadable.replaceAll("\\p{C}", "") + "\n";
             }
 
             txtDesc.setText(inputFile);

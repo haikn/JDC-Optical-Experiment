@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
@@ -100,14 +101,15 @@ public class EditProjectDialog extends JDialog implements ActionListener {
             String prjDescriptionFile = prj.getDescription();
             if(prjDescriptionFile != null) {
                 try {
-                    FileReader fileReader = new FileReader(new File(prjDescriptionFile));
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    //FileReader fileReader = new FileReader(new File(prjDescriptionFile));
+                    //BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(prjDescriptionFile), "UTF-8"));
 
                     String inputFile = "";
                     String textFieldReadable;
 
                     while ((textFieldReadable = bufferedReader.readLine()) != null) {
-                        inputFile += textFieldReadable;
+                        inputFile += textFieldReadable.replaceAll("\\p{C}", "") + "\n";
                     }              
                     row.add(inputFile.substring(0, Math.min(inputFile.length(), 20)));
 

@@ -377,7 +377,6 @@ public class Macro {
                 //For wavefront
                 functionName = wavefrontMatcher.group(1);
                 wavefront = wavefrontMatcher.group(2);
-                System.out.println("This is wavefront = " + wavefront);
                 //Expr wavefrontParser;
                
                 try {

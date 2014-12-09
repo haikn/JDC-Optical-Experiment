@@ -33,10 +33,13 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -130,7 +133,10 @@ public class NewProjectDialog extends JDialog implements ActionListener {
         testDesc = new JTextArea();
         testDesc.setColumns(20);
         testDesc.setRows(10);
-        //testDesc.setFont(new Font("Courier New", Font.PLAIN, 12));
+        
+        Font font = Utils.getFont();
+        testDesc.setFont(font);
+        testDesc.setLocale(new Locale("zh","TW"));
         testDesc.setLineWrap(true);
         testDesc.setWrapStyleWord(true);
         testDesc.setEditable(false);
@@ -166,16 +172,16 @@ public class NewProjectDialog extends JDialog implements ActionListener {
                 //log.append("Opening: " + file.getName() + "." + newline);
                 txtDescription.setText(file.getAbsolutePath());
                 try {
-                    FileReader fileReader = new FileReader(file);
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    //FileReader fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
                     String inputFile = "";
+                  
                     String textFieldReadable;
 
                     while ((textFieldReadable = bufferedReader.readLine()) != null) {
-                        inputFile += textFieldReadable;
+                        inputFile += textFieldReadable.replaceAll("\\p{C}", "") + "\n";
                     }
-
                     testDesc.setText(inputFile);
 
                 } catch (FileNotFoundException ex) {
